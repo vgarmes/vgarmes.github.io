@@ -3,6 +3,12 @@
 	"compilerOptions": {
 		"jsx": "react-jsx",
 		"jsxImportSource": "preact",
-		"types": ["@astrojs/image/client"]
+		"types": ["@astrojs/image/client"],
+		"baseUrl": ".",
+		"paths": {
+			"@assets/*": ["src/assets/*"],
+			"@components/*": ["src/components/*"],
+			"@layouts/*": ["src/layouts/*"]
+		}
 	}
 }
