@@ -1,0 +1,35 @@
+---
+import GithubIcon from './icons/Github.astro'
+import TwitterIcon from './icons/Twitter.astro'
+import LinkedinIcon from './icons/Linkedin.astro'
+import InstagramIcon from './icons/Instagram.astro'
+
+const socials = [
+	{
+		url: 'https://github.com/vgarmes',
+		Icon: GithubIcon
+	},
+	{
+		url: 'https://twitter.com/vgmestre',
+		Icon: TwitterIcon
+	},
+	{
+		url: 'https://linkedin.com/vgmestre',
+		Icon: LinkedinIcon
+	},
+	{
+		url: 'https://instagram.com/vgmestre',
+		Icon: InstagramIcon
+	}
+]
+---
+
+<div class="flex gap-6 text-gray-700 dark:text-gray-400">
+	{
+		socials.map(({ url, Icon }) => (
+			<a href={url} class="hover:scale-125 transition-transform duration-100">
+				<Icon />
+			</a>
+		))
+	}
+</div>
