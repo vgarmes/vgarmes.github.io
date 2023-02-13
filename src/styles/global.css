@@ -3,3 +3,7 @@ body {
 	text-rendering: optimizeLegibility;
 	overflow-wrap: break-word;
 }
+
+p {
+	padding-bottom: 0.75rem;
+}

@@ -5,12 +5,12 @@ module.exports = {
 	theme: {
 		extend: {
 			animation: {
-				fadein: 'fadein 300ms'
+				'fade-up': 'fade-up 1000ms'
 			},
 			keyframes: {
-				fadein: {
-					from: { opacity: 0 },
-					to: { opacity: 1 }
+				'fade-up': {
+					from: { opacity: 0, transform: 'translateY(30px)' },
+					to: { opacity: 1, transform: 'translateY(0)' }
 				}
 			}
 		}
