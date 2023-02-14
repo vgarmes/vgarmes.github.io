@@ -1,0 +1,33 @@
+<section>
+	<h2 class="text-5xl pb-5 font-extrabold w-full md:w-1/2 leading-tight">
+		I like creating <span id="about">great web experiences</span> and write about
+		it.
+	</h2>
+	<h2 class="text-5xl font-extrabold w-1/2 ml-auto mr-0">My favorite stack</h2>
+</section>
+<script>
+	import { annotate } from 'rough-notation'
+	const e = document.getElementById('about') as HTMLSpanElement
+	const observer = new IntersectionObserver(
+		entries => {
+			entries.forEach(item => {
+				const annotation = annotate(e, {
+					type: 'underline',
+					multiline: true,
+					color: '#db2777',
+					strokeWidth: 2
+				})
+				if (item.isIntersecting) {
+					annotation.show()
+					observer.unobserve(item.target)
+				}
+			})
+		},
+		{
+			root: null,
+			rootMargin: '0px',
+			threshold: 1.0
+		}
+	)
+	observer.observe(e)
+</script>
