@@ -43,6 +43,12 @@ module.exports = {
 			// Script in `<script>` is assigned a virtual file name with the `.js` extension.
 			files: ['**/*.astro/*.js', '*.astro/*.js'],
 			parser: '@typescript-eslint/parser'
+		},
+		{
+			files: ['*.d.ts'],
+			rules: {
+				'@typescript-eslint/triple-slash-reference': 'off'
+			}
 		}
 	]
 }

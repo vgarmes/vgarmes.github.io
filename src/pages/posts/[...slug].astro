@@ -1,5 +1,4 @@
 ---
-import Layout from '../../layouts/base.astro'
 import { getCollection } from 'astro:content'
 export async function getStaticPaths() {
 	const blogEntries = await getCollection('blog')
