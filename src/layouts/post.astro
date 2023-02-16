@@ -1,0 +1,24 @@
+---
+import type { MarkdownLayoutProps } from 'astro'
+import BaseLayout from './base.astro'
+
+type Props = MarkdownLayoutProps<{
+	title: string
+	description: string
+	pubDate: string
+}>
+
+const { frontmatter } = Astro.props
+const date = new Intl.DateTimeFormat('en-US', {
+	dateStyle: 'full'
+}).format(new Date(frontmatter.pubDate))
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+	<article class="mt-32">
+		<h1 class="text-3xl font-extrabold">{frontmatter.title}</h1>
+		<p>{frontmatter.description}</p>
+		<p>Written on: {date}</p>
+		<slot />
+	</article>
+</BaseLayout>
