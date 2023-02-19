@@ -16,7 +16,7 @@ const date = new Intl.DateTimeFormat('en-US', {
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-	<article class="mt-32">
+	<article>
 		<h1 class="text-3xl font-extrabold">{frontmatter.title}</h1>
 		<p>{frontmatter.description}</p>
 		<p>Written on: {date}</p>

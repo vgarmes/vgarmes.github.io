@@ -1,0 +1,33 @@
+---
+import Layout from '~/layouts/base.astro'
+import { getCollection } from 'astro:content'
+const posts = await getCollection('blog')
+---
+
+<Layout title="Blog" description="Articles I have written">
+	<h1 class="text-5xl font-extrabold pb-6">Blog</h1>
+	<p class="font-bold pb-3">
+		{posts.length}
+		{posts.length === 1 ? 'article' : 'articles'}
+	</p>
+
+	<div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-8">
+		{
+			posts.map(post => (
+				<article class="bg-gray-800 p-8 rounded-lg">
+					<a href={`/blog/${post.slug}`} class="">
+						<h3 class="font-bold text-xl">{post.data.title}</h3>
+						<time
+							datetime={post.data.pubDate.toISOString()}
+							class="text-sm text-gray-400"
+						>
+							{post.data.pubDate.toDateString()}
+						</time>
+						<p class="mt-4">{post.data.description}</p>
+						<div class="font-bold">Read more</div>
+					</a>
+				</article>
+			))
+		}
+	</div>
+</Layout>
