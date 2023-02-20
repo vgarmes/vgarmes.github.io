@@ -11,10 +11,12 @@ const posts = await getCollection('blog')
 		{posts.length === 1 ? 'article' : 'articles'}
 	</p>
 
-	<div class="grid grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-8">
+	<div
+		class="grid sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-8 grid-cols-1"
+	>
 		{
 			posts.map(post => (
-				<article class="bg-gray-800 p-8 rounded-lg">
+				<article class=" bg-white dark:bg-gray-800 p-8 rounded-lg dark:border dark:border-slate-400/20 shadow">
 					<a href={`/blog/${post.slug}`} class="">
 						<h3 class="font-bold text-xl">{post.data.title}</h3>
 						<time
