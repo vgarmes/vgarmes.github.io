@@ -6,6 +6,6 @@ import mdx from '@astrojs/mdx'
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [preact(), image(), tailwind(), mdx()],
+	integrations: [preact({ compat: true }), image(), tailwind(), mdx()],
 	site: 'https://vgarmes.github.io'
 })
