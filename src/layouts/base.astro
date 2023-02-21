@@ -1,6 +1,6 @@
 ---
-import Footer from '~/components/Footer.astro'
-import Head from '~/components/Head.astro'
+import Footer from '~/components/common/Footer.astro'
+import Head from '~/components/common/Head.astro'
 import Header from '~/components/header/Header.astro'
 const { title, description } = Astro.props
 ---
@@ -13,10 +13,10 @@ const { title, description } = Astro.props
 		<Head title={title} description={description} />
 	</head>
 	<body
-		class="min-h-screen flex flex-col bg-slate-100 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-500 break-words font-sans"
+		class="flex flex-col break-words bg-slate-100 font-sans text-gray-900 transition-colors duration-500 dark:bg-gray-900 dark:text-gray-50"
 	>
 		<Header />
-		<main class="max-w-7xl px-4 mt-28 sm:px-16">
+		<main class="mx-auto mt-28 w-full max-w-7xl px-4 sm:px-16">
 			<slot />
 		</main>
 		<Footer />

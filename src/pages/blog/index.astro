@@ -1,6 +1,7 @@
 ---
 import Layout from '~/layouts/base.astro'
 import { getCollection } from 'astro:content'
+import ArrowRight from '~/components/icons/ArrowRight.astro'
 const posts = await getCollection('blog')
 ---
 
@@ -16,7 +17,7 @@ const posts = await getCollection('blog')
 	>
 		{
 			posts.map(post => (
-				<article class=" bg-white dark:bg-gray-800 p-8 rounded-lg dark:border dark:border-slate-400/20 shadow">
+				<article class="bg-white dark:bg-gray-800 p-8 rounded-lg dark:border dark:border-slate-400/20 shadow">
 					<a href={`/blog/${post.slug}`} class="">
 						<h3 class="font-bold text-xl">{post.data.title}</h3>
 						<time
@@ -26,7 +27,12 @@ const posts = await getCollection('blog')
 							{post.data.pubDate.toDateString()}
 						</time>
 						<p class="mt-4">{post.data.description}</p>
-						<div class="font-bold">Read more</div>
+						<div class="group flex items-center gap-2">
+							<p class="font-bold">Read more</p>
+							<div class="text-pink-600 group-hover:translate-x-2 transition-transform">
+								<ArrowRight />
+							</div>
+						</div>
 					</a>
 				</article>
 			))
