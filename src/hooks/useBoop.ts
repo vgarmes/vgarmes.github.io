@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'preact/hooks'
-import { useSpring } from 'react-spring'
+import { useSpring } from '@react-spring/web'
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 
 export function useBoop({

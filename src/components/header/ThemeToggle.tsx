@@ -1,6 +1,6 @@
 import type { FunctionalComponent } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
-import { animated } from 'react-spring'
+import { animated } from '@react-spring/web'
 import { useBoop } from '~/hooks/useBoop'
 // This component is intended to be used with client directive 'client:load' so it skips SSR (theme will be undefined in server)
 
