@@ -2,20 +2,25 @@
 import ThemeToggle from './ThemeToggle'
 ---
 
-<header class="fixed w-full z-10 backdrop-blur-md">
-	<div class="mx-auto max-w-7xl px-4 sm:px-16 py-6 transition-all">
+<header class="fixed z-10 w-full backdrop-blur-md">
+	<div class="mx-auto max-w-7xl px-4 py-6 transition-all sm:px-16">
 		<nav class="flex items-center gap-3 text-base">
-			<a href="/" class="group">
-				<h2 class="font-semibold tracking-tighter py-2 text-lg">
+			<a href="/">
+				<h2
+					class="py-2 text-lg font-semibold tracking-tighter hover:text-pink-600"
+				>
 					{/*icon */}
 					Victor Garcia
 				</h2>
 			</a>
-			<div class="items-center gap-6 hidden md:flex">
-				{/* navigation links */}
-			</div>
+
 			<div class="flex-1"></div>
-			<ThemeToggle client:only="preact" />
+			<div class="hidden items-center gap-6 md:flex">
+				<a href="/blog" class="font-semibold">Blog</a>
+			</div>
+			<div>
+				<ThemeToggle client:only="preact" />
+			</div>
 		</nav>
 	</div>
 </header>

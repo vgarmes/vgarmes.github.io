@@ -2,7 +2,6 @@ import type { FunctionalComponent } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import { animated } from '@react-spring/web'
 import { useBoop } from '~/hooks/useBoop'
-// This component is intended to be used with client directive 'client:load' so it skips SSR (theme will be undefined in server)
 
 const icons = {
 	sun: (
@@ -47,9 +46,14 @@ const icons = {
 	)
 }
 const ThemeToggle: FunctionalComponent = () => {
-	const [theme, setTheme] = useState(
-		document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-	)
+	const [theme, setTheme] = useState(() => {
+		if (typeof window === 'undefined') {
+			return
+		}
+		return document.documentElement.classList.contains('dark')
+			? 'dark'
+			: 'light'
+	})
 	const { style, trigger } = useBoop({ rotation: 20, timing: 200 })
 
 	useEffect(() => {
@@ -68,7 +72,7 @@ const ThemeToggle: FunctionalComponent = () => {
 	}
 
 	return (
-		<animated.span onClick={trigger} style={style}>
+		<animated.span onClick={trigger} style={style} class="flex items-center">
 			<button
 				className="animate-fadein"
 				onClick={toggleTheme}

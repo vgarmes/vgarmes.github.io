@@ -6,20 +6,20 @@ const posts = await getCollection('blog')
 ---
 
 <Layout title="Blog" description="Articles I have written">
-	<h1 class="text-5xl font-extrabold pb-6">Blog</h1>
-	<p class="font-bold pb-3">
+	<h1 class="pb-6 text-5xl font-extrabold">Blog</h1>
+	<p class="pb-3 font-bold">
 		{posts.length}
 		{posts.length === 1 ? 'article' : 'articles'}
 	</p>
 
 	<div
-		class="grid sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] gap-8 grid-cols-1"
+		class="grid grid-cols-1 gap-8 sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
 	>
 		{
 			posts.map(post => (
-				<article class="bg-white dark:bg-gray-800 p-8 rounded-lg dark:border dark:border-slate-400/20 shadow">
+				<article class="rounded-lg bg-white p-8 shadow dark:border dark:border-slate-400/20 dark:bg-gray-800">
 					<a href={`/blog/${post.slug}`} class="">
-						<h3 class="font-bold text-xl">{post.data.title}</h3>
+						<h3 class="text-xl font-bold">{post.data.title}</h3>
 						<time
 							datetime={post.data.pubDate.toISOString()}
 							class="text-sm text-gray-400"
@@ -29,7 +29,7 @@ const posts = await getCollection('blog')
 						<p class="mt-4">{post.data.description}</p>
 						<div class="group flex items-center gap-2">
 							<p class="font-bold">Read more</p>
-							<div class="text-pink-600 group-hover:translate-x-2 transition-transform">
+							<div class="text-pink-600 transition-transform group-hover:translate-x-2">
 								<ArrowRight />
 							</div>
 						</div>
