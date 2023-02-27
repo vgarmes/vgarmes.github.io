@@ -2,21 +2,23 @@
 import ThemeToggle from './ThemeToggle'
 ---
 
-<header class="fixed z-10 w-full backdrop-blur-md">
+<header
+	id="header"
+	class="fixed z-10 w-full backdrop-blur-md transition-transform"
+>
 	<div class="mx-auto max-w-7xl px-4 py-6 transition-all sm:px-16">
-		<nav class="flex items-center gap-3 text-base">
+		<nav class="flex items-center text-base">
 			<a href="/">
 				<h2
-					class="py-2 text-lg font-semibold tracking-tighter hover:text-pink-600"
+					class="py-2 pr-12 text-lg font-semibold tracking-tighter hover:text-pink-600"
 				>
 					{/*icon */}
 					Victor Garcia
 				</h2>
 			</a>
-
-			<div class="flex-1"></div>
-			<div class="hidden items-center gap-6 md:flex">
-				<a href="/blog" class="font-semibold">Blog</a>
+			<div class="hidden flex-1 items-center gap-3 md:flex">
+				<a href="/blog" class="font-semibold hover:text-pink-600">Blog</a>
+				<a href="/blog" class="font-semibold hover:text-pink-600">Projects</a>
 			</div>
 			<div>
 				<ThemeToggle client:only="preact" />
@@ -24,3 +26,37 @@ import ThemeToggle from './ThemeToggle'
 		</nav>
 	</div>
 </header>
+<script>
+	const header = document.getElementById('header')
+	const threshold = 0
+	let lastScrollY = window.scrollY
+	let scrolledToTop = true
+	let timeout = false
+
+	const updateScrollDir = () => {
+		const scrollY = window.scrollY
+		scrolledToTop = scrollY < 50
+
+		if (Math.abs(scrollY - lastScrollY) < threshold || scrolledToTop) {
+			return
+		}
+		if (scrollY > lastScrollY) {
+			header!.style.transform = 'translateY(-100px)'
+		} else {
+			header!.style.transform = 'translateY(0)'
+		}
+		lastScrollY = scrollY > 0 ? scrollY : 0
+	}
+
+	const throttledHandleScroll = () => {
+		if (!timeout) {
+			timeout = true
+			window.setTimeout(() => {
+				timeout = false
+				updateScrollDir()
+			}, 100)
+		}
+	}
+
+	window.addEventListener('scroll', throttledHandleScroll)
+</script>
