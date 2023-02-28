@@ -6,7 +6,7 @@ import ThemeToggle from './ThemeToggle'
 	id="header"
 	class="fixed z-10 w-full backdrop-blur-md transition-transform"
 >
-	<div class="mx-auto max-w-7xl px-4 py-6 transition-all sm:px-16">
+	<div class="mx-auto max-w-7xl px-4 py-2 transition-all sm:px-16">
 		<nav class="flex items-center text-base">
 			<a href="/">
 				<h2
@@ -26,37 +26,3 @@ import ThemeToggle from './ThemeToggle'
 		</nav>
 	</div>
 </header>
-<script>
-	const header = document.getElementById('header')
-	const threshold = 0
-	let lastScrollY = window.scrollY
-	let scrolledToTop = true
-	let timeout = false
-
-	const updateScrollDir = () => {
-		const scrollY = window.scrollY
-		scrolledToTop = scrollY < 50
-
-		if (Math.abs(scrollY - lastScrollY) < threshold || scrolledToTop) {
-			return
-		}
-		if (scrollY > lastScrollY) {
-			header!.style.transform = 'translateY(-100px)'
-		} else {
-			header!.style.transform = 'translateY(0)'
-		}
-		lastScrollY = scrollY > 0 ? scrollY : 0
-	}
-
-	const throttledHandleScroll = () => {
-		if (!timeout) {
-			timeout = true
-			window.setTimeout(() => {
-				timeout = false
-				updateScrollDir()
-			}, 100)
-		}
-	}
-
-	window.addEventListener('scroll', throttledHandleScroll)
-</script>
