@@ -75,6 +75,15 @@ declare module 'astro:content' {
   data: InferEntrySchema<"blog">
 },
 },
+"projects": {
+"first-project.md": {
+  id: "first-project.md",
+  slug: "first-project",
+  body: string,
+  collection: "projects",
+  data: InferEntrySchema<"projects">
+},
+},
 
 	};
 
