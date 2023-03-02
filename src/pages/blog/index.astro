@@ -2,6 +2,7 @@
 import Layout from '~/layouts/base.astro'
 import { getCollection } from 'astro:content'
 import ArrowRight from '~/components/icons/ArrowRight.astro'
+import { lengthToReadingTime } from '~/utils/helpers'
 const posts = await getCollection('blog')
 ---
 
@@ -17,8 +18,8 @@ const posts = await getCollection('blog')
 	>
 		{
 			posts.map(post => (
-				<article class="group rounded-lg bg-white p-8 shadow transition-transform hover:-translate-y-2 hover:shadow-md dark:border dark:border-slate-400/20 dark:bg-gray-800">
-					<a href={`/blog/${post.slug}`} class="">
+				<a href={`/blog/${post.slug}`} class="">
+					<article class="rounded-lg bg-white p-8 shadow transition-transform hover:scale-105 hover:shadow-md dark:border dark:border-slate-400/20 dark:bg-gray-800">
 						<h3 class="text-xl font-bold">{post.data.title}</h3>
 						<time
 							datetime={post.data.pubDate.toISOString()}
@@ -27,14 +28,17 @@ const posts = await getCollection('blog')
 							{post.data.pubDate.toDateString()}
 						</time>
 						<p class="mt-4">{post.data.description}</p>
-						<div class="flex items-center gap-2">
-							<p class="font-bold">Read more</p>
-							<div class="text-pink-600 transition-transform group-hover:translate-x-1">
-								<ArrowRight />
+						<div class="flex items-center justify-between">
+							<p>{lengthToReadingTime(post.body.length)}</p>
+							<div class="group flex items-center gap-2">
+								<p class="font-bold">Read more</p>
+								<div class="text-pink-600 transition-transform group-hover:translate-x-2">
+									<ArrowRight />
+								</div>
 							</div>
 						</div>
-					</a>
-				</article>
+					</article>
+				</a>
 			))
 		}
 	</div>
