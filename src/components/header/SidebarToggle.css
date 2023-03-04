@@ -1,0 +1,24 @@
+.line {
+	transition: y 300ms ease-in 300ms, rotate 300ms ease-in, opacity 0ms 300ms;
+	transform-origin: center;
+}
+
+#sidebar-toggle[aria-expanded='true'] .line {
+	transition: y 300ms ease-in, rotate 300ms ease-in 300ms, opacity 0ms 300ms;
+}
+
+#sidebar-toggle[aria-expanded='true'] :is(.line_top, .line_bottom) {
+	y: 45;
+}
+
+#sidebar-toggle[aria-expanded='true'] .line_top {
+	rotate: 45deg;
+}
+
+#sidebar-toggle[aria-expanded='true'] .line_middle {
+	opacity: 0;
+}
+
+#sidebar-toggle[aria-expanded='true'] .line_bottom {
+	rotate: -45deg;
+}
