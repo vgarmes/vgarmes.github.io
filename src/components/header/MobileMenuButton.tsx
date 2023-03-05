@@ -1,14 +1,23 @@
-import { useState } from 'preact/hooks'
-import './SidebarToggle.css'
+import { useEffect, useState } from 'preact/hooks'
+import './MobileMenuButton.css'
 
 const SidebarToggle = () => {
 	const [isOpen, setIsOpen] = useState(false)
 
+	useEffect(() => {
+		const body = document.getElementsByTagName('body')[0]
+		if (isOpen) {
+			body?.classList.add('mobile-toggle-on')
+		} else {
+			body?.classList.remove('mobile-toggle-on')
+		}
+	}, [isOpen])
+
 	return (
 		<button
 			id="sidebar-toggle"
-			class="inline-flex justify-center rounded-md border border-zinc-400 p-2 text-sm font-medium shadow-sm transition-all hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
-			aria-label="menu"
+			class="z-20 inline-flex justify-center rounded-md border border-zinc-400 p-2 text-sm font-medium shadow-sm transition-all hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+			aria-label={isOpen ? 'Close menu' : 'Open menu'}
 			type="button"
 			aria-haspopup="menu"
 			aria-expanded={isOpen}

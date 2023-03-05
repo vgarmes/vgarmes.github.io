@@ -1,0 +1,57 @@
+<style is:global>
+	.mobile-toggle-on {
+		overflow: hidden;
+	}
+	#mobile-menu {
+		display: none;
+		pointer-events: none;
+	}
+	#mobile-menu > button {
+		opacity: 0;
+		touch-action: none;
+	}
+	.mobile-toggle-on #mobile-menu > button {
+		opacity: 1;
+		touch-action: auto;
+	}
+	.mobile-toggle-on #mobile-menu {
+		display: block;
+		pointer-events: auto;
+	}
+	.mobile-toggle-on #header {
+		@apply bg-transparent backdrop-blur-none;
+	}
+</style>
+<div id="mobile-menu" class="fixed inset-0 z-10 overflow-hidden">
+	<button
+		id="menu-bg-button"
+		aria-hidden="true"
+		tabindex="-1"
+		class="absolute inset-0 h-full w-full bg-gray-900/80 backdrop-blur-md"
+	></button>
+	<nav
+		aria-label="mobile navigation"
+		class="absolute left-0 bottom-[100px] flex h-3/4 w-full flex-col items-center justify-between px-4 pt-8 sm:px-16"
+	>
+		<div class="flex w-full flex-col items-center gap-6">
+			<a
+				href="/blog"
+				tabindex="0"
+				class="text-3xl font-bold hover:text-pink-600">Blog</a
+			>
+			<a
+				href="/projects"
+				tabindex="0"
+				class="text-3xl font-bold hover:text-pink-600">Projects</a
+			>
+		</div>
+	</nav>
+</div>
+<script>
+	const button = document.getElementById('menu-bg-button')
+	const body = document.getElementsByTagName('body')[0]
+	function handleButtonClick() {
+		body.classList.remove('mobile-toggle-on')
+	}
+	button!.addEventListener('click', handleButtonClick)
+</script>
