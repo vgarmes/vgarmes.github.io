@@ -4,7 +4,7 @@
 }
 
 #sidebar-toggle[aria-expanded='true'] .line {
-	transition: y 300ms ease-in, rotate 300ms ease-in 300ms, opacity 0ms 300ms;
+	transition: y 300ms ease-in, transform 300ms ease-in 300ms, opacity 0ms 300ms;
 }
 
 #sidebar-toggle[aria-expanded='true'] :is(.line_top, .line_bottom) {
@@ -12,7 +12,7 @@
 }
 
 #sidebar-toggle[aria-expanded='true'] .line_top {
-	rotate: 45deg;
+	transform: rotate(45deg);
 }
 
 #sidebar-toggle[aria-expanded='true'] .line_middle {
@@ -20,5 +20,5 @@
 }
 
 #sidebar-toggle[aria-expanded='true'] .line_bottom {
-	rotate: -45deg;
+	transform: rotate(-45deg);
 }
