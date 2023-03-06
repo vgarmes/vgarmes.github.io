@@ -16,7 +16,7 @@ const SidebarToggle = () => {
 	return (
 		<button
 			id="sidebar-toggle"
-			class="z-20 inline-flex justify-center rounded-md border border-zinc-400 p-2 text-sm font-medium shadow-sm transition-all hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+			class="z-20 inline-flex justify-center rounded-md border border-zinc-400 p-2 text-sm font-medium shadow-sm transition-all hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
 			aria-label={isOpen ? 'Close menu' : 'Open menu'}
 			type="button"
 			aria-haspopup="menu"

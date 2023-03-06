@@ -27,7 +27,7 @@
 		id="menu-bg-button"
 		aria-hidden="true"
 		tabindex="-1"
-		class="absolute inset-0 h-full w-full bg-gray-900/80 backdrop-blur-md transition-opacity"
+		class="absolute inset-0 h-full w-full bg-slate-100 backdrop-blur-md dark:bg-gray-900/80"
 	></button>
 	<nav
 		aria-label="mobile navigation"
@@ -53,5 +53,6 @@
 	function handleButtonClick() {
 		body.classList.remove('mobile-toggle-on')
 	}
+
 	button!.addEventListener('click', handleButtonClick)
 </script>
