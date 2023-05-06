@@ -1,0 +1,44 @@
+---
+layout: ../../layouts/post.astro
+title: 'Spice up your macOS shell with Fish'
+pubDate: 2022-07-01
+description: 'This is the first post of my new Astro blog.'
+image:
+    url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg' 
+    alt: 'The Astro logo with the word One.'
+tags: ["shell", "fish", "macos"]
+draft: false
+---
+iTerm2
+
+Install Fish using Brew:
+`brew install fish`
+
+Install Fisher
+
+Install Tide theme:
+`url -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher`
+
+Change font and font size
+
+VScode:
+osx exec: iTerm.app
+
+Bonus for Node users
+Once I tried to install the dependencies in one of my node projects, the following error popped up:
+`node command not found`
+To my surpise, it turns out that [`nvm` does not support Fish](https://github.com/nvm-sh/nvm#fish). In fact, `nvm`isn't even in the path. In order to solve this I used one of the alternatives mentioned in `nvm` docs which is [Bass](https://github.com/edc/bass). Bass makes it possible to use bash utilities in fish shell by capturing what environment variables are modified by the utility of interest (in this case `nvm`), and replaying the changes in fish.
+
+To install Bass with Fisher:
+`fisher install edc/bass`
+
+Then create the file `~/.config/fish/functions/nvm.fish` with the following function to be able to call `nvm`:
+```
+function nvm
+  bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
+end
+```
+
+Finally, you will need to switch to a specific node version (assuming you already have node installed). You can list all your installed versions with `nvm ls` and select one using `nvm use` as usual.
+
+
