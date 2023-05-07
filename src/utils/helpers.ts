@@ -5,3 +5,10 @@ export function lengthToReadingTime(length: number) {
 
 	return `${new Array(cups || 1).fill('☕️').join('')} ${minutes} min read`
 }
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+	dateStyle: 'full'
+})
+export function formatDate(date: string) {
+	return dateFormatter.format(new Date(date))
+}

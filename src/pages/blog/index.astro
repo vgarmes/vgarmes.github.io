@@ -3,7 +3,9 @@ import Layout from '~/layouts/base.astro'
 import { getCollection } from 'astro:content'
 import ArrowRight from '~/components/icons/ArrowRight.astro'
 import { lengthToReadingTime } from '~/utils/helpers'
-const posts = await getCollection('blog')
+const posts = await getCollection('blog', ({ data }) => {
+	return data.draft !== true
+})
 ---
 
 <Layout title="Blog" description="Articles I have written">

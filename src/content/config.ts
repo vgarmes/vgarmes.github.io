@@ -9,7 +9,7 @@ const blogCollection = defineCollection({
 		description: z.string(),
 		tags: z.array(z.string()),
 		image: z.object({ url: z.string(), alt: z.string() }).optional(),
-		draft: z.boolean()
+		draft: z.boolean().optional().default(false)
 	})
 })
 
@@ -20,7 +20,7 @@ const projectCollection = defineCollection({
 		tags: z.array(z.string()),
 		image: z.object({ url: z.string(), alt: z.string() }).optional(),
 		url: z.string(),
-		repository: z.string()
+		githubUrl: z.string()
 	})
 })
 // 3. Export a single `collections` object to register your collection(s)

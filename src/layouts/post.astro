@@ -1,6 +1,7 @@
 ---
 import type { MarkdownLayoutProps } from 'astro'
 import BaseLayout from './base.astro'
+import { formatDate } from '~/utils/helpers'
 
 // eslint-disable-next-line no-unused-vars
 type Props = MarkdownLayoutProps<{
@@ -10,9 +11,7 @@ type Props = MarkdownLayoutProps<{
 }>
 
 const { frontmatter } = Astro.props
-const date = new Intl.DateTimeFormat('en-US', {
-	dateStyle: 'full'
-}).format(new Date(frontmatter.pubDate))
+const date = formatDate(frontmatter.pubDate)
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
@@ -23,3 +22,10 @@ const date = new Intl.DateTimeFormat('en-US', {
 		<slot />
 	</article>
 </BaseLayout>
+
+<style is:global>
+	pre {
+		padding: 16px;
+		border-radius: 6px;
+	}
+</style>

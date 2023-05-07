@@ -112,13 +112,13 @@ declare module 'astro:content' {
 
 	const entryMap: {
 		"blog": {
-"fish-shell.md": {
-  id: "fish-shell.md",
+"fish-shell.mdx": {
+  id: "fish-shell.mdx",
   slug: "fish-shell",
   body: string,
   collection: "blog",
   data: InferEntrySchema<"blog">
-} & { render(): Render[".md"] },
+} & { render(): Render[".mdx"] },
 "hello-world.md": {
   id: "hello-world.md",
   slug: "hello-world",

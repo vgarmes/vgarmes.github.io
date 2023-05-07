@@ -4,15 +4,23 @@ title: 'Spice up your macOS shell with Fish'
 pubDate: 2022-07-01
 description: 'This is the first post of my new Astro blog.'
 image:
-    url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg' 
-    alt: 'The Astro logo with the word One.'
-tags: ["shell", "fish", "macos"]
+  url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg'
+  alt: 'The Astro logo with the word One.'
+tags: ['shell', 'fish', 'macos']
 draft: false
 ---
+
+import { Code } from 'astro/components'
+
 iTerm2
 
+<Code code={`const foo = 'bar';`} lang="js" />
+
 Install Fish using Brew:
-`brew install fish`
+
+```shell
+brew install fish
+```
 
 Install Fisher
 
@@ -33,6 +41,7 @@ To install Bass with Fisher:
 `fisher install edc/bass`
 
 Then create the file `~/.config/fish/functions/nvm.fish` with the following function to be able to call `nvm`:
+
 ```
 function nvm
   bass source ~/.nvm/nvm.sh --no-use ';' nvm $argv
@@ -40,5 +49,3 @@ end
 ```
 
 Finally, you will need to switch to a specific node version (assuming you already have node installed). You can list all your installed versions with `nvm ls` and select one using `nvm use` as usual.
-
-
