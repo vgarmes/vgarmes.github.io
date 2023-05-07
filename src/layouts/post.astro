@@ -15,7 +15,7 @@ const date = formatDate(frontmatter.pubDate)
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-	<article>
+	<article class="prose dark:prose-invert">
 		<h1 class="text-3xl font-extrabold">{frontmatter.title}</h1>
 		<p>{frontmatter.description}</p>
 		<p>Written on: {date}</p>
