@@ -14,7 +14,7 @@ function diveChildren(item: TocItem, depth: number): TocItem[] {
 }
 
 export default function generateToc(headings: MarkdownHeading[]) {
-	const mainHeadings = headings.filter(({ depth }) => depth > 1 && depth < 3)
+	const mainHeadings = headings.filter(({ depth }) => depth > 1 && depth < 4)
 	const toc: Array<TocItem> = []
 
 	for (const heading of mainHeadings) {
@@ -36,4 +36,6 @@ export default function generateToc(headings: MarkdownHeading[]) {
 			}
 		}
 	}
+
+	return toc
 }

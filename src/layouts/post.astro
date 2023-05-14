@@ -1,7 +1,9 @@
 ---
 import type { MarkdownLayoutProps } from 'astro'
 import BaseLayout from './base.astro'
-import { formatDate } from '~/utils/helpers'
+import { formatDate } from '~/util/helpers'
+import TableOfContents from '~/components/blog/TableOfContents'
+import generateToc from '~/util/generateToc'
 
 // eslint-disable-next-line no-unused-vars
 type Props = MarkdownLayoutProps<{
@@ -10,22 +12,20 @@ type Props = MarkdownLayoutProps<{
 	pubDate: string
 }>
 
-const { frontmatter } = Astro.props
+const { frontmatter, headings } = Astro.props
 const date = formatDate(frontmatter.pubDate)
+const toc = generateToc(headings)
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-	<article class="prose w-full dark:prose-invert">
+	<TableOfContents client:visible toc={toc} />
+	<article
+		id="blog-post"
+		class="prose mx-auto w-full prose-pre:rounded-md prose-pre:p-4 prose-pre:shadow dark:prose-invert"
+	>
 		<h1 class="text-3xl font-extrabold">{frontmatter.title}</h1>
 		<p>{frontmatter.description}</p>
 		<p>Written on: {date}</p>
 		<slot />
 	</article>
 </BaseLayout>
-
-<style is:global>
-	pre {
-		padding: 16px;
-		border-radius: 6px;
-	}
-</style>
