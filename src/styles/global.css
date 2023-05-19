@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
 	scrollbar-color: hsla(250, 14%, 80%, 1) transparent;
 }
@@ -16,6 +20,7 @@
 
 html {
 	height: 100%;
+	scroll-behavior: smooth;
 }
 
 body {

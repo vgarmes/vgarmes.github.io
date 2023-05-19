@@ -18,14 +18,18 @@ const toc = generateToc(headings)
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-	<TableOfContents client:visible toc={toc} />
-	<article
-		id="blog-post"
-		class="prose mx-auto w-full prose-pre:rounded-md prose-pre:p-4 prose-pre:shadow dark:prose-invert"
-	>
-		<h1 class="text-3xl font-extrabold">{frontmatter.title}</h1>
-		<p>{frontmatter.description}</p>
-		<p>Written on: {date}</p>
-		<slot />
-	</article>
+	<div class="flex w-full items-start justify-center">
+		<article id="blog-post" class="max-w-full flex-shrink-0">
+			<header class="pb-16">
+				<h1 class="pb-6 text-3xl font-extrabold">{frontmatter.title}</h1>
+				<p class="text-sm">{date}</p>
+			</header>
+			<div
+				class="prose prose-headings:scroll-mt-16 prose-pre:rounded-md prose-pre:p-4 prose-pre:shadow dark:prose-invert"
+			>
+				<slot />
+			</div>
+		</article>
+		<TableOfContents client:load toc={toc} />
+	</div>
 </BaseLayout>

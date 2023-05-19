@@ -9,4 +9,11 @@ image:
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
+lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
+
+```js
+console.log
+```
+
+## adgdagdag gda dgdg dagdadgdag f fshfs 
 

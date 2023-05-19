@@ -1,8 +1,7 @@
 ---
 import Layout from '~/layouts/base.astro'
 import { getCollection } from 'astro:content'
-import ArrowRight from '~/components/icons/ArrowRight.astro'
-import { lengthToReadingTime } from '~/utils/helpers'
+import { lengthToReadingTime } from '~/util/helpers'
 const posts = await getCollection('blog', ({ data }) => {
 	return data.draft !== true
 })
@@ -20,27 +19,50 @@ const posts = await getCollection('blog', ({ data }) => {
 	>
 		{
 			posts.map(post => (
-				<a href={`/blog/${post.slug}`} class="">
-					<article class="rounded-lg bg-white p-8 shadow transition-transform hover:scale-105 hover:shadow-md dark:border dark:border-zinc-700 dark:bg-gray-800">
-						<h3 class="text-xl font-bold">{post.data.title}</h3>
+				<article class="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50">
+					<h3 class="pb-3 text-xl font-bold leading-6 text-slate-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-400">
+						<a href={`/blog/${post.slug}`}>
+							<span class="absolute inset-0 rounded-3xl" />
+							{post.data.title}
+							<span class="inline-block pl-1 align-bottom">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-5 w-5 text-pink-400 opacity-0 group-hover:opacity-100"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
+									/>
+								</svg>
+							</span>
+						</a>
+					</h3>
+
+					<div class="flex items-center gap-6">
 						<time
 							datetime={post.data.pubDate.toISOString()}
-							class="text-sm text-gray-400"
+							class="text-sm text-gray-500 dark:text-gray-400"
 						>
-							{post.data.pubDate.toDateString()}
+							{new Intl.DateTimeFormat('en-US', {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							}).format(post.data.pubDate)}
 						</time>
-						<p class="mt-4">{post.data.description}</p>
-						<div class="flex items-center justify-between">
-							<p>{lengthToReadingTime(post.body.length)}</p>
-							<div class="group flex items-center gap-2">
-								<p class="font-bold">Read more</p>
-								<div class="text-pink-600 transition-transform group-hover:translate-x-2">
-									<ArrowRight />
-								</div>
-							</div>
-						</div>
-					</article>
-				</a>
+						<p class="text-sm text-gray-700 dark:text-gray-300">
+							{lengthToReadingTime(post.body.length)}
+						</p>
+					</div>
+
+					<p class="mt-4 text-gray-700 dark:text-gray-300">
+						{post.data.description}
+					</p>
+				</article>
 			))
 		}
 	</div>
