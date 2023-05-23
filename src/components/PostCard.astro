@@ -1,0 +1,63 @@
+---
+import { lengthToReadingTime } from '~/util/helpers'
+
+interface Props {
+	title: string
+	description: string
+	slug: string
+	pubDate: Date
+	length: number
+}
+
+const { title, description, slug, pubDate, length } = Astro.props
+---
+
+<article
+	class="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
+>
+	<h3
+		class="pb-3 text-xl font-bold leading-6 text-slate-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-400"
+	>
+		<a href={`/blog/${slug}`}>
+			<span class="absolute inset-0 rounded-3xl"></span>
+			{title}
+			<span class="inline-block pl-1 align-bottom">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					class="h-5 w-5 text-pink-400 opacity-0 group-hover:opacity-100"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
+				</svg>
+			</span>
+		</a>
+	</h3>
+
+	<div class="flex items-center gap-6">
+		<time
+			datetime={pubDate.toISOString()}
+			class="text-sm text-gray-500 dark:text-gray-400"
+		>
+			{
+				new Intl.DateTimeFormat('en-US', {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric'
+				}).format(pubDate)
+			}
+		</time>
+		<p class="text-sm text-gray-700 dark:text-gray-300">
+			{lengthToReadingTime(length)}
+		</p>
+	</div>
+
+	<p class="mt-4 text-gray-700 dark:text-gray-300">
+		{description}
+	</p>
+</article>
