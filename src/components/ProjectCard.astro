@@ -1,0 +1,38 @@
+---
+const { href, title, description, thumbnail } = Astro.props
+---
+
+<li
+	class="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
+>
+	<div
+		class="relative aspect-[672/494] transform overflow-hidden rounded-md bg-slate-200 shadow-[0_2px_8px_rgba(15,23,42,0.08)] dark:bg-slate-700"
+	>
+		<img
+			alt="project-pic"
+			fetch-priority="high"
+			width="672"
+			height="494"
+			decoding="async"
+			data-nimg="1"
+			class="absolute inset-0 h-full w-full"
+			style="color:transparent"
+			src={thumbnail}
+		/>
+	</div>
+	<div class="mt-6 flex flex-wrap items-center">
+		<h2
+			class="text-sm font-semibold leading-6 text-slate-900 group-hover:text-sky-500 dark:text-white dark:group-hover:text-sky-400"
+		>
+			<a href={href}>
+				<span class="absolute inset-0 rounded-3xl"></span>
+				{title}
+			</a>
+		</h2>
+		<p
+			class="w-full flex-none text-[0.8125rem] leading-6 text-slate-500 dark:text-slate-400"
+		>
+			{description}
+		</p>
+	</div>
+</li>
