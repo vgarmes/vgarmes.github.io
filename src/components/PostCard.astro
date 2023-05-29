@@ -13,10 +13,10 @@ const { title, description, slug, pubDate, length } = Astro.props
 ---
 
 <article
-	class="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50"
+	class="dark:highlight-white/5 group relative rounded-3xl bg-zinc-50 p-6 hover:bg-zinc-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/50"
 >
 	<h3
-		class="pb-3 text-xl font-bold leading-6 text-slate-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-400"
+		class="pb-3 text-xl font-bold leading-6 text-zinc-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-400"
 	>
 		<a href={`/blog/${slug}`}>
 			<span class="absolute inset-0 rounded-3xl"></span>
@@ -42,7 +42,7 @@ const { title, description, slug, pubDate, length } = Astro.props
 	<div class="flex items-center gap-6">
 		<time
 			datetime={pubDate.toISOString()}
-			class="text-sm text-gray-500 dark:text-gray-400"
+			class="text-sm text-zinc-500 dark:text-zinc-400"
 		>
 			{
 				new Intl.DateTimeFormat('en-US', {
@@ -52,12 +52,12 @@ const { title, description, slug, pubDate, length } = Astro.props
 				}).format(pubDate)
 			}
 		</time>
-		<p class="text-sm text-gray-700 dark:text-gray-300">
+		<p class="text-sm text-zinc-700 dark:text-zinc-300">
 			{lengthToReadingTime(length)}
 		</p>
 	</div>
 
-	<p class="mt-4 text-gray-700 dark:text-gray-300">
+	<p class="mt-4 text-zinc-700 dark:text-zinc-300">
 		{description}
 	</p>
 </article>

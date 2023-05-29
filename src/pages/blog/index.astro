@@ -1,7 +1,7 @@
 ---
 import Layout from '~/layouts/base.astro'
 import { getCollection } from 'astro:content'
-import { lengthToReadingTime } from '~/util/helpers'
+import PostCard from '~/components/PostCard.astro'
 const posts = (
 	await getCollection('blog', ({ data }) => {
 		return data.draft !== true
@@ -22,51 +22,14 @@ const posts = (
 		class="grid grid-cols-1 gap-8 sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
 	>
 		{
-			posts.map(post => (
-				<article class="dark:highlight-white/5 group relative rounded-3xl bg-slate-50 p-6 hover:bg-slate-100 dark:bg-slate-800/80 dark:hover:bg-slate-700/50">
-					<h3 class="pb-3 text-xl font-bold leading-6 text-slate-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-400">
-						<a href={`/blog/${post.slug}`}>
-							<span class="absolute inset-0 rounded-3xl" />
-							{post.data.title}
-							<span class="inline-block pl-1 align-bottom">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke-width="1.5"
-									stroke="currentColor"
-									class="h-5 w-5 text-pink-400 opacity-0 group-hover:opacity-100"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-									/>
-								</svg>
-							</span>
-						</a>
-					</h3>
-
-					<div class="flex items-center gap-6">
-						<time
-							datetime={post.data.pubDate.toISOString()}
-							class="text-sm text-gray-500 dark:text-gray-400"
-						>
-							{new Intl.DateTimeFormat('en-US', {
-								year: 'numeric',
-								month: 'long',
-								day: 'numeric'
-							}).format(post.data.pubDate)}
-						</time>
-						<p class="text-sm text-gray-700 dark:text-gray-300">
-							{lengthToReadingTime(post.body.length)}
-						</p>
-					</div>
-
-					<p class="mt-4 text-gray-700 dark:text-gray-300">
-						{post.data.description}
-					</p>
-				</article>
+			posts.map(({ data, slug, body }) => (
+				<PostCard
+					title={data.title}
+					description={data.description}
+					slug={slug}
+					length={body.length}
+					pubDate={data.pubDate}
+				/>
 			))
 		}
 	</div>
