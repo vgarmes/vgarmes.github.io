@@ -69,7 +69,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 								<a
 									className={`'block py-2 leading-normal ${
 										currentHeading.slug === tocItem.slug
-											? 'font-bold text-pink-600 dark:text-pink-400'
+											? 'font-bold text-pink-600 dark:text-pink-500'
 											: 'font-semibold opacity-70 hover:opacity-100'
 									}`}
 									href={`#${tocItem.slug}`}
