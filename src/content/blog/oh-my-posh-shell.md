@@ -9,11 +9,14 @@ image:
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
-lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum 
 
-```js
-console.log
-```
+# Install Powershell and configure Windows Terminal
+The easiest way to get Powershell running in your computer is installing it directly from the Microsoft Store.
 
-## adgdagdag gda dgdg dagdadgdag f fshfs 
+Once you have Powershell installed, we need to change Windows Terminal's default shell to Powershell
+
+# Fonts
+Go to nerdfonts.com and find a font of your preference. I personally installed Hack.
+
+
 

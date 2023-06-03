@@ -1,23 +1,43 @@
-<section class="min-h-screen">
-	<h2 class="w-full pb-5 text-5xl font-extrabold leading-tight md:w-1/2">
-		I like creating <span id="about">great web experiences</span> and write about
-		it.
+<section id="about" class="mb-32 flex w-full flex-col justify-center gap-20">
+	<h2 class="w-full pb-5 text-5xl font-extrabold leading-tight md:w-2/3">
+		Engineer who loves creating <span id="highlight">great web experiences</span
+		> and trying bleeding edge technologies
+	</h2>
+	<h2
+		class="w-full self-end pb-5 text-right text-5xl font-extrabold leading-tight md:w-2/3"
+	>
+		When not developing, I also like <span id="underline"
+			>gaming, running and photography</span
+		>.
 	</h2>
 </section>
 <script>
-	import { annotate } from 'rough-notation'
-	const e = document.getElementById('about') as HTMLSpanElement
+	import { annotate, annotationGroup } from 'rough-notation'
+
+	import type { RoughAnnotation } from 'rough-notation/lib/model'
+	const container = document.getElementById('about') as HTMLDivElement
+	const e1 = document.getElementById('highlight') as HTMLSpanElement
+	const e2 = document.getElementById('underline') as HTMLSpanElement
+	const color = '#db2777'
+
+	const a1 = annotate(e1, {
+		type: 'highlight',
+		multiline: true,
+		color: color
+	})
+	const a2 = annotate(e2, {
+		type: 'underline',
+		multiline: true,
+		color: color,
+		strokeWidth: 2
+	})
+	const ag = annotationGroup([a1, a2])
+
 	const observer = new IntersectionObserver(
 		entries => {
 			entries.forEach(item => {
-				const annotation = annotate(e, {
-					type: 'underline',
-					multiline: true,
-					color: '#db2777',
-					strokeWidth: 2
-				})
 				if (item.isIntersecting) {
-					annotation.show()
+					ag.show()
 					observer.unobserve(item.target)
 				}
 			})
@@ -25,8 +45,8 @@
 		{
 			root: null,
 			rootMargin: '0px',
-			threshold: 1.0
+			threshold: 0.5
 		}
 	)
-	observer.observe(e)
+	observer.observe(container)
 </script>
