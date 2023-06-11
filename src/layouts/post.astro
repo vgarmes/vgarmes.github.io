@@ -18,9 +18,9 @@ const toc = generateToc(headings)
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.description}>
-	<div class="flex w-full items-start justify-center">
+	<div class="flex w-full items-start justify-center pt-6">
 		<article id="blog-post" class="max-w-full flex-shrink-0">
-			<header class="pb-16">
+			<header class="max-w-prose pb-16">
 				<h1 class="pb-6 text-3xl font-extrabold">{frontmatter.title}</h1>
 				<p class="text-sm">{date}</p>
 			</header>

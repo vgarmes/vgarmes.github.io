@@ -51,15 +51,15 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	return (
 		<aside
 			role="navigation"
-			className={`sticky top-0 right-0 hidden flex-1 pt-16 lg:block`}
+			className={`sticky top-0 right-0 hidden flex-1 pt-16 pl-12 lg:block`}
 		>
 			{toc.length > 0 && (
-				<h2 className="mb-3 w-full px-4 pl-8 text-sm font-bold uppercase tracking-wide lg:mb-3">
+				<h2 className="mb-3 w-full text-sm font-bold uppercase tracking-wide lg:mb-3">
 					Table of contents
 				</h2>
 			)}
 			<div
-				className="h-full max-h-[calc(100vh-7.5rem)] overflow-y-auto pl-8"
+				className="h-full max-h-[calc(100vh-7.5rem)] overflow-y-auto"
 				style={{ overscrollBehavior: 'contain' }}
 			>
 				<ul className="space-y-2 pb-16">

@@ -35,7 +35,8 @@ Then you can edit your profile using your preferred text editor which in my case
 nvim $PROFILE
 ```
 
-However, in order to have more control over my configuration files, I prefer to create a separate file that will be later imported from `$PROFILE`. In my case I created the following directory in home directory (`Users/[username]`):
+## Optional
+In order to have more control over your configuration files, it's preferable to create a separate file that will be later imported from `$PROFILE`. In my case I created the following directory in home directory (`Users/[username]`):
 
 ```shell
 mkdir .config/powershell
@@ -47,9 +48,81 @@ Then `cd` into this directory and create and edit a Powershell user profile:
 nvim user_profile.ps1
 ```
 
-Then we need to import this file 
+Then we need to import this file from `$PROFILE`:
 
+```shell
+nvim $PROFILE
+```
 
+Inside the profile import your external configuration file:
 
+```ps1
+. $env:USERPROFILE\.config\powershell\user_profile.ps1
+```
 
+## Install posh-git
+The first module we can start installing is posh-git. This module integrates Git and Powershell by providing Git status summary information that can be displayed in the PowerShell prompt.
 
+posh-git can be installed from the Powershell gallery:
+```ps1
+Install-Module posh-git -Scope CurrentUser -Force
+```
+
+Tip: if this is the first time you use Powershell, a useful command to see at any time the modules you have installed is:
+```ps1
+Get-InstalledModule
+```
+
+## Install oh-my-posh
+```shell
+winget install JanDeDobbeleer.OhMyPosh -s winget
+```
+
+Tip: if you need to update oh-my-posh, simply run the command:
+```shell
+winget upgrade JanDeDobbeleer.OhMyPosh -s winget
+```
+
+After this step you will need to restart the terminal and then initialize oh-my-posh in your Powershell profile:
+
+```
+oh-my-posh init pwsh | Invoke-Expression
+```
+
+## Add a theme to oh-my-posh
+In order to use a theme, you can add the following command to your Powershell script, replacing `POSH_THEMES_PATH` by your theme of preference:
+
+```ps1
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH/jandedobbeleer.omp.json" | Invoke-Expression
+```
+
+## Install icons:
+```ps1
+Install-Module -Name Terminal-Icons -Repository PSGallery
+```
+
+Add import it from your Powershell profile:
+```ps1
+Import-Module -Name Terminal-Icons
+```
+
+## Install z (directory jumping)
+```ps1
+Install-Module -Name z
+```
+
+## Configure PSreadline
+PSreadline is already installed with Powershell by default
+Predictive IntelliSense is disabled by default. To enable predictions, just run the following command:
+```ps1
+Set-PSReadLineOption -PredictionSource History
+```
+
+## Bonus: delete git branches by pattern
+```ps1
+function delete-branches ($pattern) {
+	git branch | Select-String -Pattern "$pattern" | ForEach-Object {
+		git branch -D $_.ToString().Trim()
+	}
+}
+```
