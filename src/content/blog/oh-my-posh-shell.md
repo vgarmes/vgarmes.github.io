@@ -2,16 +2,26 @@
 layout: ../../layouts/post.astro
 title: 'Set up a delightful PowerShell prompt with Oh My Posh'
 pubDate: 2023-05-06
-description: 'This is the first post of my new Astro blog.'
+description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
 image:
-    url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg' 
-    alt: 'The Astro logo with the word One.'
+    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1686473656/blog/oh-my-posh_nbgxup.png' 
+    alt: 'Custom command prompt with Powershell'
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
+Recently, on the lookout for a quick win to boost my development productivity, I customized the command prompt on my Windows machine. With just some small tweaks in Windows Terminal and Powershell, I was able to quickly create a personalized workspace that not only looks sleek but also helps me develop more efficiently.
+
+In this step-by-step guide I explain the process I followed to customize the command prompt. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which I'm always impressed by when I watch his videos. Some of the main features of this setup include:
+
+1. Visually appealing color themes and fonts.
+2. Git branch information displayed in the prompt
+3. 
+
+![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1686473656/blog/oh-my-posh_nbgxup.png)
+---
 
 ## Install Powershell and configure Windows Terminal
-The easiest way to get Powershell running in your computer is installing it directly from the Microsoft Store.
+The easiest way to get Powershell running in your machine is installing it directly from the Microsoft Store.
 
 Once you have Powershell installed, we need to change Windows Terminal's default shell to Powershell
 
