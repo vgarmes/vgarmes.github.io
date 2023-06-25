@@ -4,7 +4,7 @@ title: 'Set up a delightful PowerShell prompt with Oh My Posh'
 pubDate: 2023-05-06
 description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1686473656/blog/oh-my-posh_nbgxup.png' 
+    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp' 
     alt: 'Custom command prompt with Powershell'
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
@@ -17,7 +17,7 @@ In this step-by-step guide I explain the process I followed to customize the com
 2. Git branch information displayed in the prompt
 3. 
 
-![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1686473656/blog/oh-my-posh_nbgxup.png)
+![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
 ---
 
 ## Install Powershell and configure Windows Terminal
