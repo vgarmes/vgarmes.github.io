@@ -10,6 +10,9 @@ type Props = MarkdownLayoutProps<{
 	title: string
 	description: string
 	pubDate: string
+	image: {
+		url: string
+	}
 }>
 
 const { frontmatter, headings } = Astro.props
@@ -17,7 +20,11 @@ const date = formatDate(frontmatter.pubDate)
 const toc = generateToc(headings)
 ---
 
-<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+<BaseLayout
+	title={frontmatter.title}
+	description={frontmatter.description}
+	image={frontmatter.image.url}
+>
 	<div class="flex w-full items-start justify-center pt-12">
 		<article id="blog-post" class="max-w-full flex-shrink-0">
 			<header class="max-w-prose pb-16">
