@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/post.astro
 title: 'Set up a delightful PowerShell prompt with Oh My Posh'
-pubDate: 2023-05-06
+pubDate: 2023-06-26
 description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp' 
@@ -11,7 +11,11 @@ draft: false
 ---
 Recently, on the lookout for a quick win to boost my development productivity, I customized the command prompt on my Windows machine. With just a few small tweaks in Windows Terminal and PowerShell, I was able to quickly create a personalized workspace that not only looks sleek but also helps me develop more efficiently.
 
-In this step-by-step guide I explain the process I followed to do it. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which I'm always impressed by when I watch his videos. Some of the main features of this setup include:
+![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
+
+In this step-by-step guide I explain the process I followed to do it. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which I'm always impressed by when I watch his videos. 
+
+The main features of this setup include:
 
 1. Personalized color themes and fonts.
 2. Git branch information displayed in the prompt
@@ -20,15 +24,13 @@ In this step-by-step guide I explain the process I followed to do it. As a refer
 5. Directory jumping
 6. Custom functions
 
-![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
-
 ---
 
 ## Install Powershell and configure Windows Terminal
 
 The easiest way to get Powershell running in your machine is installing it directly from the Microsoft Store.
 
-Once you have Powershell installed, we need to change Windows Terminal's default shell to Powershell
+Once you have Powershell installed, change Windows Terminal's default shell to Powershell.
 
 ## Install a Nerd Font
 
@@ -42,7 +44,7 @@ Open the Windows Terminal **Settings**, select the Powershell profile and then t
 
 ## Change the color scheme
 
-Also, in **Appearance** tab, you can change the color scheme. Choose whichever you prefer. I used *One Half Dark*.
+In **Appearance** tab, you can also change the color scheme. I used *One Half Dark*, choose whichever you prefer. 
 
 Depending on your preferences, you might also want to make the background of your terminal translucent. For doing so, you can find the **Transparency** settings in the same tab. 
 
@@ -101,7 +103,7 @@ posh-git can be installed from the Powershell gallery:
 Install-Module posh-git -Scope CurrentUser -Force
 ```
 
-**Tip:**: A useful command to see the modules you have installed at any time is:
+**Tip:** A useful command to see the modules you have installed at any time is:
 ```ps1
 Get-InstalledModule
 ```
@@ -116,7 +118,7 @@ Oh My Posh can be installed using **winget**:
 winget install JanDeDobbeleer.OhMyPosh -s winget
 ```
 
-**Tip**: if you need to update Oh My Posh, simply run the command:
+**Tip:** if you need to update Oh My Posh, simply run the command:
 ```shell
 winget upgrade JanDeDobbeleer.OhMyPosh -s winget
 ```
@@ -134,15 +136,15 @@ In order to use a theme, you can add the following command to your Powershell sc
 Oh My Posh init pwsh --config "$env:POSH_THEMES_PATH/jandedobbeleer.omp.json" | Invoke-Expression
 ```
 
-## Install icons:
+## Install icons
 
-One of the first visual enhancement we can take advantage of by using Oh My Posh is having icons that represent the file type next to the file names when listing a directory because it allows us to quickly identify them. We can add the icons by installing **Terminal-Icons**:
+One of the first visual enhancement we can take advantage of by using Oh My Posh is having icons that represent the file type next to the file names when listing a directory. We can add the icons by installing **Terminal-Icons**:
 
 ```ps1
 Install-Module -Name Terminal-Icons -Repository PSGallery
 ```
 
-Add import it in your Powershell profile:
+And import it in your Powershell profile:
 ```ps1
 Import-Module -Name Terminal-Icons
 ```
@@ -165,7 +167,11 @@ Predictive IntelliSense is disabled by default. To enable predictions, just run 
 Set-PSReadLineOption -PredictionSource History
 ```
 
-## Bonus: delete git branches by pattern
+## Add custom functions
+Finally, Powershell also enables a really powerful feature which is easily adding custom functions using its scripting language.
+
+The options here are infinite. Just as an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that taking advantage of *cmdlets* (Powershell commands) is the following:
+
 ```ps1
 function delete-branches ($pattern) {
 	git branch | Select-String -Pattern "$pattern" | ForEach-Object {
