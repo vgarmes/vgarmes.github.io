@@ -28,11 +28,12 @@ const toc = generateToc(headings)
 	<div class="flex w-full items-start justify-center pt-12">
 		<article id="blog-post" class="max-w-full flex-shrink-0">
 			<header class="max-w-prose pb-16">
-				<h1 class="pb-6 text-3xl font-extrabold">{frontmatter.title}</h1>
+				<h1 id="overview" class="scroll-mt-16 pb-6 text-3xl font-extrabold">
+					{frontmatter.title}
+				</h1>
 				<p class="text-sm font-semibold text-zinc-300">{date}</p>
 			</header>
 			<div
-				id="article-content"
 				class="prose prose-zinc prose-headings:scroll-mt-16 prose-code:before:hidden prose-code:after:hidden prose-pre:rounded-md prose-pre:p-4 prose-pre:shadow prose-img:rounded-md dark:prose-invert"
 			>
 				<slot />

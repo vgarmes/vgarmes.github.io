@@ -36,7 +36,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 		)
 
 		document
-			.querySelectorAll('#article-content :is(h1,h2,h3)')
+			.querySelectorAll('article :is(h1,h2,h3)')
 			.forEach(h => headingsObserver.observe(h))
 
 		return () => headingsObserver.disconnect()
@@ -47,6 +47,32 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 			slug: e.currentTarget.getAttribute('href')!.replace('#', ''),
 			text: e.currentTarget.textContent || ''
 		})
+
+	const TableOfContentsItem = ({ heading }: { heading: TocItem }) => {
+		const { text, slug, children, depth } = heading
+		return (
+			<li key={slug} className="text-sm">
+				<a
+					className={`block py-1 leading-normal ${
+						currentHeading.slug === slug
+							? 'font-bold text-pink-600 dark:text-pink-500'
+							: 'font-semibold opacity-70 hover:opacity-100'
+					} ${depth > 2 ? 'pl-3' : ''}`}
+					href={`#${slug}`}
+					onClick={onLinkClick}
+				>
+					{text}
+				</a>
+				{children.length > 0 ? (
+					<ul>
+						{children.map(heading => (
+							<TableOfContentsItem key={heading.slug} heading={heading} />
+						))}
+					</ul>
+				) : null}
+			</li>
+		)
+	}
 
 	return (
 		<aside
@@ -65,19 +91,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 				<ul className="space-y-2 pb-16">
 					{toc.length > 0 &&
 						toc.map(tocItem => (
-							<li key={tocItem.slug} className="text-sm">
-								<a
-									className={`'block py-2 leading-normal ${
-										currentHeading.slug === tocItem.slug
-											? 'font-bold text-pink-600 dark:text-pink-500'
-											: 'font-semibold opacity-70 hover:opacity-100'
-									}`}
-									href={`#${tocItem.slug}`}
-									onClick={onLinkClick}
-								>
-									{tocItem.text}
-								</a>
-							</li>
+							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
 						))}
 				</ul>
 			</div>
