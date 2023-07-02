@@ -1,48 +1,51 @@
 ---
-import { lengthToReadingTime } from '~/util/helpers'
+import { lengthToReadingTime, formatDate } from '~/util/helpers'
+import ReadingTime from './ReadingTime.astro'
 
 interface Props {
 	title: string
 	description: string
 	slug: string
 	pubDate: Date
-	length: number
+	tags: string[]
 }
 
-const { title, description, slug, pubDate, length } = Astro.props
+const { title, description, slug, pubDate, tags } = Astro.props
 ---
 
 <article
-	class="dark:highlight-white/5 group relative rounded-3xl bg-zinc-50 p-6 hover:bg-zinc-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/50"
+	class="dark:highlight-white/5 group relative flex flex-col justify-between rounded-3xl bg-zinc-50 p-6 hover:bg-zinc-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/50"
 >
-	<h3
-		class="pb-3 text-xl font-bold leading-6 text-zinc-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-500"
-	>
-		<a href={`/blog/${slug}`}>
-			<span class="absolute inset-0 rounded-3xl"></span>
-			{title}
-		</a>
-	</h3>
-
-	<div class="flex items-center gap-6">
-		<time
-			datetime={pubDate.toISOString()}
-			class="text-sm text-zinc-500 dark:text-zinc-400"
+	<div class="grow">
+		<h3
+			class="pb-3 text-xl font-bold leading-6 text-zinc-900 group-hover:text-pink-500 dark:text-white dark:group-hover:text-pink-500"
 		>
-			{
-				new Intl.DateTimeFormat('en-US', {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric'
-				}).format(pubDate)
-			}
-		</time>
-		<p class="text-sm text-zinc-700 dark:text-zinc-300">
-			{lengthToReadingTime(length)}
+			<a href={`/blog/${slug}`}>
+				<span class="absolute inset-0 rounded-3xl"></span>
+				{title}
+			</a>
+		</h3>
+
+		<div class="flex items-center gap-6">
+			<time
+				datetime={pubDate.toISOString()}
+				class="text-sm uppercase text-zinc-500 dark:text-zinc-400"
+			>
+				{formatDate(pubDate)}
+			</time>
+		</div>
+
+		<p class="mt-4 pb-6 text-sm text-zinc-700 dark:text-zinc-300">
+			{description}
 		</p>
 	</div>
-
-	<p class="mt-4 text-sm text-zinc-700 dark:text-zinc-300">
-		{description}
-	</p>
+	<div class="flex flex-wrap gap-3 self-end">
+		{
+			tags.map(tag => (
+				<div class=" rounded-full bg-zinc-200 px-3 py-1 text-xs font-bold uppercase dark:bg-zinc-700">
+					{tag}
+				</div>
+			))
+		}
+	</div>
 </article>

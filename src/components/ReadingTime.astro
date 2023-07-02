@@ -1,0 +1,11 @@
+---
+interface Props {
+	minutesRead: number
+}
+const { minutesRead } = Astro.props
+const cups = Math.min(Math.round(minutesRead / 5), 5)
+---
+
+<p class="text-sm text-zinc-700 dark:text-zinc-300">
+	{`${new Array(cups || 1).fill('☕️').join('')} ${minutesRead} min read`}
+</p>

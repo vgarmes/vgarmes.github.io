@@ -11,6 +11,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
 	day: 'numeric',
 	year: 'numeric'
 })
-export function formatDate(date: string) {
+export function formatDate(date: string | number | Date) {
 	return dateFormatter.format(new Date(date))
 }

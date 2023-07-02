@@ -13,7 +13,7 @@ const posts = (
 
 <Layout title="Blog" description="Articles I have written">
 	<h1 class="pb-6 text-5xl font-extrabold">Blog</h1>
-	<p class="pb-3 font-bold">
+	<p class="pb-3 text-right font-bold">
 		{posts.length}
 		{posts.length === 1 ? 'article' : 'articles'}
 	</p>
@@ -22,13 +22,13 @@ const posts = (
 		class="grid grid-cols-1 gap-8 sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
 	>
 		{
-			posts.map(({ data, slug, body }) => (
+			posts.map(({ data, slug }) => (
 				<PostCard
 					title={data.title}
 					description={data.description}
 					slug={slug}
-					length={body.length}
 					pubDate={data.pubDate}
+					tags={data.tags}
 				/>
 			))
 		}

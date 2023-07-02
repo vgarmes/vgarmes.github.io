@@ -13,7 +13,7 @@ Recently, on the lookout for a quick win to boost my development productivity, I
 
 ![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
 
-In this step-by-step guide I explain the process I followed to do it. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which I'm always impressed by when I watch his videos. 
+In this step-by-step guide I explain the process I followed to do it. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which always impresses me when I watch his videos. 
 
 The main features of this setup include:
 
@@ -93,6 +93,8 @@ Inside the profile import your external configuration file:
 ```ps1
 . $env:USERPROFILE\.config\powershell\user_profile.ps1
 ```
+
+## Set some aliases
 
 ## Install posh-git
 
