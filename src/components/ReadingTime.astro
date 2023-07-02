@@ -3,9 +3,11 @@ interface Props {
 	minutesRead: number
 }
 const { minutesRead } = Astro.props
-const cups = Math.min(Math.round(minutesRead / 5), 5)
+const roundedMinutes = Math.ceil(minutesRead)
+const cups = Math.min(Math.round(roundedMinutes / 5), 5)
 ---
 
 <p class="text-sm text-zinc-700 dark:text-zinc-300">
-	{`${new Array(cups || 1).fill('☕️').join('')} ${minutesRead} min read`}
+	<span class="pr-1">{new Array(cups || 1).fill('☕️').join('')}</span>
+	{`${roundedMinutes} min read`}
 </p>
