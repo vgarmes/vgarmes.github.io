@@ -9,7 +9,7 @@ image:
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
-Recently, on the lookout for a quick win to boost my development productivity, I customized the command prompt on my Windows machine. With just a few small tweaks in Windows Terminal and PowerShell, I was able to quickly create a personalized workspace that not only looks sleek but also helps me develop more efficiently.
+Recently, on the lookout for a quick win to boost my development productivity, I customized the command prompt on my Windows machine. With just a few small tweaks in Windows Terminal and PowerShell, I was able to quickly create a personalized workspace that not only looks nice but also helps me develop more efficiently.
 
 ![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
 
@@ -94,13 +94,26 @@ Inside the profile import your external configuration file:
 . $env:USERPROFILE\.config\powershell\user_profile.ps1
 ```
 
+The next steps will basically consist in configuring the PowerShell environment by adding commands to the profile. You can check [my personal profile](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) to have an idea of what this file will look like after following the configuration steps below and to make it easier to follow along this guide. 
+
 ## Set some aliases
+
+The first thing we can do with our new profile is setting aliases. 
+
+A useful alias for users of Unix-like operating systems is mapping `ls` to `ll`, since the former will prompt a list of files in a similar fashion as the `ll` Unix command. Doing this is really easy with the `Set-Alias`  cmdlet (cmdlets are Powershell commands). We just need to add the following line to our profile:
+
+```ps1
+Set-Alias ll ls
+```
+
+Now you can use this alias to test that the profile has been correctly configured.
 
 ## Install posh-git
 
 The first module we can start installing is posh-git. This module integrates Git and Powershell by providing Git status summary information that can be displayed in the PowerShell prompt.
 
 posh-git can be installed from the Powershell gallery:
+
 ```ps1
 Install-Module posh-git -Scope CurrentUser -Force
 ```
@@ -112,7 +125,7 @@ Get-InstalledModule
 
 ## Install Oh My Posh
 
-One of the most important steps for customizing the terminal is installing Oh My Posh. Oh My Posh enables you to use the full color set to define and render the prompt by easily creating your own theme or using one from their extensive library.
+Oh My Posh enables you to to use the full color set to change the appearance of the commpand prompt by creating your own theme or use one from their extensive library.
 
 Oh My Posh can be installed using **winget**:
 
@@ -162,17 +175,30 @@ To install **z**, run the following command:
 Install-Module -Name z
 ```
 
-## Configure PSreadline
-PSreadline is already installed with Powershell by default
-Predictive IntelliSense is disabled by default. To enable predictions, just run the following command:
+## Configure PSReadLine
+
+PSreadline is a module that is already installed with Powershell by default and lets us configure the behavior of the command line editing. I find particularly useful the predictive IntelliSense which enable predictions of commands as you type. To enable this you just need to add the following to your profile:
+
 ```ps1
 Set-PSReadLineOption -PredictionSource History
+```
+
+You can configure further how you want PSreadline to show the predictions. By default you'll just see them on the same line where you type, but you can also enable showing them as a list with the following configuration:
+
+```ps1
+Set-PSReadLineOption -PredictionViewStyle ListView
+```
+
+Another cool feature of PSReadLine is that you can change the key bindings. For example, if you want to emulate Bash or Emacs key bindings you can add the following line:
+
+```ps1
+Set-PSReadLineOption -EditMode Emacs
 ```
 
 ## Add custom functions
 Finally, Powershell also enables a really powerful feature which is easily adding custom functions using its scripting language.
 
-The options here are infinite. Just as an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that taking advantage of *cmdlets* (Powershell commands) is the following:
+The options here are infinite. Just as an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that taking is the following:
 
 ```ps1
 function delete-branches ($pattern) {
