@@ -9,24 +9,28 @@ image:
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
-Recently, on the lookout for a quick win to boost my development productivity, I customized the command prompt on my Windows machine. With just a few small tweaks in Windows Terminal and PowerShell, I was able to quickly create a personalized workspace that not only looks nice but also helps me develop more efficiently.
+For some time I've been wanting to customize my terminal for not only making it look nicer but also for getting the most out of it. But every time I set out to do it, I'd get caught up in building projects. However, watching people like [Takuya Matsuyama (@craftzdog)](https://www.youtube.com/@devaslife) code with their epic setup, encouraged me to finally take the plunge.
+
+With just a few small tweaks using PowerShell and tools like Oh My Posh, I was able to take the command prompt in my Windows machine to a whole new level with the following features:
+
+1. Personalized command prompt theme: customize colors, text font and icons.
+2. Git branch information displayed in the prompt
+3. Alisases
+4. Command-line tab auto-completion and command history
+5. Directory jumping
+6. Custom functions
+
+And here is a small peak of what it looks like:
 
 ![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
 
-In this step-by-step guide I explain the process I followed to do it. As a reference, I used [Takuya Matsuyama's (@craftzdog) setup](https://www.youtube.com/@devaslife), which always impresses me when I watch his videos. 
-
-The main features of this setup include:
-
-1. Personalized color themes and fonts.
-2. Git branch information displayed in the prompt
-3. Alisases
-4. Tab auto-completion and command history
-5. Directory jumping
-6. Custom functions
+I'm really happy with the result and I can already notice how much more enjoyable and effective the overall experience of using the terminal is. In this post I'll walk you trough the process I followed to setup these tools.
 
 ---
 
 ## Install Powershell and configure Windows Terminal
+
+PowerShell is a versatile command-line shell language developed by Microsoft and it provides a robust environment where it is really easy to automate workflows.
 
 The easiest way to get Powershell running in your machine is installing it directly from the Microsoft Store.
 
@@ -54,7 +58,7 @@ Try tweaking the values for **Background opacity** and switching on and off the 
 
 ## Create a Powershell profile
 
-The rest of the configuration is defined in a Powershell profile. This file is basically a script that runs when Powershell starts and it can contain commands, aliases, functions, variables, modules, etc.
+The rest of the configuration is defined in a PowerShell profile. This file is basically a script that runs when PowerShell starts and it can contain commands, aliases, functions, variables, modules, etc.
 
 The `$PROFILE` variable stores the path to the PowerShell profile for the current user and current host. If you installed PowerShell for the first time, you most likely don't have this directory on your computer. In any case, to create it without any risk of overwriting an existing profile, use the following command:
 
@@ -98,15 +102,21 @@ The next steps will basically consist in configuring the PowerShell environment 
 
 ## Set some aliases
 
-The first thing we can do with our new profile is setting aliases. 
+Aliases are essentially shortcuts that map one command to another. They can save you from having to type long commands or from having to remember commands that do the same but are called differently accross different OS environments. 
 
-A useful alias for users of Unix-like operating systems is mapping `ls` to `ll`, since the former will prompt a list of files in a similar fashion as the `ll` Unix command. Doing this is really easy with the `Set-Alias`  cmdlet (cmdlets are Powershell commands). We just need to add the following line to our profile:
+Creating aliases in PowerShell is very straight forward with the `Set-Alias`  cmdlet (cmdlets are Powershell commands). The syntax is:
+
+```ps1
+Set-Alias {command name} {command to run}
+```
+
+For example, a useful alias for users of Unix-like operating systems is mapping `ls` to `ll`, since the former will prompt a list of files in a similar fashion as the `ll` Unix command. We just need to add the following line to our profile:
 
 ```ps1
 Set-Alias ll ls
 ```
 
-Now you can use this alias to test that the profile has been correctly configured.
+Now it's a good time to test out that you implemented the previous sep correctly and PowerShell is using your profile file. Simply type the alias on the command prompt, if it does the expected that means your profile has been correctly configured.
 
 ## Install posh-git
 
@@ -124,6 +134,8 @@ Get-InstalledModule
 ```
 
 ## Install Oh My Posh
+
+On the other hand, Oh My Posh is a highly customizable prompt framework for PowerShell that allows us to create visually appealing and informative prompts, enhancing our command-line interface with colors, icons and various useful information.
 
 Oh My Posh enables you to to use the full color set to change the appearance of the commpand prompt by creating your own theme or use one from their extensive library.
 
@@ -196,9 +208,9 @@ Set-PSReadLineOption -EditMode Emacs
 ```
 
 ## Add custom functions
-Finally, Powershell also enables a really powerful feature which is easily adding custom functions using its scripting language.
+Finally, one of my favorite features of PowerShell, is that it enables the possibility of easily adding custom functions.
 
-The options here are infinite. Just as an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that taking is the following:
+The options here are infinite. Just to give you an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that is the following:
 
 ```ps1
 function delete-branches ($pattern) {
@@ -207,3 +219,6 @@ function delete-branches ($pattern) {
 	}
 }
 ```
+
+## Conclusion
+
