@@ -9,15 +9,15 @@ image:
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
-For some time I've been wanting to customize my terminal for not only making it look nicer but also for getting the most out of it. But every time I set out to do it, I'd get caught up in building projects. However, watching people like [Takuya Matsuyama (@craftzdog)](https://www.youtube.com/@devaslife) code with their epic setup, encouraged me to finally take the plunge.
+For a while now, I've been wanting to customize my terminal to get more out of it. This motivation specially started after watching people like [Takuya Matsuyama (@craftzdog)](https://www.youtube.com/@devaslife) and his epic setup, which allows him to fly through the command-line.
 
-With just a few small tweaks using PowerShell and tools like Oh My Posh, I was able to take the command prompt in my Windows machine to a whole new level with the following features:
+So, the other day I finally set out to do it in my Windows machine. Surprisingly, it just required a few simple tweaks with PowerShell and tools like Oh My Posh to completely transform the command prompt taking it to a whole new level with features like these:
 
-1. Personalized command prompt theme: customize colors, text font and icons.
+1. Ability to customize the colors and appearence with themes, as well as changing the text font and adding icons.
 2. Git branch information displayed in the prompt
 3. Alisases
 4. Command-line tab auto-completion and command history
-5. Directory jumping
+5. Directory jumping based on history
 6. Custom functions
 
 And here is a small peak of what it looks like:
@@ -26,19 +26,19 @@ And here is a small peak of what it looks like:
 
 I'm really happy with the result and I can already notice how much more enjoyable and effective the overall experience of using the terminal is. In this post I'll walk you trough the process I followed to setup these tools.
 
+As I'll explain later on, most of the configuration will be contained in a single file that PowerShell will use on startup. You can check [my personal PowerShell profile file](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) to have an idea of what this file will look like after following the steps below and to make it easier to follow along. 
+
 ---
 
-## Install Powershell and configure Windows Terminal
+## Pre-requisites: Install Windows Terminal and PowerShell
 
-PowerShell is a versatile command-line shell language developed by Microsoft and it provides a robust environment where it is really easy to automate workflows.
+If you don't already have Windows Terminal and Powershell, the easiest way to get them is installing them from the Microsoft Store.
 
-The easiest way to get Powershell running in your machine is installing it directly from the Microsoft Store.
-
-Once you have Powershell installed, change Windows Terminal's default shell to Powershell.
+Once you have Powershell installed, change Windows Terminal's default shell to Powershell if you want to use it by default when starting up the terminal.
 
 ## Install a Nerd Font
 
-The custom themes we are going to install in the next steps use glyphs (icons) for styling the command prompt. To ensure that we see all of the glyphs in the terminal, it is recommended to install a [Nerd Font](https://www.nerdfonts.com/).
+The custom themes we are going to install in the following steps use glyphs (icons) for styling the command prompt. To ensure that we see all of the glyphs in the terminal, it is recommended to install a [Nerd Font](https://www.nerdfonts.com/).
 
 Find a font of your preference (I chose *Hack*) and after downloading it, unzip it and install it (right click on the file and click on *Install*).
 
@@ -48,7 +48,7 @@ Open the Windows Terminal **Settings**, select the Powershell profile and then t
 
 ## Change the color scheme
 
-In **Appearance** tab, you can also change the color scheme. I used *One Half Dark*, choose whichever you prefer. 
+In **Appearance** tab, you can also change the color scheme to whichever you prefer. I tend to use dark themes for everything so I picked *One Half Dark*. 
 
 Depending on your preferences, you might also want to make the background of your terminal translucent. For doing so, you can find the **Transparency** settings in the same tab. 
 
@@ -68,13 +68,13 @@ if (!(Test-Path -Path $PROFILE)) {
 }
 ```
 
-Then you can edit your profile using your preferred text editor. In my case, it's Neovim, but you can also use Notepad, for example (just replace nvim with notepad):
+Then you can edit your profile using your preferred text editor (just replace `nvim` with whatever you use, like `notepad`):
 
 ```shell
 nvim $PROFILE
 ```
 
-In order to have more control over your configuration files, it's preferable to create a separate file that will be later imported from `$PROFILE`. In my case I created the following directory in home directory (`Users/[username]`):
+In order to have more control over your configuration files, it's preferable to create a separate file that will be later imported from `$PROFILE`. In my case I created the following directory in home directory (`Users/{username}`):
 
 ```shell
 mkdir .config/powershell
@@ -92,19 +92,19 @@ Then we need to import this file from `$PROFILE`:
 nvim $PROFILE
 ```
 
-Inside the profile import your external configuration file:
+Inside the profile import your configuration file. You can use the `USERPROFILE` enviroment variable to prepend the home directory to the path where you created the file:
 
 ```ps1
 . $env:USERPROFILE\.config\powershell\user_profile.ps1
 ```
 
-The next steps will basically consist in configuring the PowerShell environment by adding commands to the profile. You can check [my personal profile](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) to have an idea of what this file will look like after following the configuration steps below and to make it easier to follow along this guide. 
+The next steps will basically consist in configuring the PowerShell environment by adding PowerShell commands (also called cmdlets) to the profile. 
 
 ## Set some aliases
 
 Aliases are essentially shortcuts that map one command to another. They can save you from having to type long commands or from having to remember commands that do the same but are called differently accross different OS environments. 
 
-Creating aliases in PowerShell is very straight forward with the `Set-Alias`  cmdlet (cmdlets are Powershell commands). The syntax is:
+Creating aliases in PowerShell is very straight forward with the `Set-Alias` cmdlet. The syntax is the following:
 
 ```ps1
 Set-Alias {command name} {command to run}
@@ -116,7 +116,7 @@ For example, a useful alias for users of Unix-like operating systems is mapping 
 Set-Alias ll ls
 ```
 
-Now it's a good time to test out that you implemented the previous sep correctly and PowerShell is using your profile file. Simply type the alias on the command prompt, if it does the expected that means your profile has been correctly configured.
+Now it's a good time to test out that PowerShell correctly configured is using your profile file. Simply type the alias on the command prompt, if it does the expected that means your profile has been correctly configured.
 
 ## Install posh-git
 
@@ -214,9 +214,25 @@ The options here are infinite. Just to give you an example, a function that I fi
 
 ```ps1
 function delete-branches ($pattern) {
-	git branch | Select-String -Pattern "$pattern" | ForEach-Object {
-		git branch -D $_.ToString().Trim()
-	}
+	# Get all branch names that match the pattern
+  $branchesToDelete = git branch | Where-Object { $_ -match $pattern }
+
+  if ($branchesToDelete.Count -eq 0) {
+    Write-Host "No branches found matching the pattern '$pattern'."
+  }
+
+  # Prompt for confirmation before deleting
+  $confirmationMessage = "The following branches will be deleted: `n$($branchesToDelete -join "`n")`nDo you want to proceed? (Y/N)"
+  $confirmation = Read-Host -Prompt $confirmationMessage
+
+  if ($confirmation -eq "Y" -or $confirmation -eq "y") {
+    foreach ($branch in $branchesToDelte) {
+      git branch -D $branch.Trim()
+    }
+    Write-Host "Branches deleted successfully."
+  } else {
+    Write-Host "Operation cancelled."
+  }
 }
 ```
 
