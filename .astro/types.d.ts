@@ -119,16 +119,16 @@ declare module 'astro:content' {
   collection: "blog",
   data: InferEntrySchema<"blog">
 } & { render(): Render[".mdx"] },
-"hello-world.md": {
-  id: "hello-world.md",
-  slug: "hello-world",
+"powershell-prompt-with-oh-my-posh.md": {
+  id: "powershell-prompt-with-oh-my-posh.md",
+  slug: "powershell-prompt-with-oh-my-posh",
   body: string,
   collection: "blog",
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] },
-"oh-my-posh-shell.md": {
-  id: "oh-my-posh-shell.md",
-  slug: "oh-my-posh-shell",
+"upload-images-with-rails-and-cloudinary.md": {
+  id: "upload-images-with-rails-and-cloudinary.md",
+  slug: "upload-images-with-rails-and-cloudinary",
   body: string,
   collection: "blog",
   data: InferEntrySchema<"blog">

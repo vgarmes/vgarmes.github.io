@@ -1,17 +1,17 @@
 ---
 layout: ../../layouts/post.astro
 title: 'Set up a delightful PowerShell prompt with Oh My Posh'
-pubDate: 2023-06-26
+pubDate: 2023-07-17
 description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp' 
+    url: '' 
     alt: 'Custom command prompt with Powershell'
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
 ---
 For a while now, I've been wanting to customize my terminal to get more out of it. This motivation specially started after watching people like [Takuya Matsuyama (@craftzdog)](https://www.youtube.com/@devaslife) and his epic setup, which allows him to fly through the command-line.
 
-So, the other day I finally set out to do it in my Windows machine. Surprisingly, it just required a few simple tweaks with PowerShell and tools like Oh My Posh to completely transform the command prompt taking it to a whole new level with features like these:
+So, the other day I finally set out to do it in my Windows machine. Surprisingly, it just required a few simple tweaks with PowerShell and tools like Oh My Posh to completely transform the command prompt taking it to a whole new level with features like:
 
 1. Ability to customize the colors and appearence with themes, as well as changing the text font and adding icons.
 2. Git branch information displayed in the prompt
@@ -20,13 +20,12 @@ So, the other day I finally set out to do it in my Windows machine. Surprisingly
 5. Directory jumping based on history
 6. Custom functions
 
-And here is a small peak of what it looks like:
+And this is what it looks like:
 
-![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1687710296/blog/ohmyposh_jwhrvk.webp)
+![Custom command prompt with Powershell]()
 
-I'm really happy with the result and I can already notice how much more enjoyable and effective the overall experience of using the terminal is. In this post I'll walk you trough the process I followed to setup these tools.
-
-As I'll explain later on, most of the configuration will be contained in a single file that PowerShell will use on startup. You can check [my personal PowerShell profile file](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) to have an idea of what this file will look like after following the steps below and to make it easier to follow along. 
+ 
+In this post I'll walk you trough the process I followed to setup these tools. As I'll explain later on, most of the configuration will be contained in a single file that PowerShell will use on startup. You can check [my personal PowerShell profile file](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) to have an idea of what this file will look like after following the steps below and to make it easier to follow along. 
 
 ---
 
@@ -48,7 +47,7 @@ Open the Windows Terminal **Settings**, select the Powershell profile and then t
 
 ## Change the color scheme
 
-In **Appearance** tab, you can also change the color scheme to whichever you prefer. I tend to use dark themes for everything so I picked *One Half Dark*. 
+Also in the **Appearance** tab, you can change the color scheme to whichever you prefer. I tend to use dark themes for everything so I picked *One Half Dark*. 
 
 Depending on your preferences, you might also want to make the background of your terminal translucent. For doing so, you can find the **Transparency** settings in the same tab. 
 
@@ -135,9 +134,7 @@ Get-InstalledModule
 
 ## Install Oh My Posh
 
-On the other hand, Oh My Posh is a highly customizable prompt framework for PowerShell that allows us to create visually appealing and informative prompts, enhancing our command-line interface with colors, icons and various useful information.
-
-Oh My Posh enables you to to use the full color set to change the appearance of the commpand prompt by creating your own theme or use one from their extensive library.
+Oh My Posh is a highly customizable prompt framework for PowerShell that allows us to create visually appealing and informative prompts, enhancing our command-line interface with colors, icons and various useful information. These preferences are defined in a theme, which you can create your own or use one from their extensive community library.
 
 Oh My Posh can be installed using **winget**:
 
@@ -145,7 +142,7 @@ Oh My Posh can be installed using **winget**:
 winget install JanDeDobbeleer.OhMyPosh -s winget
 ```
 
-**Tip:** if you need to update Oh My Posh, simply run the command:
+**Note:** if you need to update Oh My Posh, simply run the command:
 ```shell
 winget upgrade JanDeDobbeleer.OhMyPosh -s winget
 ```
@@ -157,15 +154,17 @@ Oh My Posh init pwsh | Invoke-Expression
 ```
 
 ### Add a theme to Oh My Posh
-In order to use a theme, you can add the following command to your Powershell script, replacing `POSH_THEMES_PATH` by your theme of preference:
+In order to use a theme, you can add the following command to your PowerShell script, replacing `POSH_THEMES_PATH` by your theme of preference:
 
 ```ps1
 Oh My Posh init pwsh --config "$env:POSH_THEMES_PATH/jandedobbeleer.omp.json" | Invoke-Expression
 ```
 
+You can find the full list of themes [here](https://ohmyposh.dev/docs/themes).
+
 ## Install icons
 
-One of the first visual enhancement we can take advantage of by using Oh My Posh is having icons that represent the file type next to the file names when listing a directory. We can add the icons by installing **Terminal-Icons**:
+Another visual enhancement we can take advantage of by using PowerShell modules is having icons that represent the file type next to the file names when listing a directory. We can add the icons by installing **Terminal-Icons**:
 
 ```ps1
 Install-Module -Name Terminal-Icons -Repository PSGallery
@@ -178,9 +177,9 @@ Import-Module -Name Terminal-Icons
 
 ## Install z (directory jumping)
 
-**z** is a really useful module that lets you quickly navigate the file system based on your command history. The way it works is that by just typing in the command prompt `z` followed by a keyword, **z** will search in your command history for the closest match and "cd" into it.
+**z** is a really useful module that lets you quickly navigate the file system based on your command history. The way it works is that by just typing in the command prompt `z` followed by a keyword, **z** will search in your command history for the closest match and `cd` into it.
 
-For example, if you have previosly navigated into the directory `C:\Users\Victor\dev\homepage` and you type `z homepage`, **z** will automatically navigate you to that directory.
+For example, if you have previosly navigated into the directory `C:\path\to\my-cool-project` and you type `z cool`, **z** will automatically navigate you to that directory.
 
 To install **z**, run the following command:
 ```ps1
@@ -189,7 +188,7 @@ Install-Module -Name z
 
 ## Configure PSReadLine
 
-PSreadline is a module that is already installed with Powershell by default and lets us configure the behavior of the command line editing. I find particularly useful the predictive IntelliSense which enable predictions of commands as you type. To enable this you just need to add the following to your profile:
+PSreadline is a module that is already installed with Powershell by default and lets us configure the behavior of the command line editing. I find particularly useful the predictive IntelliSense which enable predictions of commands based on your history as you type. To enable this you just need to add the following to your profile:
 
 ```ps1
 Set-PSReadLineOption -PredictionSource History
@@ -208,13 +207,13 @@ Set-PSReadLineOption -EditMode Emacs
 ```
 
 ## Add custom functions
-Finally, one of my favorite features of PowerShell, is that it enables the possibility of easily adding custom functions.
+Finally, one of my favorite features of PowerShell, is that it enables the possibility of easily adding custom functions. The options here are infinite. 
 
-The options here are infinite. Just to give you an example, a function that I find myself using very often, specially when working on collaborative projects, is deleting git branches that match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that is the following:
+Just to give you an example, a function that I find myself using very often specially when working on collaborative projects, is deleting git branches which name match a pattern. For example, I might have several branches that include the word `fix` and I don't longer need and I'd like to delete them all at once. A function that could automate that is the following:
 
 ```ps1
 function delete-branches ($pattern) {
-	# Get all branch names that match the pattern
+  # Get all branch names that match the pattern
   $branchesToDelete = git branch | Where-Object { $_ -match $pattern }
 
   if ($branchesToDelete.Count -eq 0) {
@@ -238,3 +237,4 @@ function delete-branches ($pattern) {
 
 ## Conclusion
 
+I hope you enjoyed this tutorial and it encouraged you to start using some of these life quality hacks. I'm really happy with the result and I can already notice how much more enjoyable and effective the overall experience of using the terminal is.
