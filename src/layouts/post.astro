@@ -20,7 +20,6 @@ type Props = MarkdownLayoutProps<{
 const { frontmatter, headings } = Astro.props
 const date = formatDate(frontmatter.pubDate)
 const toc = generateToc(headings)
-console.log(frontmatter.minutesRead)
 ---
 
 <BaseLayout
@@ -35,7 +34,9 @@ console.log(frontmatter.minutesRead)
 					{frontmatter.title}
 				</h1>
 				<div class="flex gap-6">
-					<p class="text-sm font-semibold text-zinc-300">{date}</p>
+					<p class="text-sm text-zinc-700 dark:text-zinc-300">
+						{date}
+					</p>
 					<ReadingTime minutesRead={frontmatter.minutesRead} />
 				</div>
 			</header>

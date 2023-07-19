@@ -31,7 +31,7 @@ Whether you want to implement a few of these steps or go all-in, I hope that thi
 
 ---
 
-## Pre-requisites: Install Windows Terminal and PowerShell
+## Pre-requisites: Windows Terminal and PowerShell
 
 If you don't already have Windows Terminal and Powershell, the easiest way to get them is by installing them from the Microsoft Store.
 
@@ -126,7 +126,7 @@ To install posh-git, use the following command, which uses the PowerShell galler
 Install-Module posh-git -Scope CurrentUser -Force
 ```
 
-**Tip:** To view the modules you have installed at any time, you can use the following command:
+**Tip:** To view the PowerShell gallery modules you have installed at any time, you can use the following command:
 
 ```ps1
 Get-InstalledModule
@@ -147,7 +147,7 @@ winget install JanDeDobbeleer.OhMyPosh -s winget
 winget upgrade JanDeDobbeleer.OhMyPosh -s winget
 ```
 
-AAfter installing Oh My Posh, you'll need to restart the terminal and add the initialization of Oh My Posh to your profile:
+After installing Oh My Posh, you'll need to restart the terminal and add the initialization of Oh My Posh to your profile:
 
 ```
 Oh My Posh init pwsh | Invoke-Expression
@@ -177,9 +177,9 @@ Import-Module -Name Terminal-Icons
 
 ## Install z (directory jumping)
 
-The **z** is incredibly useful as it enables quick navigation through the file system based on your command history. With z, you can simply type `z` followed by a keyword in the command prompt, and it will search your command history for the closest match and automatically navigate to that directory.
+The **z** module is incredibly useful as it enables quick navigation through the file system based on your command history. With z, you can simply type `z` followed by a keyword in the command prompt, and it will search your command history for the closest match and automatically navigate to that directory.
 
-For instance, if you previosly navigated to the directory `C:\path\to\my-cool-project`, typing `z cool`, **z** will automatically take you to that directory.
+For instance, if you previosly navigated to the directory `C:\path\to\my-cool-project`, typing `z cool`, you will be automatically taken to that directory.
 
 To install **z**, run the following command:
 ```ps1
@@ -209,9 +209,7 @@ Set-PSReadLineOption -EditMode Emacs
 ## Add custom functions
 Finally, one of my favorite features of PowerShell is its ability to easily add custom functions, providing limitless possibilities for automation.
 
-To illustrate this, let's consider a function that I frequently use, especially when working on collaborative projects: deleting Git branches that match a specific pattern.
-
-Just to give you an example, a function that I find myself using very often specially when working on collaborative projects, is deleting git branches which name match a pattern. For instance, if I have multiple branches containing the word "hotfix" that I no longer need, I would like to delete them all at once. Here's an example function that automates this process:"
+To illustrate this, let's consider a function that I frequently use, especially when working on collaborative projects: deleting Git branches that match a specific pattern. For instance, if I have multiple branches containing the word "hotfix" that I no longer need, I would like to delete them all at once. Here's an example function that automates this process:"
 
 ```ps1
 function delete-branches ($pattern) {
@@ -237,8 +235,8 @@ function delete-branches ($pattern) {
 }
 ```
 
-Then, simply typing `delete-branches hotfix` will run the function above.
+Then, simply typing `delete-branches hotfix` will run the function above, prompt a list of branches that match the pattern `hotfix` and ask you for confirmation to delete them all.
 
-## Conclusion
+## Conclusions
 
-I hope you found this tutorial useful and that it inspired you to start utilizing these productivity-enhancing hacks. Personally, I'm really happy with the results, and I have already noticed a significant improvement in the overall experience of using the terminal, making it more enjoyable and efficient.
+I hope you found this tutorial useful and that it inspired you to start utilizing these productivity hacks. Personally, I'm really happy with the results, and I have already noticed a significant improvement in the overall experience of using the terminal, making it more enjoyable and efficient.

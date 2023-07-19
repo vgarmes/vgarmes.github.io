@@ -88,7 +88,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 				className="h-full max-h-[calc(100vh-7.5rem)] overflow-y-auto"
 				style={{ overscrollBehavior: 'contain' }}
 			>
-				<ul className="space-y-2 pb-16">
+				<ul className="space-y-2">
 					{toc.length > 0 &&
 						toc.map(tocItem => (
 							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
