@@ -2,7 +2,7 @@
 layout: ../../layouts/post.astro
 title: 'Upload images with your Rails app using Active Storage and Cloudinary'
 pubDate: 2020-12-08
-description: 'This is the first post of my new Astro blog.'
+description: 'Setting up Active Storage in your Rails app for being able to upload images to cloud storage service can be a bit challenging the first time.'
 image:
     url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg' 
     alt: 'The Astro logo with the word One.'
