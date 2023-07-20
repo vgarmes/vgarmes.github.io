@@ -6,7 +6,7 @@ description: 'Setting up Active Storage in your Rails app for being able to uplo
 image:
     url: 'https://astro.build/assets/blog/astro-1-release-update/cover.jpeg' 
     alt: 'The Astro logo with the word One.'
-tags: ["astro", "blogging", "learning in public"]
+tags: ["ruby", "rails"]
 draft: false
 ---
 ***Archived post. Originally posted on [my blog in Medium](https://medium.com/@vgmestre/upload-images-with-your-rails-app-using-active-storage-and-cloudinary-ecf31c5ba999)***
