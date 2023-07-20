@@ -1,52 +1,41 @@
-<section id="about" class="mb-32 flex w-full flex-col justify-center gap-20">
+<section class="mb-32 flex w-full flex-col justify-center gap-20">
 	<h2 class="w-full pb-5 text-5xl font-extrabold leading-tight md:w-2/3">
 		I'm an engineer who loves crafting <span id="highlight"
 			>great web experiences ✨</span
-		> while embracing bleeding-edge technologies.
+		> and exploring bleeding-edge technologies.
 	</h2>
 	<h2
 		class="w-full self-end pb-5 text-right text-5xl font-extrabold leading-tight md:w-2/3"
 	>
-		I'm also a <span id="underline">video game enthusiast 🎮</span>. So when not
-		coding, you'll probably find me playing, on the hunt for retro gems or
-		reading about game development.
+		When not coding, I enjoy gaming, running and photography.
 	</h2>
 </section>
 <script>
-	import { annotate, annotationGroup } from 'rough-notation'
+	import { annotate } from 'rough-notation'
 
-	const container = document.getElementById('about') as HTMLDivElement
-	const e1 = document.getElementById('highlight') as HTMLSpanElement
-	const e2 = document.getElementById('underline') as HTMLSpanElement
 	const color = '#db2777'
-
-	const a1 = annotate(e1, {
+	const highlightedElement = document.getElementById(
+		'highlight'
+	) as HTMLSpanElement
+	const annotation = annotate(highlightedElement, {
 		type: 'highlight',
 		multiline: true,
 		color: color
 	})
-	const a2 = annotate(e2, {
-		type: 'underline',
-		multiline: true,
-		color: color,
-		strokeWidth: 2
-	})
-	const ag = annotationGroup([a1, a2])
 
 	const observer = new IntersectionObserver(
-		entries => {
-			entries.forEach(item => {
-				if (item.isIntersecting) {
-					ag.show()
-					observer.unobserve(item.target)
+		entries =>
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					annotation.show()
+					observer.unobserve(highlightedElement)
 				}
-			})
-		},
+			}),
 		{
 			root: null,
 			rootMargin: '0px',
-			threshold: 0.5
+			threshold: 1
 		}
 	)
-	observer.observe(container)
+	observer.observe(highlightedElement)
 </script>
