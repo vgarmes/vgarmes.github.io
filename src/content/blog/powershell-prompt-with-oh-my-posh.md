@@ -4,7 +4,7 @@ title: 'Set up a delightful PowerShell prompt with Oh My Posh'
 pubDate: 2023-07-19
 description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689770253/blog/overview_tfr6ei.webp' 
+    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp' 
     alt: 'Custom command prompt with Powershell'
 tags: ["shell", "powershell", "oh my posh"]
 draft: false
@@ -22,7 +22,7 @@ So, the other day, I finally decided to do the same on my Windows machine. Surpr
 
 Check out how it looks in the screenshot below:
 
-![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1689770253/blog/overview_tfr6ei.webp)
+![Custom command prompt with Powershell](https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp)
 
  
 In this post, I'll walk you trough the process of setting up these tools. Most of the configuration will be stored in a single file that PowerShell will use when it starts up. To make it easier to follow along, you can refer to [my personal setup file](https://github.com/vgarmes/dotfiles/blob/main/.config/powershell/user_profile.ps1) for reference.
