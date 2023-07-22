@@ -119,9 +119,9 @@ declare module 'astro:content' {
   collection: "blog",
   data: InferEntrySchema<"blog">
 } & { render(): Render[".mdx"] },
-"powershell-custom-prompt-setup.md": {
-  id: "powershell-custom-prompt-setup.md",
-  slug: "powershell-custom-prompt-setup",
+"powershell-prompt-with-oh-my-posh.md": {
+  id: "powershell-prompt-with-oh-my-posh.md",
+  slug: "powershell-prompt-with-oh-my-posh",
   body: string,
   collection: "blog",
   data: InferEntrySchema<"blog">
