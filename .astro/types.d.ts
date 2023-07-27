@@ -112,6 +112,13 @@ declare module 'astro:content' {
 
 	const entryMap: {
 		"blog": {
+"build-your-own-react-router.md": {
+  id: "build-your-own-react-router.md",
+  slug: "build-your-own-react-router",
+  body: string,
+  collection: "blog",
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] },
 "fish-shell.mdx": {
   id: "fish-shell.mdx",
   slug: "fish-shell",
