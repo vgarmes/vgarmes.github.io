@@ -7,7 +7,7 @@ image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp' 
     alt: 'Custom command prompt with Powershell'
 tags: ["react", "router", "spa"]
-draft: false
+draft: true
 ---
 Single-Page Applications (SPAs) are incredibly popular, especially for highly interactive applications. The key feature of SPAs is that they consist of a single JavaScript application, which generates the HTML of every page after the initial load without the need to hit the server again. This allows the application to maintain state and memory across pages seamlessly. Frameworks like Next.js, SvelteKit, and Remix are all examples of SPA frameworks, even though some of them offer server-side rendering capabilities.
 
@@ -230,8 +230,67 @@ useEffect(() => {
 
 And with this we have a working router for our SPAs!
 
-# Routes with dynamic segments and query parameters
+## Routes with dynamic segments
+
+So far we have added support for routes with static names (like `/about` for example). However, in most cases we are going to need routes with* dynamic segments (for example `/user/:id`). 
+
+In order to support his, we will use the library **path-to-regexp** and replace in `App.tsx` this line where we check for equal path names:
+
+```ts
+const page = routes.find((route) => route.path === currentPathname)?.element
+```
+
+With this one:
+
+```ts
+import { match } from 'path-to-regexp';
+
+const page = routesToUse.find(({ path }) => {
+    if (path === currentPathname) {
+      return true;
+    }
+
+    const matcherUrl = match(path, { decode: decodeURIComponent });
+
+    const matched = matcherUrl(currentLocation.path);
+    if (!matched) return false;
+
+    return true;
+  })?.element;
+```
+
+## Query parameters
+
+Additionaly, it will be useful if our router also had access to the query parameters and re-render
+
+## The router context provider
+
+Now that we have the basic functionality of the routing in place, we can extract this logic into a React context so we can also consume the router state in any component of the application. Let's start by creating the context:
+
+```tsx
+// context.ts
+import { createContext, useContext } from 'react';
+
+interface RouterContext {
+  pathname: string;
+  navigate: (to: string) => void;
+}
+
+export const RouterContext = createContext<RouterContext>(null!);
+
+export function useRouter() {
+  return useContext(RouterContext);
+}
+```
+
+Now we can create a Router component that returns this context:
+```tsx
+
+```
 
 
-# Extra: Optimizing bundle size
+
+We have now the foundation 
+
+## Extra: Optimizing bundle size
 

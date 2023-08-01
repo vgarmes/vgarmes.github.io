@@ -2,9 +2,10 @@
 import { getCollection } from 'astro:content'
 import PostCard from './PostCard.astro'
 const posts = (
-	await getCollection('blog', ({ data }) => {
-		return data.draft !== true
-	})
+	await getCollection(
+		'blog',
+		({ data }) => import.meta.env.DEV || data.draft !== true
+	)
 )
 	.sort((a, b) => {
 		return b.data.pubDate.getTime() - a.data.pubDate.getTime()
