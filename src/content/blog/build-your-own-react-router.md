@@ -123,23 +123,23 @@ At the same time, since this method doesn't trigger any events we can listen to,
 const getCurrentPath = () => window.location.pathname;
 
 function App() {
-    const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
+  const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
 
-    useEffect(() => {
-        const onLocationChange = () => setCurrentPathname(getCurrentPath());
+  useEffect(() => {
+    const onLocationChange = () => setCurrentPathname(getCurrentPath());
  
-        window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
+    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
     
-        return () => {
-            window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
-        };
+    return () => {
+      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
+    };
     }, [])
 
     const Page = routes.find((route) => route.path === currentPathname)?.element
     return (
-        <main>
-            {Page ? Page : 404Page}
-        </main>
+      <main>
+        {Page ? Page : 404Page}
+      </main>
     )
 }
 
@@ -147,18 +147,91 @@ function App() {
 
 ## Link component: Replacing anchor's default behavior
 
-In order to replace the anchor's default behavior, we can create a custom `Link` component that will return a traditional anchor element but with altered functionality.
+Now we can use the `dispatchPushStateEvent` function in the anchor element. For this, we can create a custom `Link` component that will return a traditional anchor element but with the altered functionality:
+
+```tsx
+// Link.tsx
+import { AnchorHTMLAttributes, MouseEvent } from 'react';
+import { dispatchPushStateEvent } from './utils';
+
+interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  to: string;
+}
+
+function Link({ target, to, ...props }: LinkProps) {
+  const handleClick = (event: MouseEvent) => {
+    const isMainEvent = event.button === 0; // primary mouse button click
+    const isModifiedEvent =
+      event.metaKey || event.altKey || event.ctrlKey || event.shiftKey;
+    
+    // let browser handle target="_blank" etc
+    const isManageableEvent = target === undefined || target === '_self'; 
+    
+    if (isMainEvent && isManageableEvent && !isModifiedEvent) {
+      event.preventDefault();
+      dispatchPushStateEvent(to);
+    }
+  };
+
+  return <a onClick={handleClick} href={to} target={target} {...props} />;
+}
+
+export default Link
+```
+
+What we are doing here is that clicking on the anchor will trigger our custom `pushstate` event, as long as the intent is not opening a new window or tab (hence the `isModifiedEvent` and `isMnageableEvent`).
+
+We can now refactor our routes with the new Link component:
+
+```tsx
+const routes = [
+    {
+        path: '/',
+        element: (
+            <div>
+                <h1>Hello World!</h1>
+                <Link to="/about">About us</Link>
+            </div>
+        ),
+    },
+    {
+        path: '/about',
+        element: (
+            <div>
+                <h1>About us</h1>
+                <Link to="/">Go back home</Link>
+            </div>
+        ),
+    },
+]
+
+```
+
+If you try now to inspect the network requests, you'll see that after the initial load there won't be any more requests to the server while navigating across the pages. First goal for building the router achieved!
+
+Now there is a prooblem though, if you try to navigate back using the browser back button you will see that the page content doesn't update. This is because the current location in our SPA is not being updated.
+
+## Updating the location when navigating back
+
+In order to update the current route when the user tries to navigate back, we are going to need to update the `useEffect` where we handled our custom `pushstate` event.  This time we need to add a subscription to the `popstate` event, which is automatically triggered when we click the back button (or when calling `window.back`):
+
+```tsx
+const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
+
+useEffect(() => {
+  window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
+  window.addEventListener(EVENTS.POPSTATE, onLocationChange);
+  return () => {
+    window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
+    window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
+  };
+}, []);
+  ```
+
+And with this we have a working router for our SPAs!
+
+# Routes with dynamic segments and query parameters
 
 
-`pushState` will change the url without refreshing the page.
-'popstate' triggered when we click back button or call window.back
+# Extra: Optimizing bundle size
 
-a way to see
-
-## The Link component
-
-## The Router
-
-## The Route
-
-how they work under the hood
