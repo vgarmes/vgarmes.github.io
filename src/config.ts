@@ -5,7 +5,7 @@ export const showcase = [
 	{
 		name: 'Game Lib',
 		slug: 'game-lib',
-		url: '/',
+		url: 'https://github.com/vgarmes/game-lib',
 		thumbnail:
 			'https://res.cloudinary.com/dx73a1lse/image/upload/c_fill,g_north,h_494,w_672/portfolio/game-lib_gs8itj.png',
 		description:
@@ -14,7 +14,7 @@ export const showcase = [
 	{
 		name: 'My Steam',
 		slug: 'my-steam',
-		url: '/',
+		url: 'https://github.com/vgarmes/my-steam',
 		thumbnail:
 			'https://repository-images.githubusercontent.com/589785833/e282849a-fb31-49b1-86cb-e3be80d05a10',
 		description:
@@ -23,7 +23,7 @@ export const showcase = [
 	{
 		name: 'Markdown Editor',
 		slug: 'markdown-editor',
-		url: '/',
+		url: 'https://github.com/vgarmes/markdown-editor',
 		thumbnail:
 			'https://res.cloudinary.com/dx73a1lse/image/upload/c_fill,h_494,w_672/portfolio/markdown-editor_pple1j.png',
 		description:
