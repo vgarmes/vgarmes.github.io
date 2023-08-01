@@ -230,9 +230,11 @@ useEffect(() => {
 
 And with this we have a working router for our SPAs!
 
-## Routes with dynamic segments
+## Adding support to dynamic routes and query parameters
 
-So far we have added support for routes with static names (like `/about` for example). However, in most cases we are going to need routes with* dynamic segments (for example `/user/:id`). 
+### Dynamic routes
+
+So far we have added support for routes with static names (like `/about` for example). However, in most cases we are going to need routes with dynamic segments (for example `/user/:id`). 
 
 In order to support his, we will use the library **path-to-regexp** and replace in `App.tsx` this line where we check for equal path names:
 
@@ -245,6 +247,8 @@ With this one:
 ```ts
 import { match } from 'path-to-regexp';
 
+let params: Record<string, string> = {};
+
 const page = routesToUse.find(({ path }) => {
     if (path === currentPathname) {
       return true;
@@ -255,17 +259,138 @@ const page = routesToUse.find(({ path }) => {
     const matched = matcherUrl(currentLocation.path);
     if (!matched) return false;
 
+    params = matched.params as Record<string, string>; 
     return true;
   })?.element;
 ```
 
+Where `params` will contain the values of the dynamic segments. For example, if the user is trying to access the route `/user/123`, this will match the route `/user/:id` and `params` will be an object with a value of `{id: '123'}`.
+
 ## Query parameters
 
-Additionaly, it will be useful if our router also had access to the query parameters and re-render
+Additionaly, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
+
+```ts
+export const getQueryParams = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const query = {} as Record<string, string | string[]>;
+  for (const [key, value] of searchParams.entries()) {
+    if (!query[key]) {
+      query[key] = value;
+    } else if (typeof query[key] === 'string') {
+      query[key] = [query[key] as string, value];
+    } else {
+      query[key] = [...query[key], value];
+    }
+  }
+  return query;
+};
+```
+
+This function will return an object which values will be either a string or array of strings depending whether the corresponding parameter key has multiple values or not. For example, a query parameter of `?foo=1&foo=2&bar=abc` will be parsed as `{ foo: ['1', '2'], bar: 'abc' }`.
+
+Now we can add this to the event subscription, so the application is re-rendered on a query change. For this purpose, I renamed the previous `currentPathname` to `currentLocation` which will contain both the current path and query:
+
+```ts
+ const [currentLocation, setCurrentLocation] = useState({
+    path: getCurrentPath(),
+    query: getQueryParams(),
+  });
+
+  useEffect(() => {
+    const onLocationChange = () =>
+      setCurrentLocation({
+        path: getCurrentPath(),
+        query: getQueryParams(),
+      });
+    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
+    window.addEventListener(EVENTS.POPSTATE, onLocationChange);
+    return () => {
+      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
+      window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
+    };
+  }, []);
+```
+
+### Refactoring the navigation
+
+These additions will allow our application to render the right route when the requested url contains dynamic segments and also keep in state the query parameters. 
+
+However, if we want to link to a dynamic route or add query parameters to a link programatically, we'll need to refactor our `Link` component so it's able to link to an `href` given any values of path, dynamic segments and query parameters. The function to do this conversion would be something like this:
+
+```ts
+import { compile } from 'path-to-regexp';
+
+const compilePathWithSegments = (
+  pathname: string,
+  segments: Record<string, string>
+) => {
+  const toPath = compile(pathname, { encode: encodeURIComponent });
+  return toPath(segments);
+};
+
+export type PathObject = {
+  pathname: string;
+  pathSegments?: Record<string, string>;
+  query?: Record<string, string | string[]>;
+};
+
+export function getRelativeHref(url: string | PathObject) {
+  if (typeof url === 'string') {
+    return url;
+  }
+  if (!url.pathname) {
+    return '';
+  }
+
+  let compiledPathname = url.pathname;
+  if (url.pathSegments) {
+    compiledPathname = compilePathWithSegments(url.pathname, url.pathSegments);
+  }
+
+  const searchParams = new URLSearchParams();
+  if (url.query) {
+    Object.entries(url.query).forEach(([key, value]) => {
+      if (typeof value === 'string') {
+        searchParams.append(key, value);
+      } else {
+        value.forEach((val) => searchParams.append(key, val));
+      }
+    });
+  }
+  return searchParams.toString()
+    ? `${compiledPathname}?${searchParams}`
+    : compiledPathname;
+}
+```
+
+The function `getRelativeHref` will accept an url as a string, for example `/about`. Alternatively, the url can also be passed as an object containing its pathname and, optionally, its dynamic segments and query parameters, for example: `{ pathname: '/user/:id', pathSegments: { id: 'foo' }, query: { search: 'bar' }}`.
+
+Then we can add this functionality to the `Link` component:
+
+```tsx
+// Link.tsx
+function Link({ target, to, ...props }: LinkProps) {
+  const href = getRelativeHref(to);
+  const handleClick = (event: MouseEvent) => {
+
+    // {... same as before ...}
+
+    if (isMainEvent && isManageableEvent && !isModifiedEvent) {
+      event.preventDefault();
+      dispatchPushStateEvent(href);
+    }
+  };
+
+  return <a onClick={handleClick} href={href} target={target} {...props} />;
+}
+```
 
 ## The router context provider
 
-Now that we have the basic functionality of the routing in place, we can extract this logic into a React context so we can also consume the router state in any component of the application. Let's start by creating the context:
+Now that we have all the basic functionality of the routing in place, we can extract this logic into a React context so we can consume the routing state in any component of the application. 
+
+Let's start by creating the context:
 
 ```tsx
 // context.ts
@@ -284,13 +409,38 @@ export function useRouter() {
 ```
 
 Now we can create a Router component that returns this context:
-```tsx
 
+```tsx
+// Router.tsx
+
+function navigate(to: string | PathObject) {
+  const href = getRelativeHref(to);
+  dispatchPushStateEvent(href);
+}
+
+function Router({
+  routes = [],
+  defaultElement = <h1>404</h1>,
+}: PropsWithChildren<Props>) {
+  // const [currentLocation, setCurrentLocation] = useState({ ...
+
+  // useEffect(() => { ...
+   
+  // const page = routes.find(({ path })) => { ...
+
+  return (
+      <RouterContext.Provider
+        value={{
+          pathname,
+          asPath: currentLocation.path,
+          params,
+          query: currentLocation.query,
+          navigate,
+        }}
+      >
+        {page ? page : defaultElement}
+      </RouterContext.Provider>
+    );
 ```
 
-
-
-We have now the foundation 
-
-## Extra: Optimizing bundle size
 
