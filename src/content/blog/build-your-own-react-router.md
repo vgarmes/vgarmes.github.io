@@ -1,27 +1,29 @@
 ---
 layout: ../../layouts/post.astro
 title: 'Build your own React router'
-pubDate: 2023-07-19
+pubDate: 2023-08-03
 description: 'The core of Single-Page Applications consists of its client routing which allows navigating through the pages without hitting the server. I made a basic React router to better understand this behavior.'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp' 
     alt: 'Custom command prompt with Powershell'
 tags: ["react", "router", "spa"]
-draft: true
+draft: false
 ---
-Single-Page Applications (SPAs) are incredibly popular, especially for highly interactive applications. The key feature of SPAs is that they consist of a single JavaScript application, which generates the HTML of every page after the initial load without the need to hit the server again. This allows the application to maintain state and memory across pages seamlessly. Frameworks like Next.js, SvelteKit, and Remix are all examples of SPA frameworks, even though some of them offer server-side rendering capabilities.
+Single-Page Applications (SPAs) are incredibly popular, especially for highly interactive applications. Frameworks like Next.js, SvelteKit, and Remix are all examples of SPA frameworks, even though some of them offer server-side rendering capabilities. 
+
+The key feature of SPAs is that they consist of a single JavaScript application, which generates the HTML of every page after the initial load without the need to hit the server again. This allows the application to maintain state and memory across pages seamlessly. 
 
 At the core of these applications, there lies a router running on the client-side. This router is what prevents the client from requesting new pages from the server and instead lets the JavaScript application generate the corresponding page.
 
-To gain a better understanding of how routing in SPAs works, I decided to create my own router using React and TypeScript. While building this router, I used as reference the source code of the popular library React Router made by the guys at Remix, but I focused on simplicity and implemented only the essential features.
+To gain a better understanding of how routing in SPAs works, I decided to create my own router using React and TypeScript. I found great inspiration from [video by midudev](https://www.youtube.com/watch?v=K2NcGYajvY4) (in Spanish) where he builds something similar. Additionally, I referred to the source code of the popular library [React Router]() for guidance during the development process. 
 
-This is how we can build it.
+You can see the router in action [here](https://v-router.netlify.app/)! Throughout this tutorial, I have prioritized simplicity while implementing only the essential features. Despite its simplicity, the router fully supports dynamic routing and query parameters. Now, let's delve into how we can build it.
 
 ## Getting started
 
-As a base application to test the router, I created an appication using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) with the React and Typescript + SWC template.
+As a foundation to test the router, I created an appication using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) with the React and Typescript + SWC template.
 
-As in most typical SPAs made with React, this template will create an almost empty `index.html` file with a root <div> element. Then, there will also be a JavaScript file (in this case Typescript) where React will inject the rendered HTML inside this root element:
+In line with most typical React-based SPAs, this template generates an almost empty index.html file containing a root `<div>` element. Additionally, a JavaScript file (in this case, written in TypeScript) is included, where React will inject the rendered HTML into this root element:
 
 ```tsx
 // main.tsx
@@ -38,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 The file `App.tsx` is where we will have to use our router to control what page is going to be rendered depending on the client location, enabling client side routing.
 
-Similarly to what React Router does, we will implement a Router component that accepts the routes as props. Therefore, we can start by creating the routes object and doing a first attempt on conditionally rendering the corresponding route depending on the current location:
+Following a similar approach to React Router, we'll implement a Router component that accepts the routes as props. Thus, we can begin by creating the routes object and making an initial attempt at conditionally rendering the corresponding route based on the current location:
 
 ```tsx
 // App.tsx
@@ -82,19 +84,22 @@ function App() {
 }
 ```
 
-This will find a matching route and render the corresponding page, otherwise it will render a 404 page. 
+The implemented routing logic will successfully find a matching route and render the corresponding page; otherwise, it will display a 404 page. 
 
-There is a problem though. If you try to click on the links above to navigate between the root page `/` and `/about`, you will notice that every time you navigate to page, a request will be sent to the server to get the corresponding HTML file and all the JavaScript application. This is what we want to avoid in order to turn this application into an SPA, so we will need to intercept all the navigation.
+However, when attempting to navigate between the root page `/` and `/about` using the links provided, you will notice that every time you navigate to page, a request is sent to the server to fetch the corresponding HTML file and the entire JavaScript application (you can see it on the Network tab of the browser developer tools). 
+
+To achieve true SPA behavior, we need to avoid this and intercept all navigation attempts.
 
 ## Intercepting navigation
 
-For intercepting all navigation to prevent the browser default behavior, we are going to need to do a couple of things:
-1. Create a function we can call in an anchor element (and anywhere else) for navigating to a different page.
-2. Replace the default behavior when the user wants to navigate back (browser back button).
+To intercept all navigation attempts and prevent the browser's default behavior, we need to take the following steps:
+
+1. Create a function that we can call in an anchor element (and elsewhere) to enable navigation to a different page.
+2. Intercept the event of navigating back using the browser's back button.
 
 ### Creating a function to navigate to another path
 
-First of all, we will need a function that we can call every time we need to navigate to a different page. The approach for achieving this, is programatically replacing the url with a `window` method while triggering an event we can subscribe to and re-render accordingly:
+First and foremost, we require a function that we can call whenever we need to navigate to a different page. The approach to achieve this involves programmatically replacing the URL using a `window` method while simultaneously triggering an event that we can subscribe to and handle the re-rendering process accordingly:
 
 ```ts
 
@@ -109,9 +114,9 @@ const dispatchPushStateEvent = (href: string) => {
 };
 ```
 
-The `window.history.pushState` method adds an entry to the browser's session history stack, allowing us to replace the url without refreshing the page. 
+The `window.history.pushState` method is used to add an entry to the browser's session history stack, enabling us to replace the URL without the need to refresh the page.
 
-At the same time, since this method doesn't trigger any events we can listen to, we can dispatch a custom `pushstate` event and subscribe to it in a `useEffect`. For this purpose, we will refactor a bit the `App.tsx`:
+At the same time, since this method doesn't trigger any events we can subscribe to, we can dispatch a custom `pushstate` event and subscribe to it in a `useEffect` hook. For this purpose, we will need to make some refinements to the `App.tsx` file:
 
 ```tsx
 // App.tsx
@@ -147,7 +152,7 @@ function App() {
 
 ## Link component: Replacing anchor's default behavior
 
-Now we can use the `dispatchPushStateEvent` function in the anchor element. For this, we can create a custom `Link` component that will return a traditional anchor element but with the altered functionality:
+Now we can use the `dispatchPushStateEvent` function in the anchor element. For this, we can create a custom `Link` component that will return a traditional anchor element but with the modified functionality:
 
 ```tsx
 // Link.tsx
@@ -179,9 +184,9 @@ function Link({ target, to, ...props }: LinkProps) {
 export default Link
 ```
 
-What we are doing here is that clicking on the anchor will trigger our custom `pushstate` event, as long as the intent is not opening a new window or tab (hence the `isModifiedEvent` and `isMnageableEvent`).
+What we are accomplishing here is that clicking on the anchor will trigger our custom `pushState` event, but only if the intent is not to open a new window or tab (hence the `isModifiedEvent` and `isMnageableEvent` checks).
 
-We can now refactor our routes with the new Link component:
+With the new `Link` component in place, we can now proceed to refactor the elements returned by our routes:
 
 ```tsx
 const routes = [
@@ -207,13 +212,13 @@ const routes = [
 
 ```
 
-If you try now to inspect the network requests, you'll see that after the initial load there won't be any more requests to the server while navigating across the pages. First goal for building the router achieved!
+If you try inspecting the network requests now, you'll notice that after the initial load, there won't be any more requests to the server while navigating across the pages. We have achieved the first goal for building the router!
 
-Now there is a prooblem though, if you try to navigate back using the browser back button you will see that the page content doesn't update. This is because the current location in our SPA is not being updated.
+However, there is still an issue. If you attempt to navigate back using the browser's back button, you will notice that the page content doesn't update. This is because the current location in our SPA is not being updated.
 
 ## Updating the location when navigating back
 
-In order to update the current route when the user tries to navigate back, we are going to need to update the `useEffect` where we handled our custom `pushstate` event.  This time we need to add a subscription to the `popstate` event, which is automatically triggered when we click the back button (or when calling `window.back`):
+To update the current route when the user navigates back, we'll need to make some changes to the  `useEffect` where we previously handled our custom `pushState` event. This time, we will add a subscription to the `popAtate` event, which is automatically triggered when the back button is clicked (or when `window.back` is called).:
 
 ```tsx
 const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
@@ -228,15 +233,15 @@ useEffect(() => {
 }, []);
   ```
 
-And with this we have a working router for our SPAs!
+And with this, we have successfully built a working router for our SPAs!
 
 ## Adding support to dynamic routes and query parameters
 
 ### Dynamic routes
 
-So far we have added support for routes with static names (like `/about` for example). However, in most cases we are going to need routes with dynamic segments (for example `/user/:id`). 
+So far, we have added support for routes with static names (like `/about` for example). However, in most cases, we are going to need routes with dynamic segments (for example `/user/:id`). 
 
-In order to support his, we will use the library **path-to-regexp** and replace in `App.tsx` this line where we check for equal path names:
+To support his, we will use the library **path-to-regexp** and replace this line in `App.tsx` where we check for equal path names:
 
 ```ts
 const page = routes.find((route) => route.path === currentPathname)?.element
@@ -248,9 +253,11 @@ With this one:
 import { match } from 'path-to-regexp';
 
 let params: Record<string, string> = {};
+let pathname: string = '';
 
 const page = routesToUse.find(({ path }) => {
     if (path === currentPathname) {
+      pathname = path;
       return true;
     }
 
@@ -259,16 +266,17 @@ const page = routesToUse.find(({ path }) => {
     const matched = matcherUrl(currentLocation.path);
     if (!matched) return false;
 
-    params = matched.params as Record<string, string>; 
+    params = matched.params as Record<string, string>;
+    pathname = path;
     return true;
   })?.element;
 ```
 
-Where `params` will contain the values of the dynamic segments. For example, if the user is trying to access the route `/user/123`, this will match the route `/user/:id` and `params` will be an object with a value of `{id: '123'}`.
+Where `params` will contain the values of the dynamic segments. For example, if the user is trying to access the route `/user/123`, this will match the route `/user/:id` and `params` will be an object with a value of `{id: '123'}`. We will also keep the value for the original path in `pathname` (in the previous example it would be `/user/:id`) since it might be useful.
 
 ## Query parameters
 
-Additionaly, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
+Additionally, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
 
 ```ts
 export const getQueryParams = () => {
@@ -287,9 +295,9 @@ export const getQueryParams = () => {
 };
 ```
 
-This function will return an object which values will be either a string or array of strings depending whether the corresponding parameter key has multiple values or not. For example, a query parameter of `?foo=1&foo=2&bar=abc` will be parsed as `{ foo: ['1', '2'], bar: 'abc' }`.
+This function will return an object whose values will be either a string or an array of strings, depending on whether the corresponding parameter key has multiple values or not. For example, a query parameter of `?foo=1&foo=2&bar=abc` will be parsed as `{ foo: ['1', '2'], bar: 'abc' }`.
 
-Now we can add this to the event subscription, so the application is re-rendered on a query change. For this purpose, I renamed the previous `currentPathname` to `currentLocation` which will contain both the current path and query:
+Now, we can add this to the event subscription, so the application is re-rendered when there's a query change. For this purpose, I renamed the previous `currentPathname` to `currentLocation`, which will contain both the current path and query:
 
 ```ts
  const [currentLocation, setCurrentLocation] = useState({
@@ -314,7 +322,7 @@ Now we can add this to the event subscription, so the application is re-rendered
 
 ### Refactoring the navigation
 
-These additions will allow our application to render the right route when the requested url contains dynamic segments and also keep in state the query parameters. 
+These additions will allow our application to render the right route when the requested url contains dynamic segments and also keep in the state the query parameters. 
 
 However, if we want to link to a dynamic route or add query parameters to a link programatically, we'll need to refactor our `Link` component so it's able to link to an `href` given any values of path, dynamic segments and query parameters. The function to do this conversion would be something like this:
 
@@ -364,7 +372,7 @@ export function getRelativeHref(url: string | PathObject) {
 }
 ```
 
-The function `getRelativeHref` will accept an url as a string, for example `/about`. Alternatively, the url can also be passed as an object containing its pathname and, optionally, its dynamic segments and query parameters, for example: `{ pathname: '/user/:id', pathSegments: { id: 'foo' }, query: { search: 'bar' }}`.
+The function `getRelativeHref` will accept a URL as a string, for example `/about`. Alternatively, the url can also be passed as an object containing its pathname and, optionally, its dynamic segments and query parameters. For example: `{ pathname: '/user/:id', pathSegments: { id: 'foo' }, query: { search: 'bar' }}`.
 
 Then we can add this functionality to the `Link` component:
 
@@ -422,11 +430,16 @@ function Router({
   routes = [],
   defaultElement = <h1>404</h1>,
 }: PropsWithChildren<Props>) {
-  // const [currentLocation, setCurrentLocation] = useState({ ...
+  /* 
+  const [currentLocation, setCurrentLocation] = useState({ ...
 
-  // useEffect(() => { ...
-   
-  // const page = routes.find(({ path })) => { ...
+  useEffect(() => { ...
+
+  let params: Record<string, string> = {};
+  let pathname: string = '';
+
+  const page = routes.find(({ path })) => { ...
+  */
 
   return (
       <RouterContext.Provider
@@ -443,4 +456,41 @@ function Router({
     );
 ```
 
+## Optimizing an SPA: Lazy loading
+
+As it is now, using this router in our SPA will load all the JavaScript code during the first request, which will impact negatively on the application's initial load time. 
+
+In order to only load the code required to run the current page, we should move the pages into their own files and lazy load them while using `React.Suspense`:
+
+```tsx
+import { Suspense, lazy } from 'react';
+import { Router, Route } from './';
+import Page404 from './pages/404';
+
+const HomePage = lazy(() => import('./pages/Home'))
+const AboutPage = lazy(() => import('./pages/About'));
+
+const routes = [
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: '/',
+    element: <AboutPage />,
+  },
+];
+
+function App() {
+  return (
+    <main>
+      <Suspense fallback={null}>
+        <Router routes={routes} defaultElement={<Page404 />} />
+      </Suspense>
+    </main>
+  );
+}
+
+export default App;
+```
 
