@@ -1,6 +1,6 @@
 ---
 layout: ../../layouts/post.astro
-title: 'Build your own React router'
+title: 'Build your own React router: A dive into Single-Page Applications'
 pubDate: 2023-08-03
 description: 'The core of Single-Page Applications consists of its client routing which allows navigating through the pages without hitting the server. I made a basic React router to better understand this behavior.'
 image:
@@ -9,7 +9,7 @@ image:
 tags: ["react", "router", "spa"]
 draft: false
 ---
-Single-Page Applications (SPAs) are incredibly popular, especially for highly interactive applications. Frameworks like Next.js, SvelteKit, and Remix are all examples of SPA frameworks, even though some of them offer server-side rendering capabilities. 
+Single-Page Applications (SPAs) are really popular, especially for highly interactive applications. Frameworks like Next.js, SvelteKit, and Remix are all examples of SPA frameworks, even though some of them offer server-side rendering capabilities. 
 
 The key feature of SPAs is that they consist of a single JavaScript application, which generates the HTML of every page after the initial load without the need to hit the server again. This allows the application to maintain state and memory across pages seamlessly. 
 
@@ -45,42 +45,42 @@ Following a similar approach to React Router, we'll implement a Router component
 ```tsx
 // App.tsx
 const routes = [
-    {
-        path: '/',
-        element: (
-            <div>
-                <h1>Hello World!</h1>
-                <a href="/about">About us</a>
-            </div>
-        ),
-    },
-    {
-        path: '/about',
-        element: (
-            <div>
-                <h1>About us</h1>
-                <a href="/">Go back home</a>
-            </div>
-        ),
-    },
+  {
+    path: '/',
+    element: (
+      <div>
+        <h1>Hello World!</h1>
+        <a href="/about">About us</a>
+      </div>
+    ),
+  },
+  {
+    path: '/about',
+    element: (
+      <div>
+        <h1>About us</h1>
+        <a href="/">Go back home</a>
+      </div>
+    ),
+  },
 ]
 
 function 404Page() {
-    return (
-         <div>
-            <h1>404</h1>
-        </div>
-    )
+  return (
+    <div>
+      <h1>404</h1>
+    </div>
+  )
 }
 
 function App() {
-    const currentPathname = window.location.pathname;
-    const Page = routes.find((route) => route.path === currentPathname)?.element
-    return (
-        <main>
-            {Page ? Page : 404Page}
-        </main>
-    )
+  const currentPathname = window.location.pathname;
+  const Page = routes.find((route) => route.path === currentPathname)?.element
+  return (
+    <main>
+      {Page ? Page : 404Page}
+    </main>
+  )
 }
 ```
 
@@ -104,7 +104,7 @@ First and foremost, we require a function that we can call whenever we need to n
 ```ts
 
 const EVENTS = {
-    PUSHSTATE: 'pushstate',
+  PUSHSTATE: 'pushstate',
 }
 
 const dispatchPushStateEvent = (href: string) => {
@@ -190,24 +190,24 @@ With the new `Link` component in place, we can now proceed to refactor the eleme
 
 ```tsx
 const routes = [
-    {
-        path: '/',
-        element: (
-            <div>
-                <h1>Hello World!</h1>
-                <Link to="/about">About us</Link>
-            </div>
-        ),
-    },
-    {
-        path: '/about',
-        element: (
-            <div>
-                <h1>About us</h1>
-                <Link to="/">Go back home</Link>
-            </div>
-        ),
-    },
+  {
+    path: '/',
+    element: (
+      <div>
+        <h1>Hello World!</h1>
+        <Link to="/about">About us</Link>
+      </div>
+    ),
+  },
+  {
+    path: '/about',
+    element: (
+      <div>
+        <h1>About us</h1>
+        <Link to="/">Go back home</Link>
+      </div>
+    ),
+  },
 ]
 
 ```
@@ -216,9 +216,9 @@ If you try inspecting the network requests now, you'll notice that after the ini
 
 However, there is still an issue. If you attempt to navigate back using the browser's back button, you will notice that the page content doesn't update. This is because the current location in our SPA is not being updated.
 
-## Updating the location when navigating back
+### Updating the location when navigating back
 
-To update the current route when the user navigates back, we'll need to make some changes to the  `useEffect` where we previously handled our custom `pushState` event. This time, we will add a subscription to the `popAtate` event, which is automatically triggered when the back button is clicked (or when `window.back` is called).:
+To update the current route when the user navigates back, we'll need to make some changes to the  `useEffect` where we previously handled our custom `pushState` event. This time, we will add a subscription to the `popState` event, which is automatically triggered when the back button is clicked (or when `window.back` is called).:
 
 ```tsx
 const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
@@ -231,7 +231,16 @@ useEffect(() => {
     window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
   };
 }, []);
-  ```
+```
+
+Where we added the new event to the `EVENTS` object:
+
+```ts
+const EVENTS = {
+  PUSHSTATE: 'pushstate',
+  POPSTATE: 'popstate',
+}
+```
 
 And with this, we have successfully built a working router for our SPAs!
 
@@ -256,25 +265,25 @@ let params: Record<string, string> = {};
 let pathname: string = '';
 
 const page = routesToUse.find(({ path }) => {
-    if (path === currentPathname) {
-      pathname = path;
-      return true;
-    }
-
-    const matcherUrl = match(path, { decode: decodeURIComponent });
-
-    const matched = matcherUrl(currentLocation.path);
-    if (!matched) return false;
-
-    params = matched.params as Record<string, string>;
+  if (path === currentPathname) {
     pathname = path;
     return true;
-  })?.element;
+  }
+
+  const matcherUrl = match(path, { decode: decodeURIComponent });
+
+  const matched = matcherUrl(currentLocation.path);
+  if (!matched) return false;
+
+  params = matched.params as Record<string, string>;
+  pathname = path;
+  return true;
+})?.element;
 ```
 
 Where `params` will contain the values of the dynamic segments. For example, if the user is trying to access the route `/user/123`, this will match the route `/user/:id` and `params` will be an object with a value of `{id: '123'}`. We will also keep the value for the original path in `pathname` (in the previous example it would be `/user/:id`) since it might be useful.
 
-## Query parameters
+### Query parameters
 
 Additionally, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
 
@@ -300,24 +309,24 @@ This function will return an object whose values will be either a string or an a
 Now, we can add this to the event subscription, so the application is re-rendered when there's a query change. For this purpose, I renamed the previous `currentPathname` to `currentLocation`, which will contain both the current path and query:
 
 ```ts
- const [currentLocation, setCurrentLocation] = useState({
-    path: getCurrentPath(),
-    query: getQueryParams(),
-  });
+const [currentLocation, setCurrentLocation] = useState({
+  path: getCurrentPath(),
+  query: getQueryParams(),
+});
 
-  useEffect(() => {
-    const onLocationChange = () =>
-      setCurrentLocation({
-        path: getCurrentPath(),
-        query: getQueryParams(),
-      });
-    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
-    window.addEventListener(EVENTS.POPSTATE, onLocationChange);
-    return () => {
-      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
-      window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
-    };
-  }, []);
+useEffect(() => {
+  const onLocationChange = () =>
+    setCurrentLocation({
+      path: getCurrentPath(),
+      query: getQueryParams(),
+    });
+  window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
+  window.addEventListener(EVENTS.POPSTATE, onLocationChange);
+  return () => {
+    window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
+    window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
+  };
+}, []);
 ```
 
 ### Refactoring the navigation
@@ -455,8 +464,9 @@ function Router({
       </RouterContext.Provider>
     );
 ```
+## Taking it further: the Route component
 
-## Optimizing an SPA: Lazy loading
+## Optimizing for production: Lazy loading
 
 As it is now, using this router in our SPA will load all the JavaScript code during the first request, which will impact negatively on the application's initial load time. 
 
@@ -494,3 +504,8 @@ function App() {
 export default App;
 ```
 
+## Putting it all together
+
+You can take a look at the final implementation [in my repository](https://github.com/vgarmes/v-router), which incorporates all the techniques we have discussed, along with some additional improvements.
+
+In conclusion, developing this basic client-side router has given me a better high-level understanding of SPAs. I hope it proves to be useful to you as well. Thanks for reading!
