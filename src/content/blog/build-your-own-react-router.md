@@ -23,7 +23,7 @@ You can see the router in action [here](https://v-router.netlify.app/)! Througho
 
 As a foundation to test the router, I created an appication using [Vite](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) with the React and Typescript + SWC template.
 
-In line with most typical React-based SPAs, this template generates an almost empty index.html file containing a root `<div>` element. Additionally, a JavaScript file (in this case, written in TypeScript) is included, where React will inject the rendered HTML into this root element:
+In line with most typical React-based SPAs, this template generates an almost empty `index.html` file containing a root `<div>` element. Additionally, a JavaScript file (in this case, written in TypeScript) is included, where React will inject the rendered HTML into this root element:
 
 ```tsx
 // main.tsx
@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 The file `App.tsx` is where we will have to use our router to control what page is going to be rendered depending on the client location, enabling client side routing.
 
-Following a similar approach to React Router, we'll implement a Router component that accepts the routes as props. Thus, we can begin by creating the routes object and making an initial attempt at conditionally rendering the corresponding route based on the current location:
+Following a similar approach to React Router, we'll implement a `Router` component that accepts the routes as props. Thus, we can begin by creating the routes object and making an initial attempt at conditionally rendering the corresponding route based on the current location:
 
 ```tsx
 // App.tsx
@@ -75,10 +75,10 @@ function 404Page() {
 
 function App() {
   const currentPathname = window.location.pathname;
-  const Page = routes.find((route) => route.path === currentPathname)?.element
+  const page = routes.find((route) => route.path === currentPathname)?.element
   return (
     <main>
-      {Page ? Page : 404Page}
+      {page ? page : 404Page}
     </main>
   )
 }
@@ -86,7 +86,7 @@ function App() {
 
 The implemented routing logic will successfully find a matching route and render the corresponding page; otherwise, it will display a 404 page. 
 
-However, when attempting to navigate between the root page `/` and `/about` using the links provided, you will notice that every time you navigate to page, a request is sent to the server to fetch the corresponding HTML file and the entire JavaScript application (you can see it on the Network tab of the browser developer tools). 
+However, when attempting to navigate between the routes `/` and `/about` using the links provided, you will notice that every time you navigate to page, a request is sent to the server to fetch the corresponding HTML file and the entire JavaScript application (you can see it on the Network tab of the browser developer tools). 
 
 To achieve true SPA behavior, we need to avoid this and intercept all navigation attempts.
 
@@ -94,7 +94,7 @@ To achieve true SPA behavior, we need to avoid this and intercept all navigation
 
 To intercept all navigation attempts and prevent the browser's default behavior, we need to take the following steps:
 
-1. Create a function that we can call in an anchor element (and elsewhere) to enable navigation to a different page.
+1. Create a function that we can call in an anchor element (and elsewhere) to enable navigation **to** a different path.
 2. Intercept the event of navigating back using the browser's back button.
 
 ### Creating a function to navigate to another path
@@ -102,7 +102,6 @@ To intercept all navigation attempts and prevent the browser's default behavior,
 First and foremost, we require a function that we can call whenever we need to navigate to a different page. The approach to achieve this involves programmatically replacing the URL using a `window` method while simultaneously triggering an event that we can subscribe to and handle the re-rendering process accordingly:
 
 ```ts
-
 const EVENTS = {
   PUSHSTATE: 'pushstate',
 }
@@ -124,7 +123,6 @@ At the same time, since this method doesn't trigger any events we can subscribe 
 /*
 {... same as before ...}
 */
-
 const getCurrentPath = () => window.location.pathname;
 
 function App() {
@@ -132,20 +130,18 @@ function App() {
 
   useEffect(() => {
     const onLocationChange = () => setCurrentPathname(getCurrentPath());
- 
     window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
-    
     return () => {
       window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
     };
     }, [])
 
-    const Page = routes.find((route) => route.path === currentPathname)?.element
-    return (
-      <main>
-        {Page ? Page : 404Page}
-      </main>
-    )
+  const page = routes.find((route) => route.path === currentPathname)?.element
+  return (
+    <main>
+      {page ? page : 404Page}
+    </main>
+  )
 }
 
 ```
@@ -224,6 +220,7 @@ To update the current route when the user navigates back, we'll need to make som
 const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
 
 useEffect(() => {
+  const onLocationChange = () => setCurrentPathname(getCurrentPath());
   window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
   window.addEventListener(EVENTS.POPSTATE, onLocationChange);
   return () => {
@@ -381,7 +378,7 @@ export function getRelativeHref(url: string | PathObject) {
 }
 ```
 
-The function `getRelativeHref` will accept a URL as a string, for example `/about`. Alternatively, the url can also be passed as an object containing its pathname and, optionally, its dynamic segments and query parameters. For example: `{ pathname: '/user/:id', pathSegments: { id: 'foo' }, query: { search: 'bar' }}`.
+The function `getRelativeHref` will accept a URL as a string, for example `/about`, and just return it. Alternatively, the url can be passed as an object containing its pathname and, optionally, its dynamic segments and query parameters. For example: `{ pathname: '/user/:id', pathSegments: { id: 'foo' }, query: { search: 'bar' }}`.
 
 Then we can add this functionality to the `Link` component:
 
@@ -425,7 +422,7 @@ export function useRouter() {
 }
 ```
 
-Now we can create a Router component that returns this context:
+Now we can create a `Router` component that returns this context and includes all the routing logic:
 
 ```tsx
 // Router.tsx
@@ -480,7 +477,7 @@ function App() {
 }
 ```
 
-This custom `Route` component, similary to the component in React Router, simply returns null:
+This custom `Route` component, similary to the component in React Router, simply returns `null`:
 
 ```tsx
 // Route.tsx
@@ -550,22 +547,14 @@ import Page404 from './pages/404';
 const HomePage = lazy(() => import('./pages/Home'))
 const AboutPage = lazy(() => import('./pages/About'));
 
-const routes = [
-  {
-    path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/',
-    element: <AboutPage />,
-  },
-];
-
 function App() {
   return (
     <main>
       <Suspense fallback={null}>
-        <Router routes={routes} defaultElement={<Page404 />} />
+        <Router defaultElement={<Page404 />} >
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+        </Router>
       </Suspense>
     </main>
   );
