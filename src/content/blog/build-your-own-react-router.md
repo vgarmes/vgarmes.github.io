@@ -2,10 +2,10 @@
 layout: ../../layouts/post.astro
 title: 'Build your own React router: A dive into Single-Page Applications'
 pubDate: 2023-08-03
-description: 'The core of Single-Page Applications consists of its client routing which allows navigating through the pages without hitting the server. I made a basic React router to better understand this behavior.'
+description: 'The core of Single-Page Applications consists of its client routing which allows navigating through the pages without hitting the server. Here I explain how I have built my own basic React router to better understand the inner workings of SPAs.'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp' 
-    alt: 'Custom command prompt with Powershell'
+    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp' 
+    alt: 'Thumbnail with the blog post title'
 tags: ["react", "router", "spa"]
 draft: false
 ---
