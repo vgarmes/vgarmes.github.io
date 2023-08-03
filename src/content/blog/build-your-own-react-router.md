@@ -464,13 +464,83 @@ function Router({
       </RouterContext.Provider>
     );
 ```
-## Taking it further: the Route component
+## Taking it a bit further: the Route component
+
+In order to reduce the level of abstraction, we can define a custom `Route` component, similar to the equivalent component in React Router. This allows us to use the `Route` component for each individual route instead of passing a `routes` object to the `Router`:
+
+```tsx
+function App() {
+  // ...
+  return (
+    <Router>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+    </Router>
+  )
+}
+```
+
+This custom `Route` component, similary to the component in React Router, simply returns null:
+
+```tsx
+// Route.tsx
+
+import { ReactNode } from 'react';
+
+export interface RouteProps {
+  path: string;
+  element: ReactNode;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Route(_props: RouteProps) {
+  return null;
+}
+```
+
+(Notice that I added an eslint exception since we are not using the props.)
+
+Then, React Router cleverly leverages the `React.Children` method, which is not commonly encouraged by [the React docs](https://react.dev/reference/react/Children) except for specific use cases like this. This method lets you transform the JSX code received as `children` prop. 
+
+By doing this, we can map the `children` and extract the props of the corresponding routes. Then, the `Router` will render the element of the matching route as usual, effectively ignoring the children components:
+
+```tsx
+// Router.tsx
+function Router({
+  children,
+  routes = [],
+  defaultElement = <h1>404</h1>,
+  basename = '',
+}: PropsWithChildren<Props>) {
+  // ... same code
+
+  const routesFromChildren =
+    Children.map(children, (child) => {
+      const { props, type } = child as JSX.Element;
+      const { displayName } = type;
+      const isRoute = displayName === 'Route';
+
+      return isRoute ? (props as RouteProps) : null;
+    })?.filter(Boolean) || [];
+
+  // we support both routes passed as an object ('routes' prop) or part of children as a <Route />
+  const routesToUse = [...routes, ...routesFromChildren];
+
+  const page = routesToUse.find(({ path }) => {
+    // ... same code
+  })
+  /* 
+  return (
+    ... same code
+  ) 
+  */
+```
 
 ## Optimizing for production: Lazy loading
 
-As it is now, using this router in our SPA will load all the JavaScript code during the first request, which will impact negatively on the application's initial load time. 
+As it is now, using this router in our SPA will load all the JavaScript code during the first request, which negatively impacts the application's initial load time. 
 
-In order to only load the code required to run the current page, we should move the pages into their own files and lazy load them while using `React.Suspense`:
+To optimize and load only the code required to run the current page, we should move the pages into their own files and lazy load them using  `React.Suspense`:
 
 ```tsx
 import { Suspense, lazy } from 'react';
