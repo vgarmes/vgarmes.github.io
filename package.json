@@ -10,7 +10,9 @@
 		"astro": "astro",
 		"lint": "eslint . --ext .js,.astro,.ts,.tsx",
 		"lint:fix": "lint --fix",
-		"format": "prettier -w . --cache"
+		"format": "prettier -w . --cache",
+		"generate": "drizzle-kit generate:sqlite",
+		"up": "drizzle-kit up:sqlite"
 	},
 	"dependencies": {
 		"@astrojs/image": "^0.16.7",
@@ -19,6 +21,8 @@
 		"@astrojs/tailwind": "^3.1.2",
 		"@react-spring/web": "^9.6.1",
 		"astro": "^2.4.2",
+		"drizzle-orm": "^0.28.1",
+		"hono": "^3.4.1",
 		"mdast-util-to-string": "^3.2.0",
 		"preact": "^10.6.5",
 		"reading-time": "^1.5.0",
@@ -26,9 +30,11 @@
 		"tailwindcss": "^3.0.24"
 	},
 	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20230807.0",
 		"@tailwindcss/typography": "^0.5.9",
 		"@typescript-eslint/eslint-plugin": "^5.38.1",
 		"@typescript-eslint/parser": "^5.38.0",
+		"drizzle-kit": "^0.19.12",
 		"eslint": "^8.24.0",
 		"eslint-plugin-astro": "^0.27.0",
 		"prettier": "^2.7.1",
