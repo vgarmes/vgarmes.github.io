@@ -1,0 +1,9 @@
+name = "website"
+main = "src/api/index.ts"
+compatibility_date = "2023-08-07"
+node_compat = true
+
+[[ d1_databases ]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "website-db"
+database_id = "91be2cb0-82b0-401f-baa1-4bf4a4fd5d15"

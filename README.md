@@ -35,3 +35,8 @@ Additionally, you should set Prettier as the default formatter for Astro files o
   }
 }
 ```
+
+## API
+
+This website uses Clodflare Workers for the API and Cloudflare D1 for the database. The worker is using Hono and Drizzle ORM.
+
