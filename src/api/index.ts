@@ -24,7 +24,7 @@ app.use(
 app.get('/api/posts/:slug/user-stats', async c => {
 	const db = drizzle(c.env.DB)
 	const slug = c.req.param('slug')
-	const ipAddress = c.req.header('x-forwarded-for') || '0.0.0.0'
+	const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
 	const salt = c.env.IP_ADDRESS_SALT
 	const currentUserId = await hashIpAddress(ipAddress, salt)
 	const post = await db.select().from(posts).where(eq(posts.slug, slug)).get()
@@ -97,7 +97,7 @@ app.post('/api/posts/:slug/like', async c => {
 	}
 
 	const db = drizzle(c.env.DB)
-	const ipAddress = c.req.header('x-forwarded-for') || '0.0.0.0'
+	const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
 	const slug = c.req.param('slug')
 	const salt = c.env.IP_ADDRESS_SALT
 	const currentUserId = await hashIpAddress(ipAddress, salt)
