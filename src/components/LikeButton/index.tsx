@@ -72,7 +72,7 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 			<div className="relative flex">
 				<button
 					className={cx(
-						'relative overflow-hidden rounded-lg bg-gradient-to-tl from-white/5 to-white/30 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90',
+						'relative transform overflow-hidden rounded-lg bg-gradient-to-tl from-white/5 to-white/30 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90',
 						{ 'animate-pulse': status === 'loading' }
 					)}
 					disabled={status === 'loading' || reachedMaxLikes}
