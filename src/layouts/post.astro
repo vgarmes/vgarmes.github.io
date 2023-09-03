@@ -27,7 +27,6 @@ type Props = {
 }
 
 const { frontmatter, headings, slug } = Astro.props
-const props = Astro.props
 const date = formatDate(frontmatter.pubDate)
 const toc = generateToc(headings)
 ---

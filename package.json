@@ -33,11 +33,11 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20230807.0",
 		"@tailwindcss/typography": "^0.5.9",
-		"@typescript-eslint/eslint-plugin": "^5.38.1",
-		"@typescript-eslint/parser": "^5.38.0",
+		"@typescript-eslint/eslint-plugin": "^6.5.0",
+		"@typescript-eslint/parser": "^6.5.0",
 		"drizzle-kit": "^0.19.12",
-		"eslint": "^8.24.0",
-		"eslint-plugin-astro": "^0.27.0",
+		"eslint": "^8.48.0",
+		"eslint-plugin-astro": "^0.29.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-astro": "^0.5.4",
 		"prettier-plugin-tailwindcss": "^0.2.3"
