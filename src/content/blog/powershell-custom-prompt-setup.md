@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/post.astro
 title: 'Set up a delightful custom prompt for PowerShell'
 pubDate: 2023-07-19
 description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'

@@ -1,12 +1,15 @@
 import type { FunctionalComponent, JSX } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import type { TocItem } from '~/util/generateToc'
+import LikeButton from './LikeButton'
+import BackTopButton from './BackTopButton'
 
 interface Props {
 	toc: TocItem[]
+	slug: string
 }
 
-const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
+const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 	const [currentHeading, setCurrentHeading] = useState({
 		slug: toc[0]?.slug,
 		text: toc[0]?.text
@@ -76,17 +79,17 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 
 	return (
 		<aside
-			role="navigation"
-			className={`sticky top-0 right-0 hidden flex-1 pt-16 pl-12 lg:block`}
+			className={`sticky top-16 right-0 hidden max-h-[calc(100vh-4rem)] flex-col gap-3 pl-12 pb-3 lg:flex`}
 		>
 			{toc.length > 0 && (
-				<h2 className="mb-3 w-full text-sm font-bold uppercase tracking-wide lg:mb-3">
+				<h2 className="w-full text-sm font-bold uppercase tracking-wide">
 					Table of contents
 				</h2>
 			)}
 			<div
-				className="h-full max-h-[calc(100vh-7.5rem)] overflow-y-auto"
+				className="h-full max-h-[calc(100vh-10rem)] overflow-y-auto"
 				style={{ overscrollBehavior: 'contain' }}
+				role="navigation"
 			>
 				<ul className="space-y-2">
 					{toc.length > 0 &&
@@ -94,6 +97,10 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
 						))}
 				</ul>
+			</div>
+			<div className="flex items-center justify-between border-t border-zinc-200 pt-3 pr-3 dark:border-zinc-700">
+				<LikeButton slug={slug} />
+				<BackTopButton />
 			</div>
 		</aside>
 	)

@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/post.astro
 title: 'Upload images with your Rails app using Active Storage and Cloudinary'
 pubDate: 2020-12-08
 description: 'Setting up Active Storage in your Rails app for being able to upload images to cloud storage service can be a bit challenging the first time.'

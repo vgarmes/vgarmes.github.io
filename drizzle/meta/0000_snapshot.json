@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "103b6e28-ea18-4bd4-8923-853a58407987",
+  "id": "7bce3bb9-f131-4f03-bc2d-e01da783cfb3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "posts": {
@@ -12,7 +12,7 @@
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "slug": {
           "name": "slug",
@@ -21,16 +21,16 @@
           "notNull": true,
           "autoincrement": false
         },
-        "likes": {
-          "name": "likes",
+        "total_likes": {
+          "name": "total_likes",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
           "default": 0
         },
-        "views": {
-          "name": "views",
+        "total_views": {
+          "name": "total_views",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -63,7 +63,7 @@
         },
         "post_id": {
           "name": "post_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

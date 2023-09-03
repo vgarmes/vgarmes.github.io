@@ -9,10 +9,10 @@ import {
 export const posts = sqliteTable(
 	'posts',
 	{
-		id: integer('id').primaryKey(),
+		id: integer('id').primaryKey({ autoIncrement: true }),
 		slug: text('slug').notNull(),
-		likes: integer('likes').default(0),
-		views: integer('views').default(0)
+		totalLikes: integer('total_likes').default(0),
+		totalViews: integer('total_views').default(0)
 	},
 	table => ({
 		slugIdx: uniqueIndex('slugIdx').on(table.slug)

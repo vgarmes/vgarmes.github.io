@@ -21,6 +21,7 @@
 		"@astrojs/tailwind": "^3.1.2",
 		"@react-spring/web": "^9.6.1",
 		"astro": "^2.4.2",
+		"clsx": "^2.0.0",
 		"drizzle-orm": "^0.28.1",
 		"hono": "^3.4.1",
 		"mdast-util-to-string": "^3.2.0",
