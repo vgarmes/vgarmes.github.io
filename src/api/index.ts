@@ -119,40 +119,37 @@ app.post('/api/posts/:slug/like', async c => {
 
 	const likesIncrement = Math.min(count, MAX_LIKES_PER_USER - currentUserLikes)
 
-	const result = await db.transaction(async tx => {
-		const updatedPost = await tx
-			.insert(posts)
-			.values({ slug, totalLikes: likesIncrement })
-			.onConflictDoUpdate({
-				target: posts.slug,
-				set: { totalLikes: sql`total_likes + ${likesIncrement}` }
-			})
-			.returning()
-			.get()
+	// this could be a transaction but it's not yet compatible with D1
+	const updatedPost = await db
+		.insert(posts)
+		.values({ slug, totalLikes: likesIncrement })
+		.onConflictDoUpdate({
+			target: posts.slug,
+			set: { totalLikes: sql`total_likes + ${likesIncrement}` }
+		})
+		.returning()
+		.get()
 
-		const updatedUserLikes = await tx
-			.insert(userLikes)
-			.values({
-				userId: currentUserId,
-				postId: updatedPost.id,
-				likes: likesIncrement
-			})
-			.onConflictDoUpdate({
-				target: [userLikes.userId, userLikes.postId],
-				set: { likes: sql`likes + ${likesIncrement}` }
-			})
-			.returning()
-			.get()
+	const updatedUserLikes = await db
+		.insert(userLikes)
+		.values({
+			userId: currentUserId,
+			postId: updatedPost.id,
+			likes: likesIncrement
+		})
+		.onConflictDoUpdate({
+			target: [userLikes.userId, userLikes.postId],
+			set: { likes: sql`likes + ${likesIncrement}` }
+		})
+		.returning()
+		.get()
 
-		return {
-			totalLikes: updatedPost.totalLikes,
-			userLikes: updatedUserLikes.likes,
-			userId: updatedUserLikes.userId,
-			postId: updatedPost.id
-		}
+	return c.json({
+		totalLikes: updatedPost.totalLikes,
+		userLikes: updatedUserLikes.likes,
+		userId: updatedUserLikes.userId,
+		postId: updatedPost.id
 	})
-
-	return c.json(result)
 })
 
 export default app
