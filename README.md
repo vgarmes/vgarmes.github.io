@@ -39,6 +39,11 @@ Additionally, you should set Prettier as the default formatter for Astro files o
 ## API
 
 This website uses Clodflare Workers for the API and Cloudflare D1 for the database. The worker is using Hono and Drizzle ORM.
+## Cloudflare Worker
+This repo uses secrets for the Cloudflare worker. In development, they need to be defined in a `.dev.vars` file in root. To deploy them to your worker, you need to run:
+```
+wrangler secret put <SECRET_KEY>
+```
 
 ## Cloudflare D1 database
 
