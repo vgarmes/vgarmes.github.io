@@ -47,7 +47,9 @@ const toc = generateToc(headings)
 			<ReadingTime minutesRead={frontmatter.minutesRead} />
 		</div>
 	</header>
-	<div class="mt-12 flex w-full items-start justify-center pb-6">
+	<div
+		class="mt-12 flex w-full items-start justify-center pb-6 lg:justify-start"
+	>
 		<article id="blog-post" class="max-w-full flex-shrink-0">
 			<div
 				class="prose prose-zinc prose-headings:scroll-mt-16 prose-h2:text-indigo-900 prose-code:before:hidden prose-code:after:hidden prose-pre:p-4 prose-img:rounded-md dark:prose-invert prose-h2:dark:text-yellow-400 [&_:not(pre)_>_code]:rounded [&_:not(pre)_>_code]:bg-zinc-200 [&_:not(pre)_>_code]:px-2 [&_:not(pre)_>_code]:py-1 dark:[&_:not(pre)_>_code]:bg-zinc-700"

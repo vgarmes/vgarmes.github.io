@@ -19,7 +19,6 @@
 		"@astrojs/mdx": "^0.19.1",
 		"@astrojs/preact": "^2.1.0",
 		"@astrojs/tailwind": "^3.1.2",
-		"@react-spring/web": "^9.6.1",
 		"astro": "^2.4.2",
 		"clsx": "^2.0.0",
 		"drizzle-orm": "^0.28.1",

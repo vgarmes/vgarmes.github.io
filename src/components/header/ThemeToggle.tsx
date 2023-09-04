@@ -1,7 +1,5 @@
 import type { FunctionalComponent } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
-import { animated } from '@react-spring/web'
-import { useBoop } from '~/hooks/useBoop'
 
 const icons = {
 	sun: (
@@ -54,7 +52,6 @@ const ThemeToggle: FunctionalComponent = () => {
 			? 'dark'
 			: 'light'
 	})
-	const { style, trigger } = useBoop({ rotation: 20, timing: 200 })
 
 	useEffect(() => {
 		const root = document.documentElement
@@ -72,15 +69,13 @@ const ThemeToggle: FunctionalComponent = () => {
 	}
 
 	return (
-		<animated.span onClick={trigger} style={style} class="flex items-center">
-			<button
-				className="animate-fadein"
-				onClick={toggleTheme}
-				aria-label="Toggle theme"
-			>
-				{theme === 'light' ? icons.moon : icons.sun}
-			</button>
-		</animated.span>
+		<button
+			className="animate-fadein flex items-center"
+			onClick={toggleTheme}
+			aria-label="Toggle theme"
+		>
+			{theme === 'light' ? icons.moon : icons.sun}
+		</button>
 	)
 }
 

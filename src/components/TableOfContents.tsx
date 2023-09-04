@@ -78,9 +78,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 	}
 
 	return (
-		<aside
-			className={`sticky top-16 right-0 hidden max-h-[calc(100vh-4rem)] flex-col gap-3 pl-12 pb-3 lg:flex`}
-		>
+		<aside className="sticky top-16 right-0 hidden max-h-[calc(100vh-4rem)] flex-grow flex-col gap-3 pl-12 pb-3 lg:flex xl:pl-20">
 			{toc.length > 0 && (
 				<h2 className="w-full text-sm font-bold uppercase tracking-wide">
 					Table of contents

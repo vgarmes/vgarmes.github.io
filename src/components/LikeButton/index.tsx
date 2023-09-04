@@ -72,7 +72,7 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 			<div className="relative flex">
 				<button
 					className={cx(
-						'relative transform overflow-hidden rounded-lg bg-gradient-to-tl from-white/5 to-white/30 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90',
+						'relative transform overflow-hidden rounded-lg bg-gradient-to-tl from-zinc-300 to-zinc-100 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90 dark:from-white/5 dark:to-white/30 ',
 						{ 'animate-pulse': status === 'loading' }
 					)}
 					disabled={status === 'loading' || reachedMaxLikes}
@@ -90,15 +90,16 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 					></div>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						fill="currentColor"
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
-						stroke="currentColor"
-						className={cx('relative h-6 w-6 group-hover:scale-110', {
-							'[animation:animateHeart_0.3s_linear_forwards_0.25s]':
-								likes === 3,
-							'scale-[0.2]': likes === 3
-						})}
+						className={cx(
+							'relative h-6 w-6 fill-zinc-700 group-hover:scale-110 dark:fill-white',
+							{
+								'[animation:animateHeart_0.3s_linear_forwards_0.25s] ':
+									likes === 3,
+								'scale-[0.2]': likes === 3
+							}
+						)}
 					>
 						<path
 							strokeLinecap="round"
@@ -113,7 +114,11 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 				{status === 'loading' ? (
 					<LoadingDots />
 				) : (
-					<span className={cx({ 'text-pink-500': userLikes > 0 })}>
+					<span
+						className={cx({
+							'text-pink-600 dark:text-pink-500': userLikes > 0
+						})}
+					>
 						{likes} likes
 					</span>
 				)}
