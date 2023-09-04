@@ -110,7 +110,13 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 				<Confetti active={reachedMaxLikes} />
 			</div>
 			<div className="text-sm font-bold">
-				{status === 'loading' ? <LoadingDots /> : <span>{likes} likes</span>}
+				{status === 'loading' ? (
+					<LoadingDots />
+				) : (
+					<span className={cx({ 'text-pink-500': userLikes > 0 })}>
+						{likes} likes
+					</span>
+				)}
 			</div>
 		</div>
 	)

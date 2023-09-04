@@ -1,0 +1,27 @@
+---
+title: 'Adding likes to a static site'
+pubDate: 2023-09-15
+description: ''
+image:
+  url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
+  alt: 'Thumbnail with the blog post title'
+tags: ['cloudflare', 'hono', 'drizzle']
+draft: true
+---
+
+When I started revamping my personal site I had very clear that I was going to use Astro. Astro is a framwork focused on performance and speed, which allows shipping sites with the minimum JavaScript and following a library-agnostic islands architecture.
+
+However, if you want to add functionality that needs a backend, you don't have an all-in solution like you get with frameworks like Next.js.
+
+So, when I needed to add the possibility to like posts, I had to find my own solution to build an api. One of my favorite platforms for doing this is Cloudflare.
+
+With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless endpoints instantly deployed across their 300 locations throughout the world using their Edge network.
+
+Moreover, Cloudflare has a database called D1 (in open alpha by the time this was written).
+
+## The tech stack
+
+Since I wanted to take full advantage of Cloudflare's Edge network, I used technologies that work with its JavaScript runtime:
+
+- Hono: backend framewor similar to Express but it runs on CDN Edges.
+- Drizzle: ORM that supports Edge runtime

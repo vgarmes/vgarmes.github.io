@@ -98,7 +98,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 						))}
 				</ul>
 			</div>
-			<div className="flex items-center justify-between border-t border-zinc-200 pt-3 pr-3 dark:border-zinc-700">
+			<div className="flex min-w-[180px] items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-700">
 				<LikeButton slug={slug} />
 				<BackTopButton />
 			</div>

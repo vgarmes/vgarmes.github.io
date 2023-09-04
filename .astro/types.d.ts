@@ -112,6 +112,13 @@ declare module 'astro:content' {
 
 	const entryMap: {
 		"blog": {
+"adding-likes-to-static-site.mdx": {
+  id: "adding-likes-to-static-site.mdx",
+  slug: "adding-likes-to-static-site",
+  body: string,
+  collection: "blog",
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".mdx"] },
 "build-your-own-react-router.md": {
   id: "build-your-own-react-router.md",
   slug: "build-your-own-react-router",
