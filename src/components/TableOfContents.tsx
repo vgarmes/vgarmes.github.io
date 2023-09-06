@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks'
 import type { TocItem } from '~/util/generateToc'
 import LikeButton from './LikeButton'
 import BackTopButton from './BackTopButton'
+import cx from 'clsx'
 
 interface Props {
 	toc: TocItem[]
@@ -56,14 +57,34 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 		return (
 			<li key={slug} className="text-sm">
 				<a
-					className={`block py-1 leading-normal ${
-						currentHeading.slug === slug
-							? 'font-bold text-indigo-600 dark:text-indigo-400'
-							: 'font-semibold opacity-70 hover:opacity-100'
-					} ${depth > 2 ? 'pl-3' : ''}`}
+					className={cx('flex items-start py-1 leading-normal', {
+						'font-bold text-indigo-600 dark:text-indigo-400':
+							currentHeading.slug === slug,
+						'font-semibold opacity-70 hover:opacity-100':
+							currentHeading.slug !== slug,
+						'pl-2': depth > 2
+					})}
 					href={`#${slug}`}
 					onClick={onLinkClick}
 				>
+					{depth > 2 && (
+						<span className="mr-1 pt-1">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								className="h-3 w-3"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M8.25 4.5l7.5 7.5-7.5 7.5"
+									stroke-width={3}
+								/>
+							</svg>
+						</span>
+					)}
 					{text}
 				</a>
 				{children.length > 0 ? (
@@ -78,7 +99,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 	}
 
 	return (
-		<aside className="sticky top-16 right-0 hidden max-h-[calc(100vh-4rem)] flex-grow flex-col gap-3 pl-12 pb-3 lg:flex xl:pl-20">
+		<aside className="sticky top-16 right-0 hidden max-h-[calc(100vh-4rem)] flex-grow flex-col gap-3 pl-6 pb-3 lg:flex xl:pl-12">
 			{toc.length > 0 && (
 				<h2 className="w-full text-sm font-bold uppercase tracking-wide">
 					Table of contents
