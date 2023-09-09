@@ -36,9 +36,7 @@ const toc = generateToc(headings)
 	description={frontmatter.description}
 	image={frontmatter.image?.url}
 >
-	<article
-		class="mx-auto w-full max-w-prose pt-12 md:text-lg lg:mx-0 lg:max-w-full"
-	>
+	<article class="mx-auto w-full max-w-2xl pt-12 lg:mx-0 lg:max-w-full">
 		<header>
 			<h1
 				id="overview"
@@ -57,7 +55,7 @@ const toc = generateToc(headings)
 			class="mt-12 flex flex-1 items-start justify-center pb-6 lg:justify-start"
 		>
 			<div
-				class="prose prose-zinc mx-auto w-full prose-headings:scroll-mt-16 prose-h2:text-indigo-900 prose-code:before:hidden prose-code:after:hidden prose-pre:p-4 prose-img:rounded-md dark:prose-invert prose-h2:dark:text-yellow-400 md:prose-lg lg:mx-0 [&_:not(pre)_>_code]:rounded [&_:not(pre)_>_code]:bg-zinc-200 [&_:not(pre)_>_code]:px-2 [&_:not(pre)_>_code]:py-1 dark:[&_:not(pre)_>_code]:bg-zinc-700"
+				class="prose prose-zinc mx-auto w-full prose-headings:scroll-mt-16 prose-h2:text-indigo-900 prose-code:before:hidden prose-code:after:hidden prose-pre:p-4 prose-img:rounded-md dark:prose-invert prose-h2:dark:text-yellow-400 md:prose-lg lg:mx-0 lg:max-w-2xl [&_:not(pre)_>_code]:rounded [&_:not(pre)_>_code]:bg-zinc-200 [&_:not(pre)_>_code]:px-2 [&_:not(pre)_>_code]:py-1 dark:[&_:not(pre)_>_code]:bg-zinc-700"
 			>
 				<slot />
 			</div>
