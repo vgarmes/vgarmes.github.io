@@ -38,10 +38,10 @@ const LikeButton: FunctionalComponent<Props> = ({ slug }) => {
 				setStatus('error')
 				return
 			}
-			const data = await response.json<{
+			const data = (await response.json()) as {
 				totalLikes: number
 				userLikes: number
-			}>()
+			}
 
 			setLikes(data.totalLikes)
 			setUserLikes(data.userLikes)
