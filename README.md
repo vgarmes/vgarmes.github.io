@@ -5,7 +5,7 @@ Built with Astro and Preact for a blazingly fast website 🚀
 ## Installation
 
 ```
-yarn
+pnpm install
 ```
 
 ## Some considerations with Astro
@@ -57,7 +57,7 @@ wrangler dev --local --persist
 ```
 
 Schema updates:
-Whenever you apply changes to the schema - you just rerun `yarn generate` and it will generate SQL migration for you completely automatically in most of the cases
+Whenever you apply changes to the schema - you just rerun `pnpm run generate` and it will generate SQL migration for you completely automatically in most of the cases
 
 Maintain stale metadata
 We're rapidly evolving Drizzle Kit APIs and from time to time there's a need to upgrade underlying metadata structure.
