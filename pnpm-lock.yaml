@@ -69,14 +69,14 @@ devDependencies:
     specifier: ^0.29.0
     version: 0.29.0(eslint@8.48.0)
   prettier:
-    specifier: ^2.7.1
-    version: 2.7.1
+    specifier: ^3.0.3
+    version: 3.0.3
   prettier-plugin-astro:
-    specifier: ^0.5.4
-    version: 0.5.4
+    specifier: ^0.12.0
+    version: 0.12.0
   prettier-plugin-tailwindcss:
     specifier: ^0.2.3
-    version: 0.2.3(prettier-plugin-astro@0.5.4)(prettier@2.7.1)
+    version: 0.2.3(prettier-plugin-astro@0.12.0)(prettier@3.0.3)
 
 packages:
 
@@ -93,8 +93,8 @@ packages:
       '@jridgewell/trace-mapping': 0.3.19
     dev: false
 
-  /@astrojs/compiler@0.23.5:
-    resolution: {integrity: sha512-vBMPy9ok4iLapSyCCT1qsZ9dK7LkVFl9mObtLEmWiec9myGHS9h2kQY2xzPeFNJiWXUf9O6tSyQpQTy5As/p3g==}
+  /@astrojs/compiler@1.8.2:
+    resolution: {integrity: sha512-o/ObKgtMzl8SlpIdzaxFnt7SATKPxu4oIP/1NL+HDJRzxfJcAkOTAb/ZKMRyULbz4q+1t2/DAebs2Z1QairkZw==}
     dev: true
 
   /@astrojs/compiler@2.1.0:
@@ -4201,17 +4201,16 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-astro@0.5.4:
-    resolution: {integrity: sha512-ILs/WgUYtKBOn3Zh217/PwjCFtUWEKQjcCFJDevri0hGEBwEnnda9aqSLL0/nhCOmQn/UE7M9zLQvThu970ZHw==}
-    engines: {node: ^14.15.0 || >=16.0.0, npm: '>=6.14.0'}
+  /prettier-plugin-astro@0.12.0:
+    resolution: {integrity: sha512-8E+9YQR6/5CPZJs8XsfBw579zrwZkc0Wb7x0fRVm/51JC8Iys4lBw4ecV8fHwpbQnzve86TUa4fJ08BJzqfWnA==}
+    engines: {node: ^14.15.0 || >=16.0.0}
     dependencies:
-      '@astrojs/compiler': 0.23.5
-      prettier: 2.7.1
+      '@astrojs/compiler': 1.8.2
+      prettier: 3.0.3
       sass-formatter: 0.7.8
-      synckit: 0.7.3
     dev: true
 
-  /prettier-plugin-tailwindcss@0.2.3(prettier-plugin-astro@0.5.4)(prettier@2.7.1):
+  /prettier-plugin-tailwindcss@0.2.3(prettier-plugin-astro@0.12.0)(prettier@3.0.3):
     resolution: {integrity: sha512-s2N5Dh7Ao5KTV1mao5ZBnn8EKtUcDPJEkGViZIjI0Ij9TTI5zgTz4IHOxW33jOdjHKa8CSjM88scelUiC5TNRQ==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -4263,13 +4262,13 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.7.1
-      prettier-plugin-astro: 0.5.4
+      prettier: 3.0.3
+      prettier-plugin-astro: 0.12.0
     dev: true
 
-  /prettier@2.7.1:
-    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
-    engines: {node: '>=10.13.0'}
+  /prettier@3.0.3:
+    resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
+    engines: {node: '>=14'}
     hasBin: true
     dev: true
 
@@ -4817,14 +4816,6 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  /synckit@0.7.3:
-    resolution: {integrity: sha512-jNroMv7Juy+mJ/CHW5H6TzsLWpa1qck6sCHbkv8YTur+irSq2PjbvmGnm2gy14BUQ6jF33vyR4DPssHqmqsDQw==}
-    engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
-    dependencies:
-      '@pkgr/utils': 2.4.2
-      tslib: 2.6.2
-    dev: true
 
   /synckit@0.8.5:
     resolution: {integrity: sha512-L1dapNV6vu2s/4Sputv8xGsCdAVlb5nRDMFU/E27D44l5U6cw1g0dGd45uLc+OXjNMmF4ntiMdCimzcjFKQI8Q==}
