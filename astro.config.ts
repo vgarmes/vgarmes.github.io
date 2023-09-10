@@ -6,7 +6,7 @@ import { remarkReadingTime } from './remark-reading-time.mjs'
 
 // https://astro.build/config
 export default defineConfig({
-	integrations: [preact(), tailwind(), mdx()],
+	integrations: [preact({ compat: true }), tailwind(), mdx()],
 	site: 'https://vgarmes.github.io',
 	markdown: {
 		remarkPlugins: [remarkReadingTime]

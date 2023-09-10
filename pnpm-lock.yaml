@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  react: npm:@preact/compat@latest
+  react-dom: npm:@preact/compat@latest
+
 dependencies:
   '@astrojs/mdx':
     specifier: ^1.0.3
@@ -29,6 +33,9 @@ dependencies:
   mdast-util-to-string:
     specifier: ^3.2.0
     version: 3.2.0
+  preact:
+    specifier: ^10.17.1
+    version: 10.17.1
   reading-time:
     specifier: ^1.5.0
     version: 1.5.0
