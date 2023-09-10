@@ -1,10 +1,10 @@
 .line {
-	transition: y 300ms ease-in 300ms, rotate 300ms ease-in, opacity 0ms 300ms;
+	transition: y 150ms ease-in 150ms, rotate 150ms ease-in, opacity 0ms 150ms;
 	transform-origin: center;
 }
 
 #sidebar-toggle[aria-expanded='true'] .line {
-	transition: y 300ms ease-in, transform 300ms ease-in 300ms, opacity 0ms 300ms;
+	transition: y 150ms ease-in, transform 150ms ease-in 150ms, opacity 0ms 150ms;
 }
 
 #sidebar-toggle[aria-expanded='true'] :is(.line_top, .line_bottom) {

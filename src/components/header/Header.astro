@@ -27,9 +27,7 @@ import ThemeToggle from './ThemeToggle'
 				>
 			</div>
 		</div>
-		<div class="flex items-center gap-3">
-			<ThemeToggle client:only="preact" />
-			<MobileMenuButton client:visible />
-		</div>
+		<div class="hidden sm:flex"><ThemeToggle client:visible /></div>
+		<div class="block sm:hidden"><MobileMenuButton client:visible /></div>
 	</nav>
 </header>
