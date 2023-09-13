@@ -9,15 +9,17 @@ tags: ['cloudflare', 'hono', 'drizzle']
 draft: true
 ---
 
-When I started revamping my personal site I had very clear that I was going to use Astro. Astro is a framwork focused on performance and speed, which allows shipping sites with the minimum JavaScript and following a library-agnostic islands architecture.
+When I started revamping my personal site I wanted to make it really performant. Considering that this site is mostly static content, I thought the best choice was to use Astro to generate static pages.
 
-However, if you want to add functionality that needs a backend, you don't have an all-in solution like you get with frameworks like Next.js.
+Astro is a framwork focused on performance and speed, which allows shipping sites with the minimum JavaScript and following a library-agnostic islands architecture.
 
-So, when I needed to add the possibility to like posts, I had to find my own solution to build an api. One of my favorite platforms for doing this is Cloudflare.
+However, even in static sites like these, thee is a need for adding some backend functionality. It might be that you want to count the number of views a blog post has, or even allow the readers to like or comment the posts.
 
-With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless endpoints instantly deployed across their 300 locations throughout the world using their Edge network.
+My go to technology for making modest web apis like these, is Cloudflare.
 
-Moreover, Cloudflare has a database called D1 (in open alpha by the time this was written).
+With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless api endpoints instantly deployed to their Edge network 300 locations across the globe.
+
+Moreover, Cloudflare has a database called D1 (in open alpha by the time this was written), which covers my needs.
 
 ## The tech stack
 
@@ -25,3 +27,79 @@ Since I wanted to take full advantage of Cloudflare's Edge network, I used techn
 
 - Hono: backend framewor similar to Express but it runs on CDN Edges.
 - Drizzle: ORM that supports Edge runtime
+- D1 database: SQLite-based database
+
+## Getting started with Cloudflare
+
+First of all, you'll need to create a Cloudflare account if you haven't already. With this account you will have access to your dashboard where you can set up and monitor your Workers and the D1 database.
+
+Then, you'll need the Workers command-line interface, Wrangler, which allows to easily create, test and deploy Workers projects. For using it, you can decide whether installing it in your global packages with `npm -g wrangler` or using it dirctly with `npx`.
+
+Running the command `wrangler dev` will start a local server on `http://localhost:8787` for developing our Worker. However, if you try to go to that route you'll get a 404 because we haven't built our API yet.
+
+Moreover, you'll need to create a `wrangler.toml` file at the root of your project. This file will be used to configure our Worker. We can already start the first configuration by adding this to the file:
+
+```toml
+name = <WORKER_NAME>
+main = <WORKER_ENTRY_POINT> # i.e "src/api/index.ts"
+compatibility_date = "2023-08-07"
+node_compat = true
+```
+
+### Creating a database
+
+To create our D1 database with Cloudflare, we just need to run 
+
+```shell
+wrangler d1 create <DATABASE_NAME>
+```
+
+This will create a new D1 database, and output the binding configuration like below which we'll needed in the next step:
+
+```shell
+[[d1_databases]]
+binding = "DB"
+database_name = "<DATABASE_NAME>"
+database_id = "<unique-ID-for-your-database>"
+```
+
+### Binding your Worker to the D1 database
+You must create a binding for your Worker to connect to your D1 database. Bindings allow your Workers to access resources, like D1, on the Cloudflare developer platform. You create bindings by updating your wrangler.toml file.
+
+To bind your D1 database to your Worker, add the following to the end of your `wrangler.toml` file which we previously created:
+
+```toml
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "<DATABASE_NAME>"
+database_id = "<unique-ID-for-your-database>"
+```
+
+The value (string) you set for <BINDING_NAME> will be used to reference this database in your Worker and it is available in your Worker's environent at `env.<BINDING_NAME>` as we'll see later on. The name can be any valid JavaScript variable name, in my case I've just called it `DB`.
+
+## Installing the rest of the dependencies
+
+Install hono
+`pnpm install hono`
+
+Install drizzle
+
+If you use Typescript, you'll also want to install the types for Workers:
+
+`pnpm install -D @cloudflare/workers-types`
+
+and add it to your types in your `tsconfig.json` file:
+```json
+{
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types"],
+  }
+}
+```
+
+## Creating the web APIs with Hono
+
+For the web APIs we'll use Hono, which is a simple backend famework similar to Express but it runs on Edge networks. 
+
+
+
