@@ -9,6 +9,8 @@ tags: ['cloudflare', 'hono', 'drizzle']
 draft: true
 ---
 
+import LikeButtonDemo from '../../components/LikeButton/LikeButtonDemo.tsx'
+
 When I started revamping my personal site I wanted to make it really performant. Considering that this site is mostly static content, I thought the best choice was to use Astro to generate static pages.
 
 Astro is a framwork focused on performance and speed, which allows shipping sites with the minimum JavaScript and following a library-agnostic islands architecture.
@@ -48,7 +50,7 @@ node_compat = true
 
 ### Creating a database
 
-To create our D1 database with Cloudflare, we just need to run 
+To create our D1 database with Cloudflare, we just need to run
 
 ```shell
 wrangler d1 create <DATABASE_NAME>
@@ -64,6 +66,7 @@ database_id = "<unique-ID-for-your-database>"
 ```
 
 ### Binding your Worker to the D1 database
+
 You must create a binding for your Worker to connect to your D1 database. Bindings allow your Workers to access resources, like D1, on the Cloudflare developer platform. You create bindings by updating your wrangler.toml file.
 
 To bind your D1 database to your Worker, add the following to the end of your `wrangler.toml` file which we previously created:
@@ -75,7 +78,7 @@ database_name = "<DATABASE_NAME>"
 database_id = "<unique-ID-for-your-database>"
 ```
 
-The value (string) you set for <BINDING_NAME> will be used to reference this database in your Worker and it is available in your Worker's environent at `env.<BINDING_NAME>` as we'll see later on. The name can be any valid JavaScript variable name, in my case I've just called it `DB`.
+The value (string) you set for `<BINDING_NAME>` will be used to reference this database in your Worker and it is available in your Worker's environent at `env.<BINDING_NAME>` as we'll see later on. The name can be any valid JavaScript variable name, in my case I've just called it `DB`.
 
 ## Installing the rest of the dependencies
 
@@ -89,17 +92,113 @@ If you use Typescript, you'll also want to install the types for Workers:
 `pnpm install -D @cloudflare/workers-types`
 
 and add it to your types in your `tsconfig.json` file:
+
 ```json
 {
-  "compilerOptions": {
-    "types": ["@cloudflare/workers-types"],
-  }
+	"compilerOptions": {
+		"types": ["@cloudflare/workers-types"]
+	}
 }
 ```
 
+## Creating the database schema
+
+Now that we have our D1 database ready, we can create the schema with Drizzle. One of the cool things about Drizzle, it's that it lets you define and manage the database schema in typescript.
+
+First we'll create the table `Posts`, where we will store each post's slug and the total amount of likes and views:
+
+```ts
+export const posts = sqliteTable(
+	'posts',
+	{
+		id: integer('id').primaryKey({ autoIncrement: true }),
+		slug: text('slug').notNull(),
+		totalLikes: integer('total_likes').default(0),
+		totalViews: integer('total_views').default(0)
+	},
+	table => ({
+		slugIdx: uniqueIndex('slugIdx').on(table.slug)
+	})
+)
+```
+
+As you can see, I added the slug as index of the table since that's the way it's going to be filtered in most cases.
+
+Then we can create the table that will keep track of the user likes:
+
+```ts
+export const userLikes = sqliteTable(
+	'user_likes',
+	{
+		userId: text('user_id'),
+		postId: integer('post_id').references(() => posts.id),
+		likes: integer('likes').default(1)
+	},
+	table => {
+		return {
+			pk: primaryKey(table.userId, table.postId)
+		}
+	}
+)
+```
+
+At the time of writing this article, there was [a bug with D1](https://github.com/cloudflare/workers-sdk/issues/3160) when trying to left join 2 tables that have the same column names, for which the second column is not returned. Hence why I used different naming for the likes and views in each of the tables.
+
 ## Creating the web APIs with Hono
 
-For the web APIs we'll use Hono, which is a simple backend famework similar to Express but it runs on Edge networks. 
+For the web APIs we'll use Hono, which is a simple backend famework similar to Express but it runs on Edge networks.
 
+With something as simple as this we can already have a Worker set up
 
+```ts
+type Bindings = {
+	DB: D1Database
+	IP_ADDRESS_SALT: string
+}
 
+const app = new Hono<{ Bindings: Bindings }>()
+
+app.get('hello-world', c => c.text('hello world!'))
+```
+
+## Identifying the user
+
+Since I wanted to give the possibility to like the posts without the need of creating an account and being authenticated, I identify the users using the origin IP address in the request. However, in order to not keep senstive data I hash the ip.
+
+We have easy access to the request ip by using the context of the request and getting the header `cf-connecting-ip` provided by the Cloudflare Worker. Then we can hash the ip using an encryption algorithm like `SHA-256` and salt in order to generate the user id:
+
+```ts
+const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
+const salt = c.env.IP_ADDRESS_SALT
+const currentUserId = await hashIpAddress(ipAddress, salt)
+```
+
+I ommited the definition of the function `hashIpAddress` for keeping it short but you can refer to my source code.
+
+## Fetching the post and user statistics
+
+The
+
+## Deploy the worker and database
+
+Before deploying your D1 database and Worker globally, log in with your Cloudflare account by running:
+
+```shell
+wrangler login
+```
+
+To deploy the worker, run:
+
+```shell
+wrangler deploy
+```
+
+npx wrangler deploy
+
+```shell
+wrangler d1 execute <DATABASE_NAME> --file=./schema.sql
+```
+
+## The like button
+
+<LikeButtonDemo client:visible />

@@ -54,24 +54,6 @@ app.get('/api/posts/:slug/user-stats', async c => {
 	})
 })
 
-app.get('/api/posts/:slug/stats', async c => {
-	const db = drizzle(c.env.DB)
-	const slug = c.req.param('slug')
-	const result = await db.select().from(posts).where(eq(posts.slug, slug)).get()
-
-	return c.json({
-		slug,
-		totalLikes: result?.totalLikes || 0,
-		totalViews: result?.totalViews || 0
-	})
-})
-/* app.delete('/api', async c => {
-	const db = drizzle(c.env.DB)
-	await db.delete(userLikes).run()
-	await db.delete(posts).run()
-	return c.text('done')
-}) */
-
 app.post('/api/posts/:slug/view', async c => {
 	const db = drizzle(c.env.DB)
 	const slug = c.req.param('slug')
