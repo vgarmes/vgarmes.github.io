@@ -1,9 +1,9 @@
 import type { FunctionalComponent, JSX } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import type { TocItem } from '~/util/generateToc'
-import LikeButton from './LikeButton'
 import BackTopButton from './BackTopButton'
 import cx from 'clsx'
+import PostLikes from './PostLikes'
 
 interface Props {
 	toc: TocItem[]
@@ -122,7 +122,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 				</ul>
 			</div>
 			<div className="flex min-w-[180px] items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-700">
-				<LikeButton slug={slug} />
+				<PostLikes slug={slug} />
 				<BackTopButton />
 			</div>
 		</aside>

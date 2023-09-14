@@ -5,8 +5,8 @@ import { formatDate } from '~/util/helpers'
 import TableOfContents from '~/components/TableOfContents'
 import generateToc from '~/util/generateToc'
 import ReadingTime from '~/components/ReadingTime.astro'
-import LikeButton from '~/components/LikeButton'
 import BackTopButton from '~/components/BackTopButton'
+import PostLikes from '~/components/PostLikes'
 
 type PostFrontmatter = {
 	title: string
@@ -62,7 +62,7 @@ const toc = generateToc(headings)
 			<TableOfContents client:visible toc={toc} slug={slug} />
 		</div>
 		<div class="flex items-center justify-between pb-6 lg:hidden">
-			<LikeButton client:visible slug={slug} />
+			<PostLikes client:visible slug={slug} />
 			<BackTopButton client:visible />
 		</div>
 	</article>
