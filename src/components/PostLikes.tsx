@@ -29,7 +29,7 @@ const PostLikes: FunctionComponent<Props> = ({ slug }) => {
 
 	useEffect(() => {
 		const fetchStats = async () => {
-			const response = await fetch(`${apiHost}/api/posts/${slug}/user-stats`)
+			const response = await fetch(`${apiHost}/api/posts/${slug}/stats`)
 			if (response.status !== 200) {
 				setStatus('error')
 				return

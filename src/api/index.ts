@@ -21,7 +21,7 @@ app.use(
 	})
 )
 
-app.get('/api/posts/:slug/user-stats', async c => {
+app.get('/api/posts/:slug/stats', async c => {
 	const db = drizzle(c.env.DB)
 	const slug = c.req.param('slug')
 	const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
