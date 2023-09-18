@@ -74,7 +74,7 @@ app.post('/api/posts/:slug/like', async c => {
 	const data = await c.req.json()
 	const { count } = data
 
-	if (typeof count !== 'number' || count > MAX_LIKES_PER_USER) {
+	if (typeof count !== 'number' || count > MAX_LIKES_PER_USER || count < 0) {
 		return c.text('Likes value not valid', 400)
 	}
 

@@ -20,10 +20,6 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 		const setCurrent: IntersectionObserverCallback = entries => {
 			for (const entry of entries) {
 				if (entry.isIntersecting) {
-					console.log({
-						slug: entry.target.id,
-						text: entry.target.textContent || ''
-					})
 					setCurrentHeading({
 						slug: entry.target.id,
 						text: entry.target.textContent || ''
