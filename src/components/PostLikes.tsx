@@ -66,6 +66,7 @@ const PostLikes: FunctionComponent<Props> = ({ slug }) => {
 	return (
 		<LikeButton
 			likes={likes}
+			userLikes={userLikes}
 			disabled={status === 'loading' || reachedMaxLikes}
 			isLoading={status === 'loading'}
 			onClick={handleClick}

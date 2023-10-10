@@ -7,6 +7,7 @@ import { LoadingDots } from './LoadingDots'
 
 interface Props {
 	likes: number
+	userLikes?: number
 	isLoading?: boolean
 	disabled?: boolean
 	onClick: () => void
@@ -14,6 +15,7 @@ interface Props {
 
 const LikeButton: FunctionalComponent<Props> = ({
 	likes = 0,
+	userLikes = 0,
 	disabled = false,
 	isLoading = false,
 	onClick
@@ -34,9 +36,9 @@ const LikeButton: FunctionalComponent<Props> = ({
 						className={cx(
 							'absolute inset-0 transform-gpu bg-gradient-to-t from-indigo-500 via-purple-500 to-pink-500 transition-transform',
 							{
-								'translate-y-full': likes === 0,
-								'translate-y-5': likes === 1,
-								'translate-y-3': likes === 2
+								'translate-y-full': userLikes === 0,
+								'translate-y-5': userLikes === 1,
+								'translate-y-3': userLikes === 2
 							}
 						)}
 					></div>

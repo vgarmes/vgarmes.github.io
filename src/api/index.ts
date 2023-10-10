@@ -30,12 +30,7 @@ app.get('/api/posts/:slug/stats', async c => {
 	const post = await db.select().from(posts).where(eq(posts.slug, slug)).get()
 
 	if (!post) {
-		return c.json({
-			slug,
-			totalLikes: 0,
-			userLikes: 0,
-			totalViews: 0
-		})
+		return c.text('Post not found in database', 404)
 	}
 
 	const currentUserLikes = await db
@@ -48,9 +43,9 @@ app.get('/api/posts/:slug/stats', async c => {
 
 	return c.json({
 		slug,
-		totalViews: post.totalViews || 0,
-		totalLikes: post.totalLikes || 0,
-		userLikes: currentUserLikes?.likes || 0
+		totalViews: post.totalViews,
+		totalLikes: post.totalLikes,
+		userLikes: currentUserLikes?.likes ?? 0
 	})
 })
 

@@ -11,27 +11,23 @@ draft: true
 
 import LikeButtonDemo from '../../components/LikeButton/LikeButtonDemo.tsx'
 
-When I started revamping my personal site I wanted to make it really performant. Considering that this site is mostly static content, I thought the best choice was to use Astro to generate static pages.
+When I started revamping my personal site I wanted to make it really performant. Given that my site primarily consists of static content, I found the ideal solution in Astro, a framework focused on speed and efficiency. Astro's promise of generating static pages with minimal JavaScript and adhering to a library-agnostic islands architecture aligned perfectly with my needs.
 
-Astro is a framwork focused on performance and speed, which allows shipping sites with the minimum JavaScript and following a library-agnostic islands architecture.
+However, even on static sites like this, there usually arises a need for backend functionality - whether it's tallying the blog post views or enabling readers to like and comment on posts. In my case, I wanted readers to be able to like my blog posts, without the need for authentication.
 
-However, even in static sites like these, thee is a need for adding some backend functionality. It might be that you want to count the number of views a blog post has, or even allow the readers to like or comment the posts.
+For such modest web APIs, my go-to technology is Cloudflare. With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless api endpoints, instantly deployed across their Edge network spanning 300 global locations.
 
-My go to technology for making modest web apis like these, is Cloudflare.
+What's more, Cloudflare has introduced a database solution, D1 (in open alpha by the time this was written), which caters to my needs.
 
-With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless api endpoints instantly deployed to their Edge network 300 locations across the globe.
-
-Moreover, Cloudflare has a database called D1 (in open alpha by the time this was written), which covers my needs.
-
-## The tech stack
-
-Since I wanted to take full advantage of Cloudflare's Edge network, I used technologies that work with its JavaScript runtime:
+Since I wanted to take full advantage of the Workers Edge runtime, I used technologies that support it:
 
 - Hono: backend framewor similar to Express but it runs on CDN Edges.
-- Drizzle: ORM that supports Edge runtime
-- D1 database: SQLite-based database
+- Drizzle: ORM that integrates with the Edge runtime
+- D1 database: a SQLite-based database
 
-## Getting started with Cloudflare
+In this blog post, I'll guide you through the process of improving my blog by adding a post liking functionality using these technologies. This approach can be extended to incorporate various backend features, making it helpful for anyone who wants to add these to their static sites.
+
+## Getting ready
 
 First of all, you'll need to create a Cloudflare account if you haven't already. With this account you will have access to your dashboard where you can set up and monitor your Workers and the D1 database.
 
@@ -80,7 +76,7 @@ database_id = "<unique-ID-for-your-database>"
 
 The value (string) you set for `<BINDING_NAME>` will be used to reference this database in your Worker and it is available in your Worker's environent at `env.<BINDING_NAME>` as we'll see later on. The name can be any valid JavaScript variable name, in my case I've just called it `DB`.
 
-## Installing the rest of the dependencies
+### Installing the rest of the dependencies
 
 Install hono
 `pnpm install hono`
@@ -101,7 +97,7 @@ and add it to your types in your `tsconfig.json` file:
 }
 ```
 
-## Creating the database schema
+## Creating the database
 
 Now that we have our D1 database ready, we can create the schema with Drizzle. One of the cool things about Drizzle, it's that it lets you define and manage the database schema in typescript.
 
@@ -144,6 +140,23 @@ export const userLikes = sqliteTable(
 
 At the time of writing this article, there was [a bug with D1](https://github.com/cloudflare/workers-sdk/issues/3160) when trying to left join 2 tables that have the same column names, for which the second column is not returned. Hence why I used different naming for the likes and views in each of the tables.
 
+Whenever you apply changes to the schema - you just run:
+
+```shell
+drizzle-kit generate:sqlite
+```
+
+For my own convenience I added this as a script in `package.json`.
+
+To init local database and run server locally:
+
+```shell
+wrangler d1 execute <DATABASE_NAME> --local --file=./drizzle/<FILE_NAME>.sql
+wrangler dev --local --persist
+```
+
+`FILE_NAME` something that will look like `0000_short_lockheed`
+
 ## Creating the web APIs with Hono
 
 For the web APIs we'll use Hono, which is a simple backend famework similar to Express but it runs on Edge networks.
@@ -151,19 +164,14 @@ For the web APIs we'll use Hono, which is a simple backend famework similar to E
 With something as simple as this we can already have a Worker set up
 
 ```ts
-type Bindings = {
-	DB: D1Database
-	IP_ADDRESS_SALT: string
-}
-
-const app = new Hono<{ Bindings: Bindings }>()
+const app = new Hono()
 
 app.get('hello-world', c => c.text('hello world!'))
 ```
 
-## Identifying the user
+### Identifying the user on each request
 
-Since I wanted to give the possibility to like the posts without the need of creating an account and being authenticated, I identify the users using the origin IP address in the request. However, in order to not keep senstive data I hash the ip.
+Since I wanted to give the possibility to like the posts without the need of creating an account and being authenticated, I identify the users using the origin IP address in the request. However, in order to anonymize the user and not keep any sensitive data I hash this information.
 
 We have easy access to the request ip by using the context of the request and getting the header `cf-connecting-ip` provided by the Cloudflare Worker. Then we can hash the ip using an encryption algorithm like `SHA-256` and salt in order to generate the user id:
 
@@ -177,7 +185,70 @@ I ommited the definition of the function `hashIpAddress` for keeping it short bu
 
 ## Fetching the post and user statistics
 
-We have access to the database
+As previously mentioned, we have access to Cloudflare resources using bindings. If you called the D1 database binding `DB`, you can retrieve it in our Hono endpoints using the request context under `c.env.DB`.
+
+These bindings can also include environment variables, which can be configured creating a `.dev.vars` file in development and deploy them to production using the command `CHANGE THIS`. In my case I used this to store an `IP_ADDRESS_SALT` salt value to hash the ip addresses.
+
+We can pass Generics to specify the types of these Bindings when initializing Hono, for example:
+
+```ts
+type Bindings = {
+	DB: D1Database
+	IP_ADDRESS_SALT: string
+}
+
+const app = new Hono<{ Bindings: Bindings }>()
+```
+
+```ts
+app.get('/api/posts/:slug/stats', async c => {
+	const db = drizzle(c.env.DB)
+	const slug = c.req.param('slug')
+	const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
+	const salt = c.env.IP_ADDRESS_SALT
+	const currentUserId = await hashIpAddress(ipAddress, salt)
+	const post = await db.select().from(posts).where(eq(posts.slug, slug)).get()
+
+	if (!post) {
+		return c.text('Post not found in database', 404)
+	}
+
+	const currentUserLikes = await db
+		.select()
+		.from(userLikes)
+		.where(
+			and(eq(userLikes.postId, post.id), eq(userLikes.userId, currentUserId))
+		)
+		.get()
+
+	return c.json({
+		slug,
+		totalViews: post.totalViews,
+		totalLikes: post.totalLikes,
+		userLikes: currentUserLikes?.likes ?? 0
+	})
+
+```
+
+## Storing the user's likes
+
+For storing the user's likes, I just created a new endpoint similary to the one above but with the `POST` method. With Hono, this is as simple as creating the endpoint as:
+
+```ts
+app.post('/api/posts/:slug/like', async c => {
+	// ...rest of the logic
+})
+```
+
+Without getting into many details, what this endpoint does is first identify the user and fetch the amount of likes this user has for the corresponding blog post. If this exceeds the set limits, we return an error. Otherwise we proceed to update both the posts and user likes database tables.
+
+## Building the Like Button component in React
+
+For the like button, I made a component in React with a design inspired by [Delba Oliveira's](https://delba.dev/blog/a-like-button-that-likes-you-back) but with a few changes and tweaks like the small confetti animation when the use reach the maximum number of likes. You can play around with the component here:
+
+<LikeButtonDemo client:visible />
+
+## Using API in the client and batching requests
 
 ## Deploy the worker and database
 
@@ -198,7 +269,3 @@ npx wrangler deploy
 ```shell
 wrangler d1 execute <DATABASE_NAME> --file=./schema.sql
 ```
-
-## The like button
-
-<LikeButtonDemo client:visible />
