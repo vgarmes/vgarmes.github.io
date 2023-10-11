@@ -20,7 +20,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 	isLoading = false,
 	onClick
 }) => {
-	const reachedMaxLikes = likes >= 3
+	const reachedMaxLikes = userLikes >= 3
 	return (
 		<div className="flex items-center gap-2">
 			<div className="relative flex">
@@ -49,9 +49,8 @@ const LikeButton: FunctionalComponent<Props> = ({
 						className={cx(
 							'relative h-6 w-6 fill-zinc-700 group-hover:scale-110 dark:fill-white',
 							{
-								'[animation:animateHeart_0.3s_linear_forwards_0.25s] ':
-									likes === 3,
-								'scale-[0.2]': likes === 3
+								'[animation:animateHeart_0.3s_linear_forwards_0.25s] scale-[0.2]':
+									reachedMaxLikes
 							}
 						)}
 					>
@@ -70,7 +69,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 				) : (
 					<span
 						className={cx({
-							'text-pink-600 dark:text-pink-500': likes > 0
+							'text-pink-600 dark:text-pink-500': userLikes > 0
 						})}
 					>
 						{likes} likes
