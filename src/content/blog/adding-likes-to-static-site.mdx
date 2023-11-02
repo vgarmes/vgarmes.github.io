@@ -11,21 +11,17 @@ draft: true
 
 import LikeButtonDemo from '../../components/LikeButton/LikeButtonDemo.tsx'
 
-When I started revamping my personal site I wanted to make it really performant. Given that my site primarily consists of static content, I found the ideal solution in Astro, a framework focused on speed and efficiency. Astro's promise of generating static pages with minimal JavaScript and adhering to a library-agnostic islands architecture aligned perfectly with my needs.
+I have recently added the possibility to like the posts of this blog. To implement this feature, I needed to create an api endpoint and persist the likes data in a database.
 
-However, even on static sites like this, there usually arises a need for backend functionality - whether it's tallying the blog post views or enabling readers to like and comment on posts. In my case, I wanted readers to be able to like my blog posts, without the need for authentication.
+In situations like these, where I need to implement some modest backend functionality in a static site, my go-to technology is Cloudflare. With a very generous free tier, Cloudflare comes with this incredible thing called Workers which allows you to quickly set up serverless api endpoints, instantly deployed across their Edge network spanning 300 global locations. To top it, Cloudflare has introduced a database solution, D1 (in open alpha by the time this was written).
 
-For such modest web APIs, my go-to technology is Cloudflare. With a very generous free tier, Cloudflare has a technology called Workers which allows you to quickly set up serverless api endpoints, instantly deployed across their Edge network spanning 300 global locations.
-
-What's more, Cloudflare has introduced a database solution, D1 (in open alpha by the time this was written), which caters to my needs.
-
-Since I wanted to take full advantage of the Workers Edge runtime, I used technologies that support it:
+Since I wanted to take full advantage of the Workers Edge runtime, I used these technologies that support it:
 
 - Hono: backend framewor similar to Express but it runs on CDN Edges.
 - Drizzle: ORM that integrates with the Edge runtime
 - D1 database: a SQLite-based database
 
-In this blog post, I'll guide you through the process of improving my blog by adding a post liking functionality using these technologies. This approach can be extended to incorporate various backend features, making it helpful for anyone who wants to add these to their static sites.
+In this blog post, I'll guide you through the process I followed to add blog by adding a post liking functionality using these technologies. This approach can be extended to incorporate various backend features, making it helpful for anyone who wants to add these to their static sites.
 
 ## Getting ready
 
