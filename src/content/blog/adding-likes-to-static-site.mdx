@@ -11,17 +11,15 @@ draft: true
 
 import LikeButtonDemo from '../../components/LikeButton/LikeButtonDemo.tsx'
 
-I have recently added the possibility to like the posts of this blog. To implement this feature, I needed to create an api endpoint and persist the likes data in a database.
+I've recently added a nice little "like" button to the blog posts, and it got me thinking - it's the perfect case study for an isolated full-stack component. So, why not share the ins and outs of how I made it happen?
 
-In situations like these, where I need to implement some modest backend functionality in a static site, my go-to technology is Cloudflare. With a very generous free tier, Cloudflare comes with this incredible thing called Workers which allows you to quickly set up serverless api endpoints, instantly deployed across their Edge network spanning 300 global locations. To top it, Cloudflare has introduced a database solution, D1 (in open alpha by the time this was written).
+First off, I knew I'd have to set up an API endpoint and handle data persistence in a database. In these kind of situations, where I need to quickly implement some modest backend functionality in a static site, my go-to technology is Cloudflare.
 
-Since I wanted to take full advantage of the Workers Edge runtime, I used these technologies that support it:
+Cloudflare offers this nifty feature called Workers, allowing you to easily deploy serverless api endpoints across their Edge network spanning 300 global locations. Plus, they've recently rolled out D1, a brand-new SQLite-based database solution (still in open alpha at the time of writing).
 
-- Hono: backend framewor similar to Express but it runs on CDN Edges.
-- Drizzle: ORM that integrates with the Edge runtime
-- D1 database: a SQLite-based database
+To fully leverage Cloudflare's Workers Edge runtime, I integrated the backend framework Hono and used Drizzle as the database ORM.
 
-In this blog post, I'll guide you through the process I followed to add blog by adding a post liking functionality using these technologies. This approach can be extended to incorporate various backend features, making it helpful for anyone who wants to add these to their static sites.
+Curious for more? Keep reading; this approach can be extended to accomodate various backend functionalities which you might find useful for your own projects.
 
 ## Getting ready
 
