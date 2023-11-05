@@ -15,7 +15,7 @@ I've recently added a nice little "like" button to the blog posts, and it got me
 
 First off, I knew I'd have to set up an API endpoint and handle data persistence in a database. In these kind of situations, where I need to quickly implement some modest backend functionality in a static site, my go-to technology is Cloudflare.
 
-Cloudflare offers this nifty feature called Workers, allowing you to easily deploy serverless api endpoints across their Edge network spanning 300 global locations. Plus, they've recently rolled out D1, a brand-new SQLite-based database solution (still in open alpha at the time of writing).
+Cloudflare offers this nifty feature called Workers, allowing you to easily deploy serverless API endpoints across their Edge network spanning 300 global locations. Plus, they've recently rolled out D1, a brand-new SQLite-based database solution (still in open alpha at the time of writing).
 
 To fully leverage Cloudflare's Workers Edge runtime, I integrated the backend framework Hono and used Drizzle as the database ORM.
 
@@ -23,13 +23,13 @@ Curious for more? Keep reading; this approach can be extended to accomodate vari
 
 ## Getting ready
 
-First of all, you'll need to create a Cloudflare account if you haven't already. With this account you will have access to your dashboard where you can set up and monitor your Workers and the D1 database.
+To begin, you'll need to create a Cloudflare account if you haven't already. This account will grant you access to your dashboard, where you can set up and monitor your Workers and the D1 database.
 
-Then, you'll need the Workers command-line interface, Wrangler, which allows to easily create, test and deploy Workers projects. For using it, you can decide whether installing it in your global packages with `npm -g wrangler` or using it dirctly with `npx`.
+Next, get the Workers command-line interface, Wrangler. Wrangler facilitates the creation, testing, and deployment of Workers projects. You can install it in your global packages with `npm -g wrangler` or use it directly with `npx` commands.
 
-Running the command `wrangler dev` will start a local server on `http://localhost:8787` for developing our Worker. However, if you try to go to that route you'll get a 404 because we haven't built our API yet.
+Running the command `wrangler dev` will start a local server at `http://localhost:8787` for developing our Worker. Be aware that attempting to access this route will result in a 404 error until we build our API.
 
-Moreover, you'll need to create a `wrangler.toml` file at the root of your project. This file will be used to configure our Worker. We can already start the first configuration by adding this to the file:
+Additionally, create a `wrangler.toml` file at the root of your project. This file will serve as the configuration for our Worker. To kick off the configuration, add the following to the file:
 
 ```toml
 name = <WORKER_NAME>
@@ -38,15 +38,15 @@ compatibility_date = "2023-08-07"
 node_compat = true
 ```
 
-### Creating a database
+### Setting up the database
 
-To create our D1 database with Cloudflare, we just need to run
+Creating our D1 database with Cloudflare is straightforward. Simply execute the following command:
 
 ```shell
 wrangler d1 create <DATABASE_NAME>
 ```
 
-This will create a new D1 database, and output the binding configuration like below which we'll needed in the next step:
+This command will generate a new D1 database and provide the binding configuration, which will be necessary for the next step. You should see something like this on your command prompt as a result of executing the previous command:
 
 ```shell
 [[d1_databases]]
@@ -55,11 +55,11 @@ database_name = "<DATABASE_NAME>"
 database_id = "<unique-ID-for-your-database>"
 ```
 
-### Binding your Worker to the D1 database
+### Connecting your Worker to the D1 database
 
-You must create a binding for your Worker to connect to your D1 database. Bindings allow your Workers to access resources, like D1, on the Cloudflare developer platform. You create bindings by updating your wrangler.toml file.
+To establish a connection between your Worker and the D1 database, you'll need to create a binding. Bindings enable your Workers to access resources, such as D1, on the Cloudflare developer platform.
 
-To bind your D1 database to your Worker, add the following to the end of your `wrangler.toml` file which we previously created:
+You can create bindings by updating the `wrangler.toml` file we created earlier. To bind your D1 database to your Worker, add the following at the end of the file:
 
 ```toml
 [[d1_databases]]
@@ -68,20 +68,23 @@ database_name = "<DATABASE_NAME>"
 database_id = "<unique-ID-for-your-database>"
 ```
 
-The value (string) you set for `<BINDING_NAME>` will be used to reference this database in your Worker and it is available in your Worker's environent at `env.<BINDING_NAME>` as we'll see later on. The name can be any valid JavaScript variable name, in my case I've just called it `DB`.
+The string you set for `<BINDING_NAME>` will be used to reference this database in your Worker. It will be accessible in your Worker's environent as `env.<BINDING_NAME>`, as we'll explore later on. Feel free to choose any valid JavaScript variable name. In this case, I've simply used `DB`.
 
 ### Installing the rest of the dependencies
 
-Install hono
-`pnpm install hono`
+Install Hono and Drizzle by running:
 
-Install drizzle
+```shell
+npm install hono drizzle
+```
 
-If you use Typescript, you'll also want to install the types for Workers:
+If you use Typescript, you'll also need to install the types for Workers:
 
-`pnpm install -D @cloudflare/workers-types`
+```shell
+npm install -D @cloudflare/workers-types
+```
 
-and add it to your types in your `tsconfig.json` file:
+Optionally, add the installed types to the `compilerOptions` in your `tsconfig.json` file. By doing this, you can directly access the Cloudflare Workers-specific types and interfaces within your TypeScript code without requiring explicit import statements:
 
 ```json
 {
@@ -91,11 +94,11 @@ and add it to your types in your `tsconfig.json` file:
 }
 ```
 
-## Creating the database
+## Building the database schema
 
-Now that we have our D1 database ready, we can create the schema with Drizzle. One of the cool things about Drizzle, it's that it lets you define and manage the database schema in typescript.
+With our D1 database set up, it's time to create the schema using Drizzle. One of the standout features of Drizzle is its ability to define and manage the database schema directly in TypeScript.
 
-First we'll create the table `Posts`, where we will store each post's slug and the total amount of likes and views:
+Let's start by creating the `Posts` table, where we'll store each post's slug along with the total number of likes and views:
 
 ```ts
 export const posts = sqliteTable(
@@ -112,9 +115,9 @@ export const posts = sqliteTable(
 )
 ```
 
-As you can see, I added the slug as index of the table since that's the way it's going to be filtered in most cases.
+The posts will be queried by their slug in most use cases, thus the index.
 
-Then we can create the table that will keep track of the user likes:
+Now, let's proceed to create the table responsible for tracking user likes:
 
 ```ts
 export const userLikes = sqliteTable(
@@ -134,28 +137,26 @@ export const userLikes = sqliteTable(
 
 At the time of writing this article, there was [a bug with D1](https://github.com/cloudflare/workers-sdk/issues/3160) when trying to left join 2 tables that have the same column names, for which the second column is not returned. Hence why I used different naming for the likes and views in each of the tables.
 
-Whenever you apply changes to the schema - you just run:
+Whenever you apply changes to the schema, you'll need to run the following command to generate a SQL migration (for my own convenience, I've added this as a script in `package.json`.):
 
 ```shell
 drizzle-kit generate:sqlite
 ```
 
-For my own convenience I added this as a script in `package.json`.
+This script will generate a migration file with a name resembling `0000_short_lockheed`.
 
-To init local database and run server locally:
+To initialize the local database and run the server locally, use the following commands, replacing `FILE_NAME` with the name of the generated migration file:
 
 ```shell
 wrangler d1 execute <DATABASE_NAME> --local --file=./drizzle/<FILE_NAME>.sql
 wrangler dev --local --persist
 ```
 
-`FILE_NAME` something that will look like `0000_short_lockheed`
+Note: Alternatively, if you are just prototyping, Drizzle allows you to use the `db push` command, which applies the schema changes to your development database without generating a migration file.
 
-## Creating the web APIs with Hono
+## Creating web APIs with Hono
 
-For the web APIs we'll use Hono, which is a simple backend famework similar to Express but it runs on Edge networks.
-
-With something as simple as this we can already have a Worker set up
+Hono is a backend framework, much like Express but for the Edges. Hono is fully compatible with Cloudlare Workers runtime and with just a few lines of code, we can have a fully functional Worker set up, as demonstrated below:
 
 ```ts
 const app = new Hono()
@@ -163,27 +164,21 @@ const app = new Hono()
 app.get('hello-world', c => c.text('hello world!'))
 ```
 
-### Identifying the user on each request
+This will create a `GET` endpoint accessible locally at `http://localhost:8787/hello-world`.
 
-Since I wanted to give the possibility to like the posts without the need of creating an account and being authenticated, I identify the users using the origin IP address in the request. However, in order to anonymize the user and not keep any sensitive data I hash this information.
+This will serve as the foundation for the subsequent steps, where we will expand upon this to build the remaining backend functionalities.
 
-We have easy access to the request ip by using the context of the request and getting the header `cf-connecting-ip` provided by the Cloudflare Worker. Then we can hash the ip using an encryption algorithm like `SHA-256` and salt in order to generate the user id:
+## Creating the first endpoint: Fetching post likes
 
-```ts
-const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
-const salt = c.env.IP_ADDRESS_SALT
-const currentUserId = await hashIpAddress(ipAddress, salt)
-```
+Our initial objective is to defining an endpoint for retrieving both post and user likes. This endpoint will be called from the client every time a user accesses a blog post.
 
-I ommited the definition of the function `hashIpAddress` for keeping it short but you can refer to my source code.
+I've designated the route for this endpoint as `/api/posts/stats/:slug`, making the post slug easily accessible via the request parameters within the request context: `c.req.param('slug')`.
 
-## Fetching the post and user statistics
+To retrieve the required data from our database, we'll utilize the database binding previously defined, which is also readily accessible within the request context.
 
-As previously mentioned, we have access to Cloudflare resources using bindings. If you called the D1 database binding `DB`, you can retrieve it in our Hono endpoints using the request context under `c.env.DB`.
+Additionally, these bindings can accomodate environment variables, which can be set in development environment by creating a `.dev.vars` file, and in the deployed worker, by executing `wrangler secret put <KEY>`. In my case, I included a salt value named `IP_ADDRESS_SALT` which will be used later for hashing IP addresses.
 
-These bindings can also include environment variables, which can be configured creating a `.dev.vars` file in development and deploy them to production using the command `CHANGE THIS`. In my case I used this to store an `IP_ADDRESS_SALT` salt value to hash the ip addresses.
-
-We can pass Generics to specify the types of these Bindings when initializing Hono, for example:
+Now we can initialize Hono with our customized bindings ensuring proper typing:
 
 ```ts
 type Bindings = {
@@ -193,6 +188,35 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 ```
+
+Then we can consume the request context and initiate a new database connection as below:
+
+```ts
+app.get('/api/posts/:slug/stats', async c => {
+	const db = drizzle(c.env.DB)
+	// ... rest
+}
+```
+
+### Identifying users on each request
+
+A crucial aspect of registering posts likes is establishing a reliable user identification method. With the goal of allowing users to like posts without mandatory authentication, I developed a method to identify users based on their origin IP address within each request. To enure user privacy and avoid retaining sensitive data, I opted to hash this information.
+
+Accessing the request IP is straightforward by utilizing the Cloudflare Worker-provided header `cf-connecting-ip` within the request context. Subsequently, I used a SHA-256 encryption algorithm along with a salt (stored as the environment variable `IP_ADDRESS_SALT` mentioned earlier) to generate the user ID as demonstrated below:
+
+```ts
+const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
+const salt = c.env.IP_ADDRESS_SALT
+const currentUserId = await hashIpAddress(ipAddress, salt)
+```
+
+For brevity, I have omitted the detailed definition of the `hashIpAddress` function here, but you can find it in the source code for reference.
+
+### Querying the database
+
+Now, we just need to query the database to retreive the relevant information. My approach for this was to first fetch the statistics about the corresponding post using its slug and right after fetch the amount of likes associated with the specific user.
+
+Putting everything together, our endpoint can return the post statistics as below:
 
 ```ts
 app.get('/api/posts/:slug/stats', async c => {
@@ -221,12 +245,11 @@ app.get('/api/posts/:slug/stats', async c => {
 		totalLikes: post.totalLikes,
 		userLikes: currentUserLikes?.likes ?? 0
 	})
-
 ```
 
-## Storing the user's likes
+## Storing user's likes
 
-For storing the user's likes, I just created a new endpoint similary to the one above but with the `POST` method. With Hono, this is as simple as creating the endpoint as:
+To store the user's likes, I just created a new endpoint similary to the one above but with the `POST` method. With Hono, this is as simple as creating the endpoint like below:
 
 ```ts
 app.post('/api/posts/:slug/like', async c => {
@@ -234,32 +257,34 @@ app.post('/api/posts/:slug/like', async c => {
 })
 ```
 
-Without getting into many details, what this endpoint does is first identify the user and fetch the amount of likes this user has for the corresponding blog post. If this exceeds the set limits, we return an error. Otherwise we proceed to update both the posts and user likes database tables.
-
-## Building the Like Button component in React
-
-For the like button, I made a component in React with a design inspired by [Delba Oliveira's](https://delba.dev/blog/a-like-button-that-likes-you-back) but with a few changes and tweaks like the small confetti animation when the use reach the maximum number of likes. You can play around with the component here:
-
-<LikeButtonDemo client:visible />
-
-## Using API in the client and batching requests
+Without getting into many details, what this endpoint does is first identify the user and fetch the amount of likes this user has for the corresponding blog post. If this exceeds the set limits, we return an error. Otherwise we proceed to update both the posts and user likes database tables. You can check the source code as reference.
 
 ## Deploy the worker and database
 
-Before deploying your D1 database and Worker globally, log in with your Cloudflare account by running:
+We are almost ready to deploy our Worker and D1 database globally. First, log in with your Cloudflare account by running:
 
 ```shell
 wrangler login
 ```
 
-To deploy the worker, run:
+And deploy the database by running:
+
+```shell
+wrangler d1 execute <DATABASE_NAME> --file=./schema.sql
+```
+
+And finally the Worker:
 
 ```shell
 wrangler deploy
 ```
 
-npx wrangler deploy
+Now you should have the worker deployed
 
-```shell
-wrangler d1 execute <DATABASE_NAME> --file=./schema.sql
-```
+## The like button component
+
+For the like button, I made a component in React with a design inspired by [Delba Oliveira's](https://delba.dev/blog/a-like-button-that-likes-you-back) but with a few changes and tweaks like a playful confetti animation when the user reaches the maximum number of likes. You can play around with the component here:
+
+<LikeButtonDemo client:visible />
+
+Since I allow the user to like a post multiple times, instead of sending a request for each time the user likes the post, I batch the requests so only the final value of times the user has liked the post will be sent

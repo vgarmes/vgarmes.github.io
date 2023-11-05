@@ -1,21 +1,34 @@
 import LikeButton from '.'
-import { useState, useRef } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 
 const LikeButtonDemo = () => {
 	const [likes, setLikes] = useState(0)
-	const direction = useRef<'up' | 'down'>('up')
+
+	useEffect(() => {
+		if (likes < 3) return
+		const timeout = setTimeout(() => {
+			setLikes(0)
+		}, 3000)
+
+		return () => clearTimeout(timeout)
+	}, [likes])
 
 	const handleClick = () => {
 		if (likes >= 3) {
-			direction.current = 'down'
-		} else if (likes === 0) {
-			direction.current = 'up'
+			return
 		}
-		const increment = direction.current === 'up' ? 1 : -1
-		setLikes(likes + increment)
+
+		setLikes(likes + 1)
 	}
 
-	return <LikeButton likes={likes} onClick={handleClick} />
+	return (
+		<LikeButton
+			likes={likes}
+			userLikes={likes}
+			onClick={handleClick}
+			disabled={likes >= 3}
+		/>
+	)
 }
 
 export default LikeButtonDemo
