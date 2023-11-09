@@ -1,6 +1,6 @@
 ---
-title: 'Adding likes to a static site'
-pubDate: 2023-09-15
+title: 'Adding likes to a static site using Cloudflare Workers and D1'
+pubDate: 2023-11-10
 description: ''
 image:
   url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
@@ -168,17 +168,17 @@ This will create a `GET` endpoint accessible locally at `http://localhost:8787/h
 
 This will serve as the foundation for the subsequent steps, where we will expand upon this to build the remaining backend functionalities.
 
-## Creating the first endpoint: Fetching post likes
+## Storing user likes
 
-Our initial objective is to defining an endpoint for retrieving both post and user likes. This endpoint will be called from the client every time a user accesses a blog post.
+Our primary objective is to define an endpoint for storing both post and user likes. This endpoint, which accepts POST requests, will be triggered by the "like" button.
 
-I've designated the route for this endpoint as `/api/posts/stats/:slug`, making the post slug easily accessible via the request parameters within the request context: `c.req.param('slug')`.
+I've designated the route for this endpoint as `/api/posts/:slug/like`, making the post slug easily accessible via the request parameters within the request context: `c.req.param('slug')`.
 
-To retrieve the required data from our database, we'll utilize the database binding previously defined, which is also readily accessible within the request context.
+To persist the data in the database, we'll utilize the database binding previously defined, which is also readily accessible within the request context.
 
-Additionally, these bindings can accomodate environment variables, which can be set in development environment by creating a `.dev.vars` file, and in the deployed worker, by executing `wrangler secret put <KEY>`. In my case, I included a salt value named `IP_ADDRESS_SALT` which will be used later for hashing IP addresses.
+Additionally, these bindings can accomodate environment variables, which can be set in development environment by creating a `.dev.vars` file, and in the deployed worker, by executing `wrangler secret put <KEY>`. In my case, I included a salt value named `IP_ADDRESS_SALT`, which will be used later for hashing IP addresses.
 
-Now we can initialize Hono with our customized bindings ensuring proper typing:
+Now, we can initialize Hono with our customized bindings, ensuring proper typing:
 
 ```ts
 type Bindings = {
@@ -189,10 +189,10 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>()
 ```
 
-Then we can consume the request context and initiate a new database connection as below:
+Then, we can consume the request context and initiate a new database connection as shown below:
 
 ```ts
-app.get('/api/posts/:slug/stats', async c => {
+app.post('/api/posts/:slug/like', async c => {
 	const db = drizzle(c.env.DB)
 	// ... rest
 }
@@ -202,7 +202,7 @@ app.get('/api/posts/:slug/stats', async c => {
 
 A crucial aspect of registering posts likes is establishing a reliable user identification method. With the goal of allowing users to like posts without mandatory authentication, I developed a method to identify users based on their origin IP address within each request. To enure user privacy and avoid retaining sensitive data, I opted to hash this information.
 
-Accessing the request IP is straightforward by utilizing the Cloudflare Worker-provided header `cf-connecting-ip` within the request context. Subsequently, I used a SHA-256 encryption algorithm along with a salt (stored as the environment variable `IP_ADDRESS_SALT` mentioned earlier) to generate the user ID as demonstrated below:
+Accessing the request IP is straightforward by utilizing the Cloudflare Worker-provided header `cf-connecting-ip` within the request context. Subsequently, I used the SHA-256 encryption algorithm along with a salt (stored as the environment variable `IP_ADDRESS_SALT` mentioned earlier) to generate the user ID, as demonstrated below:
 
 ```ts
 const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
@@ -212,52 +212,48 @@ const currentUserId = await hashIpAddress(ipAddress, salt)
 
 For brevity, I have omitted the detailed definition of the `hashIpAddress` function here, but you can find it in the source code for reference.
 
-### Querying the database
+### Persisting to the database
 
-Now, we just need to query the database to retreive the relevant information. My approach for this was to first fetch the statistics about the corresponding post using its slug and right after fetch the amount of likes associated with the specific user.
-
-Putting everything together, our endpoint can return the post statistics as below:
+Now, we need to save the relevant information in the database. My approach for this was to first fetch the statistics about the corresponding post and user, performing a left join on both tables to validate, amongst other things, that the user hasn't reached the maximum number of likes:
 
 ```ts
-app.get('/api/posts/:slug/stats', async c => {
-	const db = drizzle(c.env.DB)
-	const slug = c.req.param('slug')
-	const ipAddress = c.req.header('cf-connecting-ip') || '0.0.0.0'
-	const salt = c.env.IP_ADDRESS_SALT
-	const currentUserId = await hashIpAddress(ipAddress, salt)
-	const post = await db.select().from(posts).where(eq(posts.slug, slug)).get()
+const post = await db
+	.select({
+		postId: posts.id,
+		userLikes: userLikes.likes
+	})
+	.from(userLikes)
+	.leftJoin(posts, eq(posts.id, userLikes.postId))
+	.where(and(eq(posts.slug, slug), eq(userLikes.userId, currentUserId)))
+	.get()
+```
 
-	if (!post) {
-		return c.text('Post not found in database', 404)
-	}
+Right after, we perform two upsert statements in order to update both the `Posts` and `UserLikes` tables. At the time of writing, there wasn't a way to perform transactions on D1 using Drizzle. Thus, I opted to perform two sequential upsert queries:
 
-	const currentUserLikes = await db
-		.select()
-		.from(userLikes)
-		.where(
-			and(eq(userLikes.postId, post.id), eq(userLikes.userId, currentUserId))
-		)
-		.get()
+```ts
+const updatedPost = await db
+	.insert(posts)
+	.values({ slug, totalLikes: likesIncrement })
+	.onConflictDoUpdate({
+		target: posts.slug,
+		set: { totalLikes: sql`total_likes + ${likesIncrement}` }
+	})
+	.returning()
+	.get()
 
-	return c.json({
-		slug,
-		totalViews: post.totalViews,
-		totalLikes: post.totalLikes,
-		userLikes: currentUserLikes?.likes ?? 0
+db.insert(userLikes)
+	.values({
+		userId: currentUserId,
+		postId: updatedPost.id,
+		likes: likesIncrement
+	})
+	.onConflictDoUpdate({
+		target: [userLikes.userId, userLikes.postId],
+		set: { likes: sql`likes + ${likesIncrement}` }
 	})
 ```
 
-## Storing user's likes
-
-To store the user's likes, I just created a new endpoint similary to the one above but with the `POST` method. With Hono, this is as simple as creating the endpoint like below:
-
-```ts
-app.post('/api/posts/:slug/like', async c => {
-	// ...rest of the logic
-})
-```
-
-Without getting into many details, what this endpoint does is first identify the user and fetch the amount of likes this user has for the corresponding blog post. If this exceeds the set limits, we return an error. Otherwise we proceed to update both the posts and user likes database tables. You can check the source code as reference.
+To fetch the likes of a post, we take a similar approach by identifying the post and the user, and finally, we query the database to retrieve the corresponding data. You can see the whole implementation in the source code.
 
 ## Deploy the worker and database
 
@@ -283,8 +279,8 @@ Now you should have the worker deployed
 
 ## The like button component
 
-For the like button, I made a component in React with a design inspired by [Delba Oliveira's](https://delba.dev/blog/a-like-button-that-likes-you-back) but with a few changes and tweaks like a playful confetti animation when the user reaches the maximum number of likes. You can play around with the component here:
+For the like button, I created a component in React with a design inspired by [Delba Oliveira's design](https://delba.dev/blog/a-like-button-that-likes-you-back), with a few changes and tweaks, including a playful confetti animation when the user reaches the maximum number of likes. You can explore the componnet here (it will reset the likes after 3 seconds of reaching the maximum):
 
 <LikeButtonDemo client:visible />
 
-Since I allow the user to like a post multiple times, instead of sending a request for each time the user likes the post, I batch the requests so only the final value of times the user has liked the post will be sent
+Since I allow the user to like a post multiple times, instead of sending a request for each time the user likes the post, I batch the requests so only the final value of times the user has liked the post will be sent.
