@@ -1,12 +1,12 @@
 ---
 title: 'Adding likes to a static site using Cloudflare Workers and D1'
-pubDate: 2023-11-10
-description: ''
+pubDate: 2023-11-14
+description: 'In this in-depth walkthrough I explain the process I followed to add a "likes" feature to my blog posts using modern Edge technologies like Cloudflare Workers and D1 coupled with the power Hono and Drizzle.'
 image:
   url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
   alt: 'Thumbnail with the blog post title'
 tags: ['cloudflare', 'hono', 'drizzle']
-draft: true
+draft: false
 ---
 
 import LikeButtonDemo from '../../components/LikeButton/LikeButtonDemo.tsx'
@@ -31,10 +31,10 @@ Next, get the Workers command-line interface, Wrangler. Wrangler facilitates the
 
 Running the command `wrangler dev` will start a local server at `http://localhost:8787` for developing our Worker. Be aware that attempting to access this route will result in a 404 error until we build our API.
 
-Additionally, create a `wrangler.toml` file at the root of your project. This file will serve as the configuration for our Worker. To kick off the configuration, add the following to the file, replacing the worker name and entry point with your corresponding values:
+Additionally, create a `wrangler.toml` file at the root of your project. This file will serve as the configuration for our Worker. To kick off the configuration, add the following to the file:
 
 ```toml
-name = <WORKER_NAME>
+name = <WORKER_NAME> # i.e. "my-worker"
 main = <WORKER_ENTRY_POINT> # i.e "src/api/index.ts"
 compatibility_date = "2023-08-07"
 node_compat = true
@@ -277,7 +277,7 @@ And finally the Worker:
 wrangler deploy
 ```
 
-Now you should have the worker deployed
+Now you should have the worker deployed. You can preview it at <YOUR_WORKER>.<YOUR_SUBDOMAIN>.workers.dev.
 
 ## The like button component
 
