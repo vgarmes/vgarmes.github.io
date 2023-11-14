@@ -3,14 +3,12 @@ import { useEffect, useState } from 'preact/hooks'
 import type { TocItem } from '~/util/generateToc'
 import BackTopButton from './BackTopButton'
 import cx from 'clsx'
-import PostLikes from './PostLikes'
 
 interface Props {
 	toc: TocItem[]
-	slug: string
 }
 
-const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
+const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	const [currentHeading, setCurrentHeading] = useState({
 		slug: toc[0]?.slug,
 		text: toc[0]?.text
@@ -117,8 +115,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc, slug }) => {
 						))}
 				</ul>
 			</div>
-			<div className="flex min-w-[180px] items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-700">
-				<PostLikes slug={slug} />
+			<div className="flex min-w-[180px] items-center justify-end border-t border-zinc-200 pt-3 dark:border-zinc-700">
 				<BackTopButton />
 			</div>
 		</aside>

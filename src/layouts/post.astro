@@ -45,10 +45,11 @@ const toc = generateToc(headings)
 				{frontmatter.title}
 			</h1>
 			<div class="flex items-center gap-6">
-				<p class="text-sm text-zinc-700 dark:text-zinc-300">
+				<p class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
 					{date}
 				</p>
 				<ReadingTime minutesRead={frontmatter.minutesRead} />
+				<PostLikes client:visible slug={slug} />
 			</div>
 		</header>
 		<div
@@ -59,10 +60,9 @@ const toc = generateToc(headings)
 			>
 				<slot />
 			</div>
-			<TableOfContents client:visible toc={toc} slug={slug} />
+			<TableOfContents client:visible toc={toc} />
 		</div>
-		<div class="flex items-center justify-between pb-6 lg:hidden">
-			<PostLikes client:visible slug={slug} />
+		<div class="flex items-center justify-end pb-6 lg:hidden">
 			<BackTopButton client:visible />
 		</div>
 	</article>
