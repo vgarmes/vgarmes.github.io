@@ -68,7 +68,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 					<LoadingDots />
 				) : (
 					<span
-						className={cx({
+						className={cx('whitespace-nowrap', {
 							'text-pink-600 dark:text-pink-500': userLikes > 0
 						})}
 					>
