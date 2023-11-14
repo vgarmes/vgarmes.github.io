@@ -47,7 +47,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						className={cx(
-							'relative h-6 w-6 fill-zinc-700 group-hover:scale-110 dark:fill-white',
+							'relative h-6 w-6 group-hover:scale-110 fill-white stroke-zinc-400 dark:stroke-transparent',
 							{
 								'[animation:animateHeart_0.3s_linear_forwards_0.25s] scale-[0.2]':
 									reachedMaxLikes
