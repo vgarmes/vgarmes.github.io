@@ -55,38 +55,19 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 		return (
 			<li key={slug} className="text-sm">
 				<a
-					className={cx('flex items-start py-1 leading-normal', {
-						'font-bold text-indigo-600 dark:text-indigo-400':
+					className={cx('leading-normal font-semibold', {
+						'text-indigo-600 dark:text-indigo-400':
 							currentHeading.slug === slug,
-						'font-semibold opacity-70 hover:opacity-100':
-							currentHeading.slug !== slug,
-						'pl-2': depth > 2
+						'opacity-70 hover:opacity-100': currentHeading.slug !== slug,
+						'pl-3': depth > 2
 					})}
 					href={`#${slug}`}
 					onClick={onLinkClick}
 				>
-					{depth > 2 && (
-						<span className="mr-1 pt-1">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								className="h-3 w-3"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M8.25 4.5l7.5 7.5-7.5 7.5"
-									stroke-width={3}
-								/>
-							</svg>
-						</span>
-					)}
 					{text}
 				</a>
 				{children.length > 0 ? (
-					<ul>
+					<ul className="space-y-2 pt-3">
 						{children.map(heading => (
 							<TableOfContentsItem key={heading.slug} heading={heading} />
 						))}
@@ -108,7 +89,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 				style={{ overscrollBehavior: 'contain' }}
 				role="navigation"
 			>
-				<ul className="space-y-2">
+				<ul className="space-y-3 pb-3">
 					{toc.length > 0 &&
 						toc.map(tocItem => (
 							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
