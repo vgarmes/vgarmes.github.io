@@ -1,19 +1,24 @@
 import type { FunctionComponent } from 'preact'
 import LikeButton from './LikeButton'
-import { useState, useEffect, useRef } from 'preact/hooks'
+import { useEffect, useRef } from 'preact/hooks'
 
 interface Props {
 	slug: string
+	likes?: number
+	userLikes?: number
+	isLoading?: boolean
+	onLike: () => void
 }
 
 const apiHost = import.meta.env.PUBLIC_API_HOST
 
-const PostLikes: FunctionComponent<Props> = ({ slug }) => {
-	const [likes, setLikes] = useState(0)
-	const [userLikes, setUserLikes] = useState(0)
-	const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
-		'loading'
-	)
+const PostLikes: FunctionComponent<Props> = ({
+	slug,
+	likes = 0,
+	userLikes = 0,
+	isLoading,
+	onLike
+}) => {
 	const incrementLikes = useRef(0)
 	const reachedMaxLikes = userLikes >= 3
 
@@ -21,31 +26,9 @@ const PostLikes: FunctionComponent<Props> = ({ slug }) => {
 		if (reachedMaxLikes) {
 			return
 		}
-
-		setUserLikes(userLikes + 1)
 		incrementLikes.current += 1
-		setLikes(likes + 1)
+		onLike()
 	}
-
-	useEffect(() => {
-		const fetchStats = async () => {
-			const response = await fetch(`${apiHost}/api/posts/${slug}/stats`)
-			if (response.status !== 200) {
-				setStatus('error')
-				return
-			}
-			const data = (await response.json()) as {
-				totalLikes: number
-				userLikes: number
-			}
-
-			setLikes(data.totalLikes)
-			setUserLikes(data.userLikes)
-			setStatus('success')
-		}
-
-		fetchStats()
-	}, [])
 
 	useEffect(() => {
 		// Debounced post request
@@ -67,8 +50,8 @@ const PostLikes: FunctionComponent<Props> = ({ slug }) => {
 		<LikeButton
 			likes={likes}
 			userLikes={userLikes}
-			disabled={status === 'loading' || reachedMaxLikes}
-			isLoading={status === 'loading'}
+			disabled={isLoading || reachedMaxLikes}
+			isLoading={isLoading}
 			onClick={handleClick}
 		/>
 	)

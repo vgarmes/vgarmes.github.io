@@ -3,7 +3,7 @@ import cx from 'clsx'
 import './styles.css'
 import Confetti from './Confetti'
 import type { FunctionalComponent } from 'preact'
-import { LoadingDots } from './LoadingDots'
+import { LoadingDots } from '../LoadingDots'
 
 interface Props {
 	likes: number

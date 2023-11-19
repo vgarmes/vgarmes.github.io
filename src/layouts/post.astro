@@ -6,7 +6,7 @@ import TableOfContents from '~/components/TableOfContents'
 import generateToc from '~/util/generateToc'
 import ReadingTime from '~/components/ReadingTime.astro'
 import BackTopButton from '~/components/BackTopButton'
-import PostLikes from '~/components/PostLikes'
+import PostStats from '~/components/post-stats'
 
 type PostFrontmatter = {
 	title: string
@@ -49,7 +49,7 @@ const toc = generateToc(headings)
 					{date}
 				</p>
 				<ReadingTime minutesRead={frontmatter.minutesRead} />
-				<PostLikes client:visible slug={slug} />
+				<PostStats client:visible slug={slug} />
 			</div>
 		</header>
 		<div

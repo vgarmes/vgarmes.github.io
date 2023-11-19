@@ -52,17 +52,16 @@ app.get('/api/posts/:slug/stats', async c => {
 app.post('/api/posts/:slug/view', async c => {
 	const db = drizzle(c.env.DB)
 	const slug = c.req.param('slug')
-	const newStats = await db
+	await db
 		.insert(posts)
 		.values({ slug, totalViews: 1 })
 		.onConflictDoUpdate({
 			target: posts.slug,
 			set: { totalViews: sql`total_views + 1` }
 		})
-		.returning()
-		.get()
+		.run()
 
-	return c.json({ slug, views: newStats.totalViews })
+	return c.text('success', 201)
 })
 
 app.post('/api/posts/:slug/like', async c => {
