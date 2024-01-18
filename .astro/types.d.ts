@@ -193,6 +193,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
+"developing-a-gameboy-game-part-1.md": {
+	id: "developing-a-gameboy-game-part-1.md";
+  slug: "developing-a-gameboy-game-part-1";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "fish-shell.mdx": {
 	id: "fish-shell.mdx";
   slug: "fish-shell";
