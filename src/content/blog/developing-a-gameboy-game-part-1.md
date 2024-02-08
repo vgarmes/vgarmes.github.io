@@ -8,4 +8,14 @@ image:
 tags: ["game development", "gameboy", "assembly"]
 draft: true
 ---
-Hello world
+
+Install the Command Line Tools for Xcode
+
+```shell
+xcode-select --install
+```
+Install RGBDS (https://rgbds.gbdev.io/install/)
+
+```shell
+brew install rgbds
+```
