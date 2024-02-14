@@ -8,7 +8,7 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"lint": "eslint . --ext .js,.astro,.ts,.tsx",
+		"lint": "eslint . --ext .js,.astro,.ts,.tsx --fix",
 		"lint:fix": "lint --fix",
 		"format": "prettier -w . --cache",
 		"generate": "drizzle-kit generate:sqlite",
