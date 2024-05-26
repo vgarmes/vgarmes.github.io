@@ -1,0 +1,51 @@
+@keyframes floatBy {
+	0% {
+		transform: translateY(50%);
+		opacity: 0;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-50%);
+		opacity: 0;
+	}
+}
+
+.floatingText {
+	animation: floatBy 600ms both cubic-bezier(0, 0.66, 0.48, 1);
+}
+
+@keyframes bouncing {
+	0% {
+		transform: scale(0.2);
+	}
+	40% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.animateHeart {
+	animation: animateHeart 300ms linear forwards 250ms;
+}
+
+.grp {
+	transition: 0.1s opacity 0.3s;
+}
+
+.confettiGroup {
+	circle {
+		transform-origin: 0 0 0;
+	}
+
+	circle:nth-child(odd) {
+		transition: 0.5s transform 0.3s;
+	}
+
+	circle:nth-child(even) {
+		transition: 1.5s transform 0.3s;
+	}
+}

@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'preact'
+import styles from './styles.module.css'
 
 interface Props {
 	active: boolean
@@ -11,13 +12,13 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 		className="pointer-events-none absolute top-1/2 left-1/2 w-[58px] -translate-x-1/2 -translate-y-1/2 overflow-visible"
 	>
 		<g
-			id="confetti-group"
+			className={styles.confettiGroup}
 			fill="none"
 			fill-rule="evenodd"
 			transform="translate(467 392)"
 		>
 			<g
-				id="grp7"
+				className={styles.grp}
 				transform="translate(7 6)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -42,7 +43,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 			</g>
 
 			<g
-				id="grp6"
+				className={styles.grp}
 				transform="translate(0 28)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -67,7 +68,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 			</g>
 
 			<g
-				id="grp3"
+				className={styles.grp}
 				transform="translate(52 28)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -92,7 +93,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 			</g>
 
 			<g
-				id="grp2"
+				className={styles.grp}
 				transform="translate(44 6)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -117,7 +118,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 			</g>
 
 			<g
-				id="grp5"
+				className={styles.grp}
 				transform="translate(14 50)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -142,7 +143,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 			</g>
 
 			<g
-				id="grp4"
+				className={styles.grp}
 				transform="translate(35 50)"
 				style={{ opacity: active ? 1 : 0 }}
 			>
@@ -166,7 +167,7 @@ const Confetti: FunctionComponent<Props> = ({ active }) => (
 				/>
 			</g>
 			<g
-				id="grp1"
+				className={styles.grp}
 				transform="translate(24)"
 				style={{ opacity: active ? 1 : 0 }}
 			>

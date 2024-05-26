@@ -1,9 +1,10 @@
 // Based on the LikeButton by Delba Oliveira: https://github.com/delbaoliveira
 import cx from 'clsx'
-import './styles.css'
+import styles from './styles.module.css'
 import Confetti from './Confetti'
 import type { FunctionalComponent } from 'preact'
 import { LoadingDots } from '../LoadingDots'
+import { useRef } from 'preact/hooks'
 
 interface Props {
 	likes: number
@@ -20,7 +21,14 @@ const LikeButton: FunctionalComponent<Props> = ({
 	isLoading = false,
 	onClick
 }) => {
+	const initialLikes = useRef<number | null>(null)
+	if (!isLoading && initialLikes.current === null) {
+		initialLikes.current = userLikes
+	}
 	const reachedMaxLikes = userLikes >= 3
+	const shouldAnimate =
+		initialLikes.current !== null && userLikes !== initialLikes.current
+
 	return (
 		<div className="flex items-center gap-2">
 			<div className="relative flex">
@@ -49,8 +57,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 						className={cx(
 							'relative h-6 w-6 group-hover:scale-110 fill-white stroke-zinc-400 dark:stroke-transparent',
 							{
-								'[animation:animateHeart_0.3s_linear_forwards_0.25s] scale-[0.2]':
-									reachedMaxLikes
+								[styles.animateHeart]: reachedMaxLikes && shouldAnimate
 							}
 						)}
 					>
@@ -61,21 +68,27 @@ const LikeButton: FunctionalComponent<Props> = ({
 						/>
 					</svg>
 				</button>
-				<Confetti active={reachedMaxLikes} />
+				<Confetti active={reachedMaxLikes && shouldAnimate} />
 			</div>
-			<div className="text-sm font-bold">
-				{isLoading ? (
-					<LoadingDots />
-				) : (
-					<span
-						className={cx('whitespace-nowrap', {
-							'text-pink-600 dark:text-pink-500': userLikes > 0
-						})}
-					>
-						{likes} likes
-					</span>
-				)}
-			</div>
+
+			{isLoading ? (
+				<LoadingDots />
+			) : (
+				<div
+					className={cx('text-sm font-semibold whitespace-nowrap relative', {
+						'text-pink-600 dark:text-pink-500': userLikes > 0
+					})}
+				>
+					{likes} likes
+					{shouldAnimate && (
+						<div className="absolute text-xs top-0 right-0 translate-x-[calc(100%_+_4px)]">
+							<div key={userLikes} className={styles.floatingText}>
+								+1
+							</div>
+						</div>
+					)}
+				</div>
+			)}
 		</div>
 	)
 }
