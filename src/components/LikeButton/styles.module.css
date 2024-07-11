@@ -36,16 +36,14 @@
 	transition: 0.1s opacity 0.3s;
 }
 
-.confettiGroup {
-	circle {
-		transform-origin: 0 0 0;
-	}
+.confettiGroup circle {
+	transform-origin: 0 0 0;
+}
 
-	circle:nth-child(odd) {
-		transition: 0.5s transform 0.3s;
-	}
+.confettiGroup circle:nth-child(odd) {
+	transition: 0.5s transform 0.3s;
+}
 
-	circle:nth-child(even) {
-		transition: 1.5s transform 0.3s;
-	}
+.confettiGroup circle:nth-child(even) {
+	transition: 1.5s transform 0.3s;
 }
