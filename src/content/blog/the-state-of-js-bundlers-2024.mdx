@@ -1,0 +1,37 @@
+---
+title: 'The state of JavaScript bundlers in 2024'
+pubDate: 2023-07-19
+description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
+image:
+  url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp'
+  alt: 'Custom command prompt with Powershell'
+tags: ['shell', 'powershell', 'oh my posh']
+draft: true
+---
+
+For many years, the combination of Webpack and Babel as bundler and transpiler respectively has been the most commonly used in the JavaScript ecosystem. However, during the last couple of years we have witnessed an increasingly amount of competitors that claim a much higher performance and efficieny. There has been so many new solutions that is currently hard to keep track of what is going on, this is why I decided to put together this blog post.
+
+But... what is a bundler?
+A bundler is the main tool to produce a production build of our application. In a typical JavaScript application, the code is distributed in many separate files (or modules). If a browser had to use these files, it would produce a cascade effect where first it would get the entry point file and, from there, it would request subsequently all the modules imported in each of them. This would be very inefficient and slow, so this is why we have bundlers.
+
+The bundler is responsible to group into a single file all the used modules so the browser only needs to download one file. However, this has the disadvantage that, as our codebase increases in size, the bundler will do the same accordingly. This is where code splitting, dynamic importing, and other strategies come into play to reduce the bundle size.
+
+...and a transpiler?
+Besides bundling the code at build time, the bundler also transpiles the code as it builds. The transpiler takes the JavaScript code and compiles it down to an older version in order to maximize the compatibility across browsers.
+
+Bundlers:
+
+- Webpack
+- Turbopack
+- Parcel (uses SWC for transpilation)
+- Rollup
+- Rolldown
+- ESBuild
+- Bun
+- SWC
+
+Frameworks
+
+- Next.js: uses Webpack though it's starting to move on to Turbopack
+- Vite: uses Rollup for bundling, esbuild for transpiling
+  In Vite's development server mode, it uses ESBuild for rapid development and hot module replacement (HMR). However, during the production build process, it switches to Rollup for creating optimized production bundles.

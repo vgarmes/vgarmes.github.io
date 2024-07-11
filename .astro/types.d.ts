@@ -171,6 +171,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
+"the-state-of-js-bundlers-2024.mdx": {
+	id: "the-state-of-js-bundlers-2024.mdx";
+  slug: "the-state-of-js-bundlers-2024";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".mdx"] };
 "upload-images-with-rails-and-cloudinary.md": {
 	id: "upload-images-with-rails-and-cloudinary.md";
   slug: "upload-images-with-rails-and-cloudinary";
