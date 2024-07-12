@@ -1,5 +1,5 @@
 ---
-import MobileMenuButton from './MobileMenuButton'
+import MobileMenuButton from './MobileMenuButton.astro'
 import ThemeToggle from './ThemeToggle'
 ---
 
@@ -32,6 +32,6 @@ import ThemeToggle from './ThemeToggle'
 			</div>
 		</div>
 		<div class="hidden sm:flex"><ThemeToggle client:visible /></div>
-		<div class="block sm:hidden"><MobileMenuButton client:visible /></div>
+		<MobileMenuButton />
 	</nav>
 </header>

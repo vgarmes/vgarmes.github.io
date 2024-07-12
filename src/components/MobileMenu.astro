@@ -19,8 +19,7 @@ import ThemeToggle from './header/ThemeToggle'
 		touch-action: auto;
 	}
 	.mobile-toggle-on #mobile-menu {
-		display: block;
-		pointer-events: auto;
+		@apply block sm:hidden pointer-events-auto;
 	}
 	.mobile-toggle-on #header {
 		@apply bg-transparent backdrop-blur-none;

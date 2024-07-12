@@ -1,0 +1,60 @@
+<button
+	id="mobile-menu-toggle"
+	class="group z-20 inline-flex sm:hidden justify-center rounded-md border border-zinc-400 p-2 text-sm font-medium shadow-sm transition-all hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 dark:border-zinc-700 dark:hover:bg-zinc-800"
+	aria-label="Open menu"
+	type="button"
+	aria-haspopup="menu"
+	aria-expanded="false"
+>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class="group-aria-expanded:hidden"
+		><line x1="3" x2="21" y1="6" y2="6"></line><line
+			x1="3"
+			x2="21"
+			y1="12"
+			y2="12"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg
+	>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="24"
+		height="24"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class="hidden group-aria-expanded:block"
+		><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+	>
+</button>
+
+<script>
+	let isOpen = false
+	const body = document.getElementsByTagName('body')[0]
+	const button = document.getElementById('mobile-menu-toggle')
+
+	button?.addEventListener('click', () => {
+		if (isOpen) {
+			isOpen = false
+			body?.classList.remove('mobile-toggle-on')
+			button.ariaLabel = 'Open menu'
+			button.ariaExpanded = 'false'
+			return
+		}
+
+		isOpen = true
+		body?.classList.add('mobile-toggle-on')
+		button.ariaLabel = 'Close menu'
+		button.ariaExpanded = 'true'
+	})
+</script>
