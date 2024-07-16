@@ -157,13 +157,6 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".md"] };
-"fish-shell.mdx": {
-	id: "fish-shell.mdx";
-  slug: "fish-shell";
-  body: string;
-  collection: "blog";
-  data: InferEntrySchema<"blog">
-} & { render(): Render[".mdx"] };
 "powershell-custom-prompt-setup.md": {
 	id: "powershell-custom-prompt-setup.md";
   slug: "powershell-custom-prompt-setup";
