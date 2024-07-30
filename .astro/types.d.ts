@@ -171,6 +171,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".mdx"] };
+"understanding-react-server-components.md": {
+	id: "understanding-react-server-components.md";
+  slug: "understanding-react-server-components";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".md"] };
 "upload-images-with-rails-and-cloudinary.md": {
 	id: "upload-images-with-rails-and-cloudinary.md";
   slug: "upload-images-with-rails-and-cloudinary";

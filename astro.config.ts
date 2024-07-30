@@ -9,6 +9,13 @@ export default defineConfig({
 	integrations: [preact({ compat: true }), tailwind(), mdx()],
 	site: 'https://vgarmes.github.io',
 	markdown: {
+		shikiConfig: {
+			themes: {
+				light: 'catppuccin-latte',
+				dark: 'tokyo-night'
+			},
+			wrap: true
+		},
 		remarkPlugins: [remarkReadingTime]
 	}
 })
