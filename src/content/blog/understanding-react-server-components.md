@@ -77,11 +77,11 @@ export function handleRequest(request, response) {
   const appContent = renderToString(<App />);
 
   response.send(`
-<html>
-  <body>
-    ${appContent}
-  </body>
-</html>
+    <html>
+      <body>
+        ${appContent}
+      </body>
+    </html>
   `);
 }
 ```

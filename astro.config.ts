@@ -13,8 +13,7 @@ export default defineConfig({
 			themes: {
 				light: 'catppuccin-latte',
 				dark: 'tokyo-night'
-			},
-			wrap: true
+			}
 		},
 		remarkPlugins: [remarkReadingTime]
 	}
