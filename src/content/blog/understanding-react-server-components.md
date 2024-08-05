@@ -65,7 +65,7 @@ This issue can be mitigated by rendering the initial React content on the server
 
 ## Server Side Rendering
 
-The idea of Server Side Rendering is to perform the first React render on the server to generate HTML. At a high-level, our `<App />` from the previous example can be renderd on a Node.js server using a React method called `renderToString` (though more sophisticated approaches are currently in use):
+The idea of Server Side Rendering is to perform the first React render on the server to generate HTML and send it to the browser. At a high-level, our `<App />` from the previous example can be renderd on a Node.js server using a React method called `renderToString` (though more sophisticated approaches are currently in use):
 
 ```js
 /* /src/server/index.js */
@@ -115,15 +115,34 @@ Note how, instead of creating DOM nodes and rendering them using the `createRoot
 
 ## Server Components
 
-Server Side Rendering is where you take your existing client Application and pre-run it on the server.
+As shown before, we could say that Server Side Rendering is where you take your existing client application and pre-run it on the server. On the other side, the main idea of React Server Components is that they are React components that run *only* on the server.
 
-On the other side, React Server Components are React components that run *only* on the server. This server-only execution allows React Server Components to perform tasks that client components can't, such as accessing your database or backend services that you don't want to expose to the frontend. 
+This server-only execution allows React Server Components to perform asynchronous tasks that client components can't, such as accessing your database or backend services that you don't want to expose to the frontend. Moreover, Server Components guarantee that these tasks run only once, wit and they can pass the output to client components as props. In this regard, it's a similar concept to Next.js `getServerSideProps`.
 
-Because these components run on the server, they can handle asynchronous operations efficiently, running only once and passing data as props to client components. It's a similar concept to what framworks like Next.js did with `getServerSideProps`
+Server Components open a new paradigm in the React ecosystem because they allow building full-stack applications with React.
 
-By using React Server Components, you can build full-stack applications with React.
+### The "Server" in Server Components
+When we say the word server we don't necessearily mean that they run on the server but instead the fact that they run *ahead of time*. For example, Next.js which has implemented Server Components, has as default configuration to run Server Components at *build time*. 
 
-### Clarification about "Server" in Server Components
-When we say the word server we don't necessearily mean that they run on the server but instead the fact that they run *ahead of time*. For example, Next.js which has implemented Server Components has as default configuration to run Server Components at *build time*. 
+The way it works is that, at build time, the compiler pre-renders the Server Components. However, the output of this pre-render is not an HTML file but instead a serialized React object tree that describes the UI. In the previous example, the pre-render would return a serialized version of:
+
+```js
+{
+  type: "p",
+  key: null,
+  ref: null,
+  props: {
+    id: 'hello',
+    children: 'Hello World!',
+  },
+  /* rest */
+}
+```
+
+This code would be included in our JS bundle instead of the `React.createElement()` function calls. Then, during hydration, React uses this pre-rendered component tree as if it had been renderd on the client even though it never did.
+
+
+// rsc from scratch:
+We'll keep referring to this as "sending JSX", but we're not sending the JSX syntax itself (like "<Foo />") over the wire. We're only taking the object tree produced by JSX, and turning it into a JSON-formatted string. However, the exact transport format will be changing over time (for example, the real RSC implementation uses a different format that we will explore later in this series).
 
 
