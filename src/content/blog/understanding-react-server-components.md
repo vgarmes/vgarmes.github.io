@@ -123,18 +123,16 @@ function App() {
 
 Note how, instead of creating DOM nodes and rendering them using the `createRoot` and `render` methods as we saw in the client side rendering example, now we just adopt the HTML received from the server using `hydrateRoot`:
 
-
-
 ## Server Components
 
-React Server Components introduce a new paradigm allowing components to run solely on the server. This server-only execution opens up possibilities for performing tasks that would be impossible or inefficient on the client side, such as accessing databases or backend services securely without exposing them to the frontend.
+React Server Components introduce a new paradigm allowing components to run solely on the server. This server-only execution means that their code isn't included in the JS bundle, which opens up possibilities for performing tasks that would be impossible or inefficient on the client side, such as accessing databases or backend services securely without exposing them to the frontend.
 
 ### SSR vs RSC
-As previously describled, involves pre-running the client application on the server to produce HTML, which is then sent to the client. However, React Server Components differ fundamentally from this approach. 
+As previously describled, SSR involves pre-running the client application on the server. However, React Server Components differ fundamentally from this approach. 
 
 While SSR generates HTML on the server, RSC involves rendering React components on the server and passing their output as serialized objects to the client. These serialized objects represent a React component tree, not static HTML. 
 
-In our previous example, an application with both RSC and SSR enabled, the HTML received by the client (very simplified) would look something like this:
+In our previous example of an SSR application, if we had RSCs the HTML received by the client would look something like this:
 
 ```html
 <!DOCTYPE html>
@@ -153,27 +151,30 @@ In our previous example, an application with both RSC and SSR enabled, the HTML 
 </html>
 ```
 
-We see that this HTML includes the pre-rendered React application (the "Hello World!" paragraph), result of the SSR. Then we also have two `<script>` tags. The first tag loads up the JS bundle which includes React and any client components. 
+We see that this HTML includes the pre-rendered React application (the "Hello World!" paragraph), result of the SSR. Then we also have two `<script>` tags. The first tag loads up the JS bundle which includes React and the client components. 
 
-The second tag includes what RSC rendered, which is a serialized React object tree, known as the React Server Component Payload (RSC Payload). During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the initial rendering happened entirely on the server.
+The second tag includes what RSC rendered, which is a serialized React object tree, known as the React Server Component Payload (the actual format would be a stringified JSON array but it has been simplified here). During reconciliation on the client, React uses this pre-rendered component tree as if it had been rendered on the client, even though the initial rendering occurred entirely on the server.
 
 ### The "Server" in Server Components
 
 The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time. Instead, they often execute ahead of time, particularly in frameworks like Next.js. By default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree. This approach allows developers to build static sites where all the heavy lifting happens during the build, rather than at runtime.
 
+### Usage
 
-### Integration and usage
-React Server Components are not a replacement for Server-Side Rendering but an enhancement. They allow developers to omit certain components from the client-side JavaScript bundle, ensuring these components only execute on the server. This tight integration requires coordination with various tools outside of React, such as the bundler, server, and router.
+RSCs have a tight integration with client components, both on the server when React uses the RSC payload and client components to render HTML and on the client, where React needs to reconcile the Client and Server Component trees to update the DOM. 
 
-Currently, [the only way to use React Server Components is through Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks) and its newly re-architected "App Router." In this setup, all components are Server Components by default unless explicitly marked as Client Components. This default behavior underscores the paradigm shift: while SSR generates HTML on the server and sends it to the client, RSC generates serialized React objects, which React then hydrates on the client without re-rendering.
+This integration requires coordination with various tools outside of React, such as the bundler, server, and router which can be a bit daunting to set up yourself and that's why we use frameworks. However, [the only framework that currently uses React Server Components is Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks) and its newly re-architected "App Router." 
 
-### Compatibility
-React Server Components offer flexibility by being compatible with various rendering strategies. Whether rendered on-demand during runtime or pre-rendered at build time, RSC allows developers to generate static HTML files that can be hosted anywhere. This approach reduces the need for a live server and simplifies deployment, making it an attractive option for static site generation.
+When using RSCs, all components are assumed to be Server Components by default. We have to “opt in” for Client Components by using the `'use client'` directive on top of the component:
 
-In summary, React Server Components represent a significant evolution in React's capabilities, enabling more efficient and secure server-side operations while providing flexibility in rendering and deployment strategies. As this technology continues to develop, it promises to become a key tool for React developers building full-stack applications.
+
+## Conclusion
+
+React Server Components are not a replacement for Server-Side Rendering but an enhancement. They allow developers to omit certain components from the client-side JavaScript bundle, ensuring these components only execute on the server. Their benefits are still yet to be
 
 ## References
-These are some invaluable references that helped me understand RSC which I used to write this article. Please check them out if you want to learn more about RSC:
+
+If you want to learn more about RSCs, I can't recommend enough these invaluable references which I used myself for the writing of this article:
 
 - [Making Sense of React Server Components](https://www.joshwcomeau.com/react/server-components/#introduction-to-react-server-components-3) by Josh Comeau
 - [RSC from scratch](https://github.com/reactwg/server-components/discussions/5) by Dan Abramov
