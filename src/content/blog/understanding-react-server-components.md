@@ -27,7 +27,7 @@ In a typical client-only React application, the user receives an empty HTML that
     <script src="/static/js/bundle.js"></script>
   </body>
 </html>
-````
+```
 
 React, which is included in the JavaScript bundle, uses the empty `<div id="root">` element to dynamically append all of the DOM nodes like this:
 
@@ -125,14 +125,22 @@ Note how, instead of creating DOM nodes and rendering them using the `createRoot
 
 ## Server Components
 
-React Server Components introduce a new paradigm allowing components to run solely on the server. This server-only execution means that their code isn't included in the JS bundle, which opens up possibilities for performing tasks that would be impossible or inefficient on the client side, such as accessing databases or backend services securely without exposing them to the frontend.
+React Server Components introduce a new approach where components are executed only once, exclusively on the server. They are truly static because they do not re-render or hydrate on the client. Once their output is rendered on the client, it remains unchanged and immutable. 
+
+This server-only execution has several performance benefits, two of the main ones being:
+
+- *Zero bundle size:* The code of RSCs doesn't get added to your JavaScript bundle, which means you can safely use large dependencies without the risk of shipping them to the client. For example, if we needed to use a syntax highlighting library, which tend to be quite heavy, we could run it on the server to generate the syntax-highlighted code without shipping the dependency.
+
+- *Secure access to backend services:* Since RSCs run only on the server, they have direct access to data sources such as databases and file systems while safely keeping sensitive data and logic away from the client.
+
+On the other hand, because RSCs do not re-render on the client, they can't use most of React's APIs, such as state and effects. To differentiate RSCs from other React components, the latter have been renamed to Client Components.
 
 ### SSR vs RSC
-As previously describled, SSR involves pre-running the client application on the server. However, React Server Components differ fundamentally from this approach. 
+Even though the concepts of SSR and RSC might seem similar since both involve running React components on the server, they differ fundamentally.
 
-While SSR generates HTML on the server, RSC involves rendering React components on the server and passing their output as serialized objects to the client. These serialized objects represent a React component tree, not static HTML. 
+While SSR involves pre-running the client application on the server to generate HTML, RSCs are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
 
-In our previous example of an SSR application, if we had RSCs the HTML received by the client would look something like this:
+In our previous example of an SSR application, if we had used RSCs, the HTML received by the client would look something like this (truncated for simplicity):
 
 ```html
 <!DOCTYPE html>
@@ -141,20 +149,99 @@ In our previous example of an SSR application, if we had RSCs the HTML received 
     <p>Hello World!</p>
     <script src="/static/js/bundle.js"></script>
     <script>
-      self.__next['$App-1'] = {
-        type: 'p',
-        props: null,
-        children: "Hello World!",
-      };
+      self.__next_f.push([1,
+        [
+          "$",
+          "p",
+          null,
+          { children: "Hello World!" }
+        ]
+      ])
     </script>
   </body>
 </html>
 ```
 
-We see that this HTML includes the pre-rendered React application (the "Hello World!" paragraph), result of the SSR. Then we also have two `<script>` tags. The first tag loads up the JS bundle which includes React and the client components. 
+We see that this HTML includes the pre-rendered React application (the "Hello World!" paragraph), which is the result of SSR. Additionally, there are two <script> tags:
 
-The second tag includes what RSC rendered, which is a serialized React object tree, known as the React Server Component Payload (the actual format would be a stringified JSON array but it has been simplified here). During reconciliation on the client, React uses this pre-rendered component tree as if it had been rendered on the client, even though the initial rendering occurred entirely on the server.
+- The first tag loads the JavaScript bundle, which includes React and the client components.
 
+- The second tag contains what RSCs rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
+
+Even though the actual format of the RSC payload is a stringified JSON array-it has been simplified here for clarity—which has been simplified here for clarity—we can distinguish a few key elements. The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
+
+### Boundaries
+As mentioned before, RSCs never re-render on the client. This means that they 
+
+ In this new “React Server Components” paradigm, all components are assumed to be Server Components by default. We have to “opt in” for Client Components.
+
+ Client Components can only import other Client Components. 
+
+ This means we don't have to add 'use client' to every single file that needs to run on the client. In practice, we only need to add it when we're creating new client boundaries.
+
+ Let's take the same example from above an include a Client Component, the typical counter:
+
+```js
+// Counter.js
+'use client';
+
+import { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      You pressed me {count} times
+    </button>
+  );
+}
+```
+
+```js
+// page.js
+import Counter from './counter';
+
+export default function App() {
+  return (
+    <div>
+      <p>Hello world</p>
+      <Counter />
+    </div>
+  )
+}
+```
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <p>Hello World!</p>
+    <script src="/static/js/bundle.js"></script>
+    <script>
+      self.__next_f.push([1,
+        "4:I[(app-pages-browser)/./src/app/counter.tsx\",
+        [
+          '$',
+          'div',
+          null,
+          { children: [
+              ['$', 'p', null, { children: 'Hello world' }],
+              ['$', '$L4', null, {}],
+            ],
+          },
+        ]
+      ])
+    </script>
+  </body>
+</html>
+```
+
+"jfs"
 ### The "Server" in Server Components
 
 The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time. Instead, they often execute ahead of time, particularly in frameworks like Next.js. By default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree. This approach allows developers to build static sites where all the heavy lifting happens during the build, rather than at runtime.
@@ -170,7 +257,11 @@ When using RSCs, all components are assumed to be Server Components by default. 
 
 ## Conclusion
 
-React Server Components are not a replacement for Server-Side Rendering but an enhancement. They allow developers to omit certain components from the client-side JavaScript bundle, ensuring these components only execute on the server. Their benefits are still yet to be
+React Server Components are not a replacement for Server-Side Rendering but an enhancement. They allow developers to omit certain components from the client-side JavaScript bundle, ensuring these components only execute on the server. Their benefits are still yet to  
+The most obvious benefit is performance. Server Components don't get included in our JS bundles, which reduces the amount of JavaScript that needs to be downloaded, and the number of components that need to be hydrated:
+we no longer have to make the same compromises, in terms of features vs. bundle size!
+
+ 
 
 ## References
 
