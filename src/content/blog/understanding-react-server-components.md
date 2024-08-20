@@ -1,19 +1,19 @@
 ---
 title: 'Understanding React Server Components'
-pubDate: 2024-08-15
-description: 'The core of Single-Page Applications consists of its client routing which allows navigating through the pages without hitting the server. Here I explain how I have built my own basic React router to better understand the inner workings of SPAs.'
+pubDate: 2024-08-20
+description: 'Recently, the React team unveiled a formal approach for running React components exclusively on the server. This represents a significant shift in how we use React, causing some confusion within the community. In this article, I explore this new concept and provide a foundational understanding of how it works.'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp' 
     alt: 'Thumbnail with the blog post title'
 tags: ["react", "server components"]
-draft: true
+draft: false
 ---
 
-React Server Components (RSCs) are transforming the React ecosystem, with Next.js, one of the most popular frameworks, fully embracing this approach.
+React Server Components (RSC) are transforming the React ecosystem, with Next.js, one of the most popular frameworks, fully embracing this approach.
 
-When I first heard about RSCs, I completely misunderstood what they were. I initially thought RSCs were simply Server Side Rendering (SSR) with additional features, such as the ability to await methods called directly on the backend. I couldn't have been more wrong, and it seems this misconception is quite common. 
+When I first heard about RSC, I completely misunderstood what they were. I initially thought RSC were simply Server Side Rendering (SSR) with additional features, such as the ability to await methods called directly on the backend. I couldn't have been more wrong, and it seems this misconception is quite common. 
 
-RSCs are much more than just enhanced SSR; in fact, they don't necessarily require SSR at all. In this blog post, I'll provide a high-level explanation that helped me build a mental model and will hopefully help you too. But first, let's start from the beginning.
+RSC are much more than just enhanced SSR; in fact, they don't necessarily require SSR at all. In this blog post, I'll provide a high-level explanation that helped me build a mental model and will hopefully help you too. But first, let's start from the beginning.
 
 ## What are Client components
 
@@ -129,18 +129,20 @@ React Server Components introduce a new approach where components are executed o
 
 This server-only execution has several performance benefits, two of the main ones being:
 
-- *Zero bundle size:* The code of RSCs doesn't get added to your JavaScript bundle, which means you can safely use large dependencies without the risk of shipping them to the client. For example, if we needed to use a syntax highlighting library, which tend to be quite heavy, we could run it on the server to generate the syntax-highlighted code without shipping the dependency.
+- *Zero bundle size:* The code of RSC doesn't get added to your JavaScript bundle, which means you can safely use large dependencies without the risk of shipping them to the client. For example, if we needed to use a syntax highlighting library, which tend to be quite heavy, we could run it on the server to generate the syntax-highlighted code without shipping the dependency.
 
-- *Secure access to backend services:* Since RSCs run only on the server, they have direct access to data sources such as databases and file systems while safely keeping sensitive data and logic away from the client.
+- *Secure access to backend services:* Since RSC run only on the server, they have direct access to data sources such as databases and file systems while safely keeping sensitive data and logic away from the client.
 
-On the other hand, because RSCs do not re-render on the client, they can't use most of React's APIs, such as state and effects. To differentiate RSCs from other React components, the latter have been renamed to Client Components.
+On the other hand, because RSC do not re-render on the client, they can't use most of React's APIs, such as state and effects. To differentiate RSC from other React components, the latter have been renamed to Client Components.
+
+Moreover, the logic behind RSC needs to be tightly integrated with the bundler, the server, and the router. This is why, currently, [the simplest way to use RSC is with Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), which incorporates them into its newly re-architected App Router.
 
 ### SSR vs RSC
 Even though the concepts of SSR and RSC might seem similar since both involve running React components on the server, they differ fundamentally.
 
-While SSR involves pre-running the client application on the server to generate HTML, RSCs are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
+While SSR involves pre-running the client application on the server to generate HTML, RSC are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
 
-In our previous example of an SSR application, if we had used RSCs, the HTML received by the client would look something like this (truncated for simplicity):
+In our previous example of an SSR application, if we had used RSC, the HTML received by the client would look something like this (truncated for simplicity):
 
 ```html
 <!DOCTYPE html>
@@ -166,20 +168,19 @@ We see that this HTML includes the pre-rendered React application (the "Hello Wo
 
 - The first tag loads the JavaScript bundle, which includes React and the client components.
 
-- The second tag contains what RSCs rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
+- The second tag contains what RSC rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
 
-Even though the actual format of the RSC payload is a stringified JSON array-it has been simplified here for clarity—which has been simplified here for clarity—we can distinguish a few key elements. The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
+Even though the actual format of the RSC payload differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.  The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
+
+_NOTE: The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time; rather, rendering ahead of time. For instance, by default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree._
 
 ### Boundaries
-As mentioned before, RSCs never re-render on the client. This means that they 
 
- In this new “React Server Components” paradigm, all components are assumed to be Server Components by default. We have to “opt in” for Client Components.
+When using RSC with Next.js, all components are assumed to be Server Components by default. We have to “opt in” for Client Components by using the `'use client'` directive on top of the component. 
+ 
+However, Client Components can only import other Client Components. This means that when we import a Client Component into a Server Component, we create a boundary, and all components down the tree from that point will be treated as Client Components. Because of this, we don't have to add `'use client'` to every single file that needs to run on the client. In practice, we only need to add it when we're creating new client boundaries.
 
- Client Components can only import other Client Components. 
-
- This means we don't have to add 'use client' to every single file that needs to run on the client. In practice, we only need to add it when we're creating new client boundaries.
-
- Let's take the same example from above an include a Client Component, the typical counter:
+Let's see what happens if we take the same example from above and include a Client Component, such as a typical counter:
 
 ```js
 // Counter.js
@@ -202,6 +203,8 @@ export default function Counter() {
 }
 ```
 
+We place our `App` component in a Next.js `page` as an RSC, and then re-arrange it a bit to add the counter:
+
 ```js
 // page.js
 import Counter from './counter';
@@ -216,6 +219,8 @@ export default function App() {
 }
 ```
 
+If we inspect the HTML received by the client (also truncated for simplicity), we will see something like this:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -224,7 +229,7 @@ export default function App() {
     <script src="/static/js/bundle.js"></script>
     <script>
       self.__next_f.push([1,
-        "4:I[(app-pages-browser)/./src/app/counter.tsx\",
+        "4:I[(app-pages-browser)/./src/app/counter.js\",
         [
           '$',
           'div',
@@ -241,33 +246,25 @@ export default function App() {
 </html>
 ```
 
-"jfs"
-### The "Server" in Server Components
+Now, we can see that our script tag containing the RSC payloads has changed. There is a new element in the serialized object starting with the number `4` and the letter `I`, followed by the path of our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier for the payload.
 
-The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time. Instead, they often execute ahead of time, particularly in frameworks like Next.js. By default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree. This approach allows developers to build static sites where all the heavy lifting happens during the build, rather than at runtime.
-
-### Usage
-
-RSCs have a tight integration with client components, both on the server when React uses the RSC payload and client components to render HTML and on the client, where React needs to reconcile the Client and Server Component trees to update the DOM. 
-
-This integration requires coordination with various tools outside of React, such as the bundler, server, and router which can be a bit daunting to set up yourself and that's why we use frameworks. However, [the only framework that currently uses React Server Components is Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks) and its newly re-architected "App Router." 
-
-When using RSCs, all components are assumed to be Server Components by default. We have to “opt in” for Client Components by using the `'use client'` directive on top of the component:
-
+Following that, we see our React component tree. In addition to our "Hello World" paragraph, there's now an element of type  `$L4`, which instructs React to load the module identified by `4` (our counter) in that position within the component tree.
 
 ## Conclusion
 
-React Server Components are not a replacement for Server-Side Rendering but an enhancement. They allow developers to omit certain components from the client-side JavaScript bundle, ensuring these components only execute on the server. Their benefits are still yet to  
-The most obvious benefit is performance. Server Components don't get included in our JS bundles, which reduces the amount of JavaScript that needs to be downloaded, and the number of components that need to be hydrated:
-we no longer have to make the same compromises, in terms of features vs. bundle size!
+If SSR was a way to pre-render client applications on the server, RSC take it a step further by adding the performance benefits of running code solely on the server. 
 
- 
+RSC get even more interesting when combined with `Suspense` and the streaming SSR architecture,  allowing you to split the rendering work into chunks and stream them to the client as they become ready.
+
+All of this represents a paradigm shift in the React ecosystem and will significantly change the way we build applications in the future.
+
 
 ## References
 
-If you want to learn more about RSCs, I can't recommend enough these invaluable references which I used myself for the writing of this article:
+If you want to learn more about RSC, I highly recommend these invaluable references, which I used myself while writing this article:
 
-- [Making Sense of React Server Components](https://www.joshwcomeau.com/react/server-components/#introduction-to-react-server-components-3) by Josh Comeau
-- [RSC from scratch](https://github.com/reactwg/server-components/discussions/5) by Dan Abramov
-- [Data Feching with React Server Components](https://github.com/reactwg/server-components/discussions/5) by Dan Abramov and Lauren Tan
-- [Next.js Docs](https://nextjs.org/docs/app/building-your-application/rendering/server-components) Next.js documentation on RSCs
+- [Making Sense of React Server Components](https://www.joshwcomeau.com/react/server-components/#introduction-to-react-server-components-3): An exceptional and clear article by Josh Comeau, as usual, featuring plenty of helpful diagrams.
+- [RSC from scratch](https://github.com/reactwg/server-components/discussions/5): A detailed technical deep dive by the great Dan Abramov (former React core team member), which walks you through the process of "inventing" RSC from scratch to provide a comprehensive mental model.
+- [The forensics of React Server Components](https://www.smashingmagazine.com/2024/05/forensics-react-server-components/): A comprehensive explanation by Lazar Nikolov, who examines in detail the rendering lifecycle of RSC.
+- [Data Feching with React Server Components](https://github.com/reactwg/server-components/discussions/5): An excellent RSC demo by Dan Abramov and Lauren Tan.
+- [Next.js Docs](https://nextjs.org/docs/app/building-your-application/rendering/server-components): Next.js documentation on RSC, featuring a helpful explanation of how RSC are rendered and the various strategies involved.
