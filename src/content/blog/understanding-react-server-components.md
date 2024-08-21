@@ -15,7 +15,30 @@ When I first heard about RSC, I completely misunderstood what they were. I initi
 
 RSC are much more than just enhanced SSR; in fact, they don't necessarily require SSR at all. In this blog post, I'll provide a high-level explanation that helped me build a mental model and will hopefully help you too. But first, let's start from the beginning.
 
-## What are Client components
+## What is Client Side Rendering
+
+Let's imagine we have the typical React component with a counter:
+
+```js
+// Counter.js
+'use client';
+
+import { useState } from 'react';
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  function handleClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      You pressed me {count} times
+    </button>
+  );
+}
+```
 
 In a typical client-only React application, the user receives an empty HTML that looks like this:
 
@@ -29,7 +52,10 @@ In a typical client-only React application, the user receives an empty HTML that
 </html>
 ```
 
-React, which is included in the JavaScript bundle, uses the empty `<div id="root">` element to dynamically append all of the DOM nodes like this:
+React, which is included in the JavaScript bundle, uses the empty `<div id="root">` element to dynamically append all of the DOM nodes as soon as the code is loaded in the client.
+
+```js
+```
 
 ```js
 import React from 'react';
@@ -75,7 +101,7 @@ The browser then starts downloading additional resources, including the JavaScri
 
 This issue can be mitigated by rendering the initial React content on the server, which is where Server-Side Rendering (SSR) comes into play.
 
-## Server Side Rendering
+## What is Server Side Rendering
 
 The idea of Server Side Rendering is to perform the first React render on the server to generate HTML and send it to the browser. At a high-level, our `<App />` from the previous example can be renderd on a Node.js server using a React method called `renderToString` (though more sophisticated approaches are currently in use):
 
