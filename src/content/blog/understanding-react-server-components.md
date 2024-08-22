@@ -15,32 +15,66 @@ When I first heard about RSC, I completely misunderstood what they were. I initi
 
 RSC are much more than just enhanced SSR; in fact, they don't necessarily require SSR at all. In this blog post, I'll provide a high-level explanation that helped me build a mental model and will hopefully help you too. But first, let's start from the beginning.
 
-## What is Client Side Rendering
+## How React renders
 
-Let's imagine we have the typical React component with a counter:
+To better understand the behavior of Server Components and before we define the different rendering strategies, let's do a quick primer on how React actually renders a component. Imagine we have the typical counter:
 
 ```js
-// Counter.js
-'use client';
-
+// App.js
 import { useState } from 'react';
 
-export default function Counter() {
+export default function App() {
   const [count, setCount] = useState(0);
 
-  function handleClick() {
-    setCount(count + 1);
-  }
-
   return (
-    <button onClick={handleClick}>
+    <button onClick={() => setCount(count + 1)}>
       You pressed me {count} times
     </button>
   );
 }
 ```
 
-In a typical client-only React application, the user receives an empty HTML that looks like this:
+When compiled, the output of this component is converted into a `React.createElement` call:
+
+```js
+// App.js
+import { useState } from 'react';
+import React from 'react';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+
+  return React.createElement(
+    'button', 
+    { onClick: () => setCount(count + 1) }, 
+    `You pressed me ${count} times`
+  );
+}
+``` 
+
+When this function runs, it produces a plain JavaScript object that looks something like this:
+
+```js
+{
+  type: 'button',
+  key: null,
+  ref: null,
+  props: {
+    onClick: () => setCount(count + 1),
+    children:`You pressed me ${count} times`,
+  },
+  _owner: null,
+  _store: { validated: false }
+}
+```
+
+These objects, known as the Virtual DOM, are React's way of describing the DOM structure. They are used to compare renders, identify changes, and determine what needs to be updated in the actual DOM. During rendering, React uses this Virtual DOM to compare the current state of the UI with a new version generated after a state or prop change. This comparison process, called reconciliation, allows React to efficiently update only the parts of the real DOM that have changed, rather than re-rendering the entire UI.
+
+But when does the initial render occur? This depends on whether our application is rendered entirely on the client side or not.
+
+## Rendering on the client
+
+In a traditional client-only React application, the user receives an empty HTML that looks like this:
 
 ```html
 <!DOCTYPE html>
@@ -52,47 +86,15 @@ In a typical client-only React application, the user receives an empty HTML that
 </html>
 ```
 
-React, which is included in the JavaScript bundle, uses the empty `<div id="root">` element to dynamically append all of the DOM nodes as soon as the code is loaded in the client.
-
-```js
-```
+React, which is included in the JavaScript bundle, uses `<div id="root">` element to inject all of the DOM nodes as soon as it's loaded on the client:
 
 ```js
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-
-function App() {
-  return <p>Hello World!</p>
-}
+import App from './App.js'
 
 const root = createRoot(document.querySelector('#root'));
 root.render(<App />);
-```
-
-When compiled, the `<App />` component is converted into a `React.createElement` call:
-
-```js
-React.createElement(
-  'p',
-  { id: 'hello' },
-  'Hello World!'
-);
-``` 
-
-This function returns a React element which is a plain JavaScript object that looks something like this:
-
-```js
-{
-  type: "p",
-  key: null,
-  ref: null,
-  props: {
-    id: 'hello',
-    children: 'Hello World!',
-  },
-  _owner: null,
-  _store: { validated: false }
-}
 ```
 
 As you might already know this approach has its drawbacks. When a user visits a page built like this, the initial request retrieves an HTML file that is essentially empty.
@@ -109,7 +111,7 @@ The idea of Server Side Rendering is to perform the first React render on the se
 /* /src/server/index.js */
 import renderToString from 'react-dom/server';
 
-import App from './components/App';
+import Counter from './Counter';
 
 export function handleRequest(request, response) {
   const appContent = renderToString(<App />);
