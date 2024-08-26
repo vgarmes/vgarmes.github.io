@@ -1,6 +1,6 @@
 ---
 title: 'Understanding React Server Components'
-pubDate: 2024-08-21
+pubDate: 2024-08-27
 description: 'Recently, the React team unveiled a formal approach for running React components exclusively on the server. This represents a significant shift in how we use React, causing some confusion within the community. In this article, I explore this new concept and provide a foundational understanding of how it works.'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1724193063/blog/e362ffcc-ed6f-4e71-855f-35ee52d1e0a5_ujxmau.jpg' 
@@ -8,6 +8,8 @@ image:
 tags: ["react", "server components"]
 draft: false
 ---
+
+NOTE: This post is not finished.
 
 React Server Components (RSC) are transforming the React ecosystem, with Next.js, one of the most popular frameworks, fully embracing this approach.
 
@@ -86,7 +88,7 @@ In a traditional client-only React application, the user receives an empty HTML 
 </html>
 ```
 
-React, which is included in the JavaScript bundle, uses `<div id="root">` element to inject all of the DOM nodes as soon as it's loaded on the client:
+Then React, which is included in the JavaScript bundle, uses `<div id="root">` element to inject all of the DOM nodes once it's loaded on the client. To achieve this, React creates a root for the empty `<div id="root">` element and takes over managing the DOM inside it by calling `root.render`:
 
 ```js
 import React from 'react';
@@ -105,16 +107,17 @@ This issue can be mitigated by rendering the initial React content on the server
 
 ## What is Server Side Rendering
 
-The idea of Server Side Rendering is to perform the first React render on the server to generate HTML and send it to the browser. At a high-level, our `<App />` from the previous example can be renderd on a Node.js server using a React method called `renderToString` (though more sophisticated approaches are currently in use):
+The idea of Server Side Rendering is to perform the first React render on the server to generate HTML and send it to the browser. At a high-level, our `<App />` from the previous example can be renderd on a Node.js server using a React method called `renderToString` (the HTML has been simplified for brevity):
 
 ```js
 /* /src/server/index.js */
 import renderToString from 'react-dom/server';
-
-import Counter from './Counter';
+import App from './App.js';
 
 export function handleRequest(request, response) {
   const appContent = renderToString(<App />);
+  // <button>You pressed me 0 times</button>
+  
 
   response.send(`
     <html>
@@ -126,7 +129,7 @@ export function handleRequest(request, response) {
 }
 ```
 
-Similarly to the `render` method, `renderToString` will recursively render all the components in `App` all the way down resulting in HTML code in string format. Please note that the HTML is simplified to the maximum for this example. In a real-life scenario, it would contain additional elements such as <script> tags to fetch the JavaScript bundle.
+Similarly to the `render` method, `renderToString` will recursively render all the components in `App` all the way down resulting in HTML code in string format. Even though more sophisticated approaches that support features like streaming are currently in use, this gives us an idea of how SSR works.
 
 This approach has the advantage that the user can start viewing the content as soon as the HTML is received, even while the JavaScript is still loading, making the application more responsive.
 Once the JavaScript has loaded, React makes the page interactive through a process called "hydration". During this process, React performs a render to determine the shape of the component tree and set up all of the interactivity, such as event listeners. As opposed to client-side rendering, this render is not used to create all of the DOM nodes, as they already exist from the server, but rather to integrate with the existing DOM.
@@ -134,22 +137,17 @@ Once the JavaScript has loaded, React makes the page interactive through a proce
 In order to achieve this, React uses a method called `hydrateRoot` which is used instead of `createRoot` in client side rendering:
 
 ```diff
-import React from 'react`
+import React from 'react'
+import App from './App'
 - import { createRoot } from 'react-dom/client';
 + import { hydrateRoot } from 'react-dom/client';
-
-function App() {
-  return (
-    <h1>Hello world!</h1>
-  );
-}
 
 - const root = createRoot(document.querySelector('#root'));
 - root.render(<App />);
 + hydrateRoot(document.querySelector('#root'), <App />);
 ```
 
-Note how, instead of creating DOM nodes and rendering them using the `createRoot` and `render` methods as we saw in the client side rendering example, now we just adopt the HTML received from the server using `hydrateRoot`:
+Note how, instead of creating DOM nodes and rendering them using the `createRoot` and `render` methods as we saw in the client side rendering example, now we just adopt the HTML received from the server using `hydrateRoot`.
 
 ## Server Components
 
@@ -165,50 +163,26 @@ On the other hand, because RSC do not re-render on the client, they can't use mo
 
 Moreover, the logic behind RSC needs to be tightly integrated with the bundler, the server, and the router. This is why, currently, [the simplest way to use RSC is with Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), which incorporates them into its newly re-architected App Router.
 
-### SSR vs RSC
-Even though the concepts of SSR and RSC might seem similar since both involve running React components on the server, they differ fundamentally.
-
-While SSR involves pre-running the client application on the server to generate HTML, RSC are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
-
-In our previous example of an SSR application, if we had used RSC, the HTML received by the client would look something like this (truncated for simplicity):
-
-```html
-<!DOCTYPE html>
-<html>
-  <body>
-    <p>Hello World!</p>
-    <script src="/static/js/bundle.js"></script>
-    <script>
-      self.__next_f.push([1,
-        [
-          "$",
-          "p",
-          null,
-          { children: "Hello World!" }
-        ]
-      ])
-    </script>
-  </body>
-</html>
-```
-
-We see that this HTML includes the pre-rendered React application (the "Hello World!" paragraph), which is the result of SSR. Additionally, there are two <script> tags:
-
-- The first tag loads the JavaScript bundle, which includes React and the client components.
-
-- The second tag contains what RSC rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
-
-Even though the actual format of the RSC payload differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.  The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
-
-_NOTE: The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time; rather, rendering ahead of time. For instance, by default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree._
-
 ### Boundaries
-
-When using RSC with Next.js, all components are assumed to be Server Components by default. We have to “opt in” for Client Components by using the `'use client'` directive on top of the component. 
+Since Server Components run only on the server and don't support interactivity, they can't be mixed with Client Components. When building with Next.js, all components are assumed to be Server Components by default. To create a Client Component, you need to "opt-in" by adding the `'use client'` directive at the top of the component file.
  
 However, Client Components can only import other Client Components. This means that when we import a Client Component into a Server Component, we create a boundary, and all components down the tree from that point will be treated as Client Components. Because of this, we don't have to add `'use client'` to every single file that needs to run on the client. In practice, we only need to add it when we're creating new client boundaries.
 
-Let's see what happens if we take the same example from above and include a Client Component, such as a typical counter:
+Let's imagine we are creating a new route in Next.js using a page:
+```js
+/* app/page.js */
+export default function Page() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      You pressed me {count} times
+    </button>
+  );
+}
+```
+
+As soon as we tried to compile this, an error will be thrown indicating that we are using state in a Server Component. An option would be to just use the `'use client'` directive at the top of the page, but let's make it more interesting, lets split up the code and move the counter to its own Client Component like so:
 
 ```js
 // Counter.js
@@ -219,28 +193,24 @@ import { useState } from 'react';
 export default function Counter() {
   const [count, setCount] = useState(0);
 
-  function handleClick() {
-    setCount(count + 1);
-  }
-
   return (
-    <button onClick={handleClick}>
+    <button onClick={() => setCount(count + 1)}>
       You pressed me {count} times
     </button>
   );
 }
 ```
 
-We place our `App` component in a Next.js `page` as an RSC, and then re-arrange it a bit to add the counter:
+Then we could include our counter in our page:
 
 ```js
 // page.js
-import Counter from './counter';
+import Counter from './Counter';
 
 export default function App() {
   return (
     <div>
-      <p>Hello world</p>
+      <h1>My counter</h1>
       <Counter />
     </div>
   )
@@ -263,7 +233,7 @@ If we inspect the HTML received by the client (also truncated for simplicity), w
           'div',
           null,
           { children: [
-              ['$', 'p', null, { children: 'Hello world' }],
+              ['$', 'h1', null, { children: 'My counter' }],
               ['$', '$L4', null, {}],
             ],
           },
@@ -277,6 +247,23 @@ If we inspect the HTML received by the client (also truncated for simplicity), w
 Now, we can see that our script tag containing the RSC payloads has changed. There is a new element in the serialized object starting with the number `4` and the letter `I`, followed by the path of our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier for the payload.
 
 Following that, we see our React component tree. In addition to our "Hello World" paragraph, there's now an element of type  `$L4`, which instructs React to load the module identified by `4` (our counter) in that position within the component tree.
+
+### SSR vs RSC
+Even though the concepts of SSR and RSC might seem similar since both involve running React components on the server, they differ fundamentally.
+
+While SSR involves pre-running the client application on the server to generate HTML, RSC are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
+
+ Additionally, there are two <script> tags:
+
+- The first tag loads the JavaScript bundle, which includes React and the client components.
+
+- The second tag contains what RSC rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
+
+Even though the actual format of the RSC payload differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.  The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
+
+_NOTE: The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time; rather, rendering ahead of time. For instance, by default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree._
+
+
 
 ## Conclusion
 
