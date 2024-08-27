@@ -159,16 +159,20 @@ This server-only execution has several performance benefits, two of the main one
 
 - *Secure access to backend services:* Since RSC run only on the server, they have direct access to data sources such as databases and file systems while safely keeping sensitive data and logic away from the client.
 
-On the other hand, because RSC do not re-render on the client, they can't use most of React's APIs, such as state and effects. To differentiate RSC from other React components, the latter have been renamed to Client Components.
+On the other hand, because RSC are not sent to the browser, they can't use any interactive APIs like `useState`. To differentiate RSC from other React components, the latter have been renamed to Client Components.
 
 Moreover, the logic behind RSC needs to be tightly integrated with the bundler, the server, and the router. This is why, currently, [the simplest way to use RSC is with Next.js 13.4+](https://react.dev/learn/start-a-new-react-project#bleeding-edge-react-frameworks), which incorporates them into its newly re-architected App Router.
 
+_NOTE: The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time; rather, rendering ahead of time. For instance, by default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default)._
+
 ### Boundaries
-Since Server Components run only on the server and don't support interactivity, they can't be mixed with Client Components. When building with Next.js, all components are assumed to be Server Components by default. To create a Client Component, you need to "opt-in" by adding the `'use client'` directive at the top of the component file.
+
+When building with Next.js, all components are assumed to be Server Components by default. To add interactivity, you need to "opt-in" by adding the `'use client'` directive at the top of the component file. This directive will convert the all the components in that file into Client Components.
  
 However, Client Components can only import other Client Components. This means that when we import a Client Component into a Server Component, we create a boundary, and all components down the tree from that point will be treated as Client Components. Because of this, we don't have to add `'use client'` to every single file that needs to run on the client. In practice, we only need to add it when we're creating new client boundaries.
 
-Let's imagine we are creating a new route in Next.js using a page:
+Let's imagine we are creating a new page in Next.js:
+
 ```js
 /* app/page.js */
 export default function Page() {
@@ -182,7 +186,11 @@ export default function Page() {
 }
 ```
 
-As soon as we tried to compile this, an error will be thrown indicating that we are using state in a Server Component. An option would be to just use the `'use client'` directive at the top of the page, but let's make it more interesting, lets split up the code and move the counter to its own Client Component like so:
+As soon as we tried to compile this, an error will be thrown indicating that we are using state in a Server Component. 
+
+An option would be to just use the `'use client'` directive at the top of the page, but let's take some advantage of Server Components and compose our code a little bit. 
+
+We can start by moving the counter to its own Client Component like so:
 
 ```js
 // Counter.js
@@ -201,7 +209,7 @@ export default function Counter() {
 }
 ```
 
-Then we could include our counter in our page:
+Then we could add some elements in our Server Component page and include our counter:
 
 ```js
 // page.js
@@ -217,7 +225,15 @@ export default function App() {
 }
 ```
 
-If we inspect the HTML received by the client (also truncated for simplicity), we will see something like this:
+Now we won't get any compilation errors, our Server and Client components are properly separated by the boundary in the counter.
+
+### Server Components vs SSR
+
+Even though the concepts of SSR and RSC might seem similar at first glance since both involve running React components on the server,  they differ fundamentally as we have juse seen.
+
+While SSR involves pre-running the client application on the server to generate HTML, RSC are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects, known as the *React Server Component Payload*, represent a React component tree, not static HTML.
+
+If we were to inspect the HTML of the previous page when received by the client (also truncated for simplicity), we would see something like this:
 
 ```html
 <!DOCTYPE html>
@@ -244,26 +260,17 @@ If we inspect the HTML received by the client (also truncated for simplicity), w
 </html>
 ```
 
-Now, we can see that our script tag containing the RSC payloads has changed. There is a new element in the serialized object starting with the number `4` and the letter `I`, followed by the path of our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier for the payload.
+As we can see, next to our server-side rendered HTML, there are two <script> tags.
 
-Following that, we see our React component tree. In addition to our "Hello World" paragraph, there's now an element of type  `$L4`, which instructs React to load the module identified by `4` (our counter) in that position within the component tree.
+The first tag loads the JavaScript bundle, which includes React and the Client Components.
 
-### SSR vs RSC
-Even though the concepts of SSR and RSC might seem similar since both involve running React components on the server, they differ fundamentally.
+The second tag contains what RSC rendered—an array of RSC payloads representing the object tree. Even though the actual format of this object differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.
 
-While SSR involves pre-running the client application on the server to generate HTML, RSC are rendered on the server, and their output is passed to the client as serialized objects. These serialized objects represent a React component tree, not static HTML.
+In the payload array, the element starting with the number `4` and the letter `I`, followed by a file path is our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier.
 
- Additionally, there are two <script> tags:
+Following that, we see our React component tree. The `"$"` symbol indicates a DOM definition. First we have the `div` element which children are the `h1` heading and a `$L4` element. The latter instructs React to load the module identified by `4` (our counter) in that position within the component tree.
 
-- The first tag loads the JavaScript bundle, which includes React and the client components.
-
-- The second tag contains what RSC rendered—a serialized React object tree, known as the *React Server Component Payload*. During hydration, React uses this pre-rendered component tree as if it had been rendered on the client, even though the rendering occurred entirely on the server.
-
-Even though the actual format of the RSC payload differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.  The `"$"` symbol indicates a DOM definition, which in our case corresponds to the static HTML consisting of a `"p"` tag with `null` props and `Hello World!` as its `children`.
-
-_NOTE: The term "server" in Server Components doesn't strictly mean that these components run on a server in real-time; rather, rendering ahead of time. For instance, by default, [Next.js configures Server Components to render at build time](https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default), where the compiler pre-renders them into a serialized React object tree._
-
-
+We can see some similarities between this object tree and what we previously saw rendered by `React.createElement`. In fact, during hydration, React uses this pre-rendered component tree just as it would if it had been rendered on the client, even though the initial rendering occurred entirely on the server.
 
 ## Conclusion
 
