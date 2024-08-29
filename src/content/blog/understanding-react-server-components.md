@@ -9,7 +9,7 @@ tags: ["react", "server components"]
 draft: false
 ---
 
-React Server Components are transforming the React ecosystem, and Next.js, one of the most popular frameworks, is fully embracing this approach.
+React Server Components (RSC) are transforming the React ecosystem, and Next.js, one of the most popular frameworks, is fully embracing this approach.
 
 When I first learned about Server Components, I completely misunderstood them. I initially thought it was simply Server Side Rendering (SSR) with additional features, such as the ability to await methods called directly on the backend. I couldn't have been more wrong, and it seems this misconception is quite common. 
 
@@ -116,9 +116,8 @@ import App from './App.js';
 
 export function handleRequest(request, response) {
   const appContent = renderToString(<App />);
-  // <button>You pressed me 0 times</button>
+  // the result of this is: "<button>You pressed me 0 times</button>"
   
-
   response.send(`
     <html>
       <body>
