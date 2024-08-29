@@ -266,11 +266,13 @@ The first tag loads the JavaScript bundle, which includes React and the Client C
 
 The second tag contains what Server Components rendered—an array of payloads representing the object tree. Even though the actual format of this object differs a bit—it has been simplified here for clarity—we can distinguish a few key elements.
 
-In the payload array, the element starting with the number `4` and the letter `I`, followed by a file path is our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier.
+In the payload array, the element starting with the number `4` and the letter `I`, followed by a file path is our Client Component-the counter. Payloads that start with `I` are modules, which is how Client Components are loaded. The number `4` is simply an identifier. Also, notice that I included the file path as it would appear in development. In a production build, we would see something like `static/chunks/app/page-2bf114d4cb295821.js` instead.
 
 Following that, we see our React component tree. The `"$"` symbol indicates a DOM definition. First we have the `div` element which children are the `h1` heading and a `$L4` element. The latter instructs React to load the module identified by `4` (our counter) in that position within the component tree.
 
 We can see some similarities between this object tree and what we previously saw rendered by `React.createElement`. In fact, during hydration, React uses this pre-rendered component tree just as it would if it had been rendered on the client, even though the initial rendering occurred entirely on the server.
+
+If we were to look for the heading `Hello World!` in our bundle, it wouldn't appear. This is one of the strengths of Server Components. This was just a very simple example, but it could be scaled up to more complex processes like querying data from a database, reading from the file system, doing code highlighting, etc., and none of it would be included in the bundle—just a payload with the rendered component tree.
 
 ## Conclusion
 
