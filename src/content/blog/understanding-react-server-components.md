@@ -1,9 +1,9 @@
 ---
 title: 'Understanding React Server Components'
-pubDate: 2024-08-28
+pubDate: 2024-08-29
 description: 'Recently, the React team unveiled a formal approach for running React components exclusively on the server. This represents a significant shift in how we use React, causing some confusion within the community. In this article, I explore this new concept and provide a foundational understanding of how it works.'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1724193063/blog/e362ffcc-ed6f-4e71-855f-35ee52d1e0a5_ujxmau.jpg' 
+    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1724958842/blog/9e0060af-bc61-40cc-b516-2d13d013615b_v4pf3t.png' 
     alt: 'understanding react server components title on a blue background'
 tags: ["react", "server components"]
 draft: false
