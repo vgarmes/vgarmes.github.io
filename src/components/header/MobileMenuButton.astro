@@ -39,22 +39,27 @@
 </button>
 
 <script>
-	let isOpen = false
-	const body = document.getElementsByTagName('body')[0]
-	const button = document.getElementById('mobile-menu-toggle')
+	function setup() {
+		const TOGGLE_ON_CLASS = 'mobile-toggle-on'
+		const body = document.getElementsByTagName('body')[0]
+		const button = document.getElementById('mobile-menu-toggle')
 
-	button?.addEventListener('click', () => {
-		if (isOpen) {
-			isOpen = false
-			body?.classList.remove('mobile-toggle-on')
-			button.ariaLabel = 'Open menu'
-			button.ariaExpanded = 'false'
-			return
-		}
+		button?.addEventListener('click', () => {
+			if (body?.classList.contains(TOGGLE_ON_CLASS)) {
+				body?.classList.remove(TOGGLE_ON_CLASS)
+				button.ariaLabel = 'Open menu'
+				button.ariaExpanded = 'false'
+				return
+			}
 
-		isOpen = true
-		body?.classList.add('mobile-toggle-on')
-		button.ariaLabel = 'Close menu'
-		button.ariaExpanded = 'true'
+			body?.classList.add(TOGGLE_ON_CLASS)
+			button.ariaLabel = 'Close menu'
+			button.ariaExpanded = 'true'
+		})
+	}
+
+	document.addEventListener('astro:page-load', () => {
+		// This runs on first page load and after every navigation.
+		setup()
 	})
 </script>

@@ -21,11 +21,11 @@ const posts = (
 		class="grid grid-cols-1 gap-8 sm:grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))]"
 	>
 		{
-			posts.map(({ data, slug }) => (
+			posts.map(({ data, id }) => (
 				<PostCard
 					title={data.title}
 					description={data.description}
-					slug={slug}
+					slug={id}
 					pubDate={data.pubDate}
 					tags={data.tags}
 				/>
