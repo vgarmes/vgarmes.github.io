@@ -1,0 +1,26 @@
+---
+title: "Recreating Vercel's Relative Time Card component in React"
+pubDate: 2025-03-09
+description: ''
+image:
+  url: ''
+  alt: 'Recreating Vercel relative time card'
+tags: ['react', 'vercel', 'time']
+draft: true
+---
+
+import RelativeTimeCard from '../../components/RelativeTimeCard'
+
+Handling dates and time zones is a common challenge when building web applications. Depending on the use case, we might want to display times in UTC or the user's local time zone—but no matter the approach, it’s often unclear to users which time zone they’re looking at.
+
+While exploring solutions, I came across Vercel’s elegant approach in their dashboard. When hovering over a relative timestamp, users see the exact date and time in both UTC and their local time zone:
+
+![alt text](https://pbs.twimg.com/media/GdrLhI5WoAAGekN?format=png&name=medium)
+
+This component is part of Vercel’s design system, which, unfortunately, isn’t open source. However, by analyzing the compiled JavaScript, I was able to reverse-engineer its implementation. The solution is surprisingly elegant—it relies solely on the `Intl.DateTimeFormat` API, without any external date libraries.
+
+In this post, I’ll walk you through the process step by step so you can build it yourself.
+
+<div className="flex justify-center">
+	<RelativeTimeCard date={new Date()} client:load />
+</div>
