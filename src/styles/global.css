@@ -1,5 +1,20 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+@theme {
+	--animate-fade-up: fade-up 1000ms;
+
+	@keyframes fade-up {
+		0% {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+}
 
 * {
 	scrollbar-color: hsla(250, 14%, 80%, 1) transparent;
