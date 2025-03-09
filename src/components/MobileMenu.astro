@@ -19,10 +19,10 @@ import ThemeToggle from './header/ThemeToggle'
 		touch-action: auto;
 	}
 	.mobile-toggle-on #mobile-menu {
-		@apply block sm:hidden pointer-events-auto;
+		@reference block sm:hidden pointer-events-auto;
 	}
 	.mobile-toggle-on #header {
-		@apply bg-transparent backdrop-blur-none;
+		@reference bg-transparent backdrop-blur-none;
 	}
 </style>
 <div id="mobile-menu" class="fixed inset-0 z-10 overflow-hidden">

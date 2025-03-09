@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin '@tailwindcss/typography';
 
 * {
 	scrollbar-color: hsla(250, 14%, 80%, 1) transparent;
