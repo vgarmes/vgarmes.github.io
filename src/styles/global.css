@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
 	--animate-fade-up: fade-up 1000ms;
 
@@ -13,6 +15,15 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+}
+
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+	}
+	.dark {
+		--background: 222.2 84% 4.9%;
 	}
 }
 
