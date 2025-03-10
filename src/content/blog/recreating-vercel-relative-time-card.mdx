@@ -1,26 +1,334 @@
 ---
-title: "Recreating Vercel's Relative Time Card component in React"
-pubDate: 2025-03-09
+title: "Recreating Vercel's Relative Time Card component"
+pubDate: 2025-03-10
 description: ''
 image:
   url: ''
   alt: 'Recreating Vercel relative time card'
-tags: ['react', 'vercel', 'time']
-draft: true
+tags: ['react', 'vercel', 'datetime']
+draft: false
 ---
 
 import RelativeTimeCard from '../../components/RelativeTimeCard'
 
-Handling dates and time zones is a common challenge when building web applications. Depending on the use case, we might want to display times in UTC or the user's local time zone—but no matter the approach, it’s often unclear to users which time zone they’re looking at.
+Handling dates and time zones is a common UI/UX challenge in web applications. Depending on the use case, we might display times in UTC or the user’s local time zone, but it’s often unclear which one they’re looking at.
 
-While exploring solutions, I came across Vercel’s elegant approach in their dashboard. When hovering over a relative timestamp, users see the exact date and time in both UTC and their local time zone:
+To address this, Vercel offers a clever solution in their dashboard. When hovering over a relative timestamp, users see the exact date and time in both UTC and their local time zone—providing clarity without cluttering the interface.
 
 ![alt text](https://pbs.twimg.com/media/GdrLhI5WoAAGekN?format=png&name=medium)
 
-This component is part of Vercel’s design system, which, unfortunately, isn’t open source. However, by analyzing the compiled JavaScript, I was able to reverse-engineer its implementation. The solution is surprisingly elegant—it relies solely on the `Intl.DateTimeFormat` API, without any external date libraries.
+This component is part of [Vercel’s design system](https://vercel.com/geist/relative-time-card), which, unfortunately, isn’t open source. However, by inspecting the compiled JavaScript, I was able to reverse-engineer its implementation. The solution is quite elegant, relying solely on the `Intl.DateTimeFormat` API along with some custom formatter methods.
 
 In this post, I’ll walk you through the process step by step so you can build it yourself.
+
+## Creating the component shell
+
+First, let’s set up the basic structure of the component using dummy date values. For styling, I’m using Tailwind CSS, but you can easily adapt it to any styling solution you prefer.
+
+```tsx
+const RelativeTimeCard: React.FC = () => {
+	return (
+		<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+			<div className="flex flex-col gap-3">
+				<div className="flex flex-col gap-3">
+					<span className="text-muted-foreground text-xs tabular-nums">
+						3 hours, 24 minutes, 35 seconds
+					</span>
+				</div>
+				<div className="flex flex-col gap-2">
+					<div className="flex items-center justify-between gap-3">
+						<div className="flex items-center gap-1.5">
+							<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+								<span className="text-muted-foreground font-mono text-xs">
+									UTC
+								</span>
+							</div>
+							<span className="text-sm">March 10, 2025</span>
+						</div>
+						<span className="text-muted-foreground font-mono text-xs tabular-nums">
+							08:04:34 AM
+						</span>
+					</div>
+					<div className="flex items-center justify-between gap-3">
+						<div className="flex items-center gap-1.5">
+							<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+								<span className="text-muted-foreground font-mono text-xs">
+									GMT+1
+								</span>
+							</div>
+							<span className="text-sm">March 10, 2025</span>
+						</div>
+						<span className="text-muted-foreground font-mono text-xs tabular-nums">
+							09:04:34 AM
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+```
+
+Just for reference, I’ve used the same values as shadcn/ui for the additional theme colors like `muted` and `muted-foreground`.
+
+This is what it looks like:
+
+{
+
+<div className="flex justify-center">
+	<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+		<div className="flex flex-col gap-3">
+			<div className="flex flex-col gap-3">
+				<span className="text-muted-foreground text-xs tabular-nums">
+					3 hours, 24 minutes, 35 seconds
+				</span>
+			</div>
+			<div className="flex flex-col gap-2">
+				<div className="flex items-center justify-between gap-3">
+					<div className="flex items-center gap-1.5">
+						<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+							<span className="text-muted-foreground font-mono text-xs">
+								UTC
+							</span>
+						</div>
+						<span className="text-sm">March 10, 2025</span>
+					</div>
+					<span className="text-muted-foreground font-mono text-xs tabular-nums">
+						08:04:34 AM
+					</span>
+				</div>
+				<div className="flex items-center justify-between gap-3">
+					<div className="flex items-center gap-1.5">
+						<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+							<span className="text-muted-foreground font-mono text-xs">
+								GMT+1
+							</span>
+						</div>
+						<span className="text-sm">March 10, 2025</span>
+					</div>
+					<span className="text-muted-foreground font-mono text-xs tabular-nums">
+						09:04:34 AM
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+}
+
+Now, let’s replace those hardcoded values with actual date calculations.
+
+## The time distance formatter
+
+The first thing we need to calculate is the time difference between the given date and today. Vercel’s approach displays the three most significant time units, ranging from years down to seconds.
+
+For example, if the date is over a year old, it will show something like "X years, Y months, Z days" For more recent dates, it might display "X hours, Y minutes, Z seconds" And if the date is exactly now, a brief "Just now" message appears.
+
+To achieve this, we first need to define an array of time units along with their values in milliseconds:
+
+```js
+const timeUnits = [
+	{
+		unit: 'year',
+		ms: 31536e6
+	},
+	{
+		unit: 'month',
+		ms: 2628e6
+	},
+	{
+		unit: 'day',
+		ms: 864e5
+	},
+	{
+		unit: 'hour',
+		ms: 36e5
+	},
+	{
+		unit: 'minute',
+		ms: 6e4
+	},
+	{
+		unit: 'second',
+		ms: 1e3
+	}
+]
+```
+
+With this predefined array of time units, we can now build our formatter function:
+
+```ts
+function formatDistanceToNow(date: Date): string {
+	// Calculate the absolute difference between the current time and the provided date
+	let timeDifference = Math.abs(new Date().getTime() - date.getTime())
+
+	// Initialize an empty array to store the time units
+	const timeParts = []
+
+	// Iterate over the predefined array of time units and their corresponding milliseconds
+	for (const { unit: unitName, ms: unitMilliseconds } of timeUnits) {
+		// Calculate how many of the current unit fit into the remaining time difference
+		const unitCount = Math.floor(timeDifference / unitMilliseconds)
+
+		// If the unit count is greater than 0 or if we already have some parts in the array
+		if (unitCount > 0 || timeParts.length > 0) {
+			// Add the unit count and unit name to the array, pluralizing if necessary
+			timeParts.push(`${unitCount} ${unitName}${unitCount !== 1 ? 's' : ''}`)
+
+			// Update the remaining time difference by taking the remainder after division
+			timeDifference %= unitMilliseconds
+		}
+
+		// If we have collected 3 time parts, stop the loop
+		if (timeParts.length === 3) {
+			break
+		}
+	}
+
+	// Join the time parts with commas and format the result
+	return timeParts.length === 0 ? 'Just now' : `${timeParts.join(', ')} ago`
+}
+```
+
+This works fine as is for a static result, but Vercel dynamically updates the value every second. To achieve the same behavior, we can run this function at a one-second interval and initialize it within a custom hook:
+
+```tsx
+const useTimeDistance = (date: Date) => {
+	const [timeDistance, setTimeDistance] = useState(formatDistanceToNow(date))
+
+	useEffect(() => {
+		const updateTimeDistance = () => {
+			const formattedTime = formatDistanceToNow(date)
+			setTimeDistance(formattedTime)
+		}
+
+		const intervalId = setInterval(updateTimeDistance, 1000)
+
+		return () => clearInterval(intervalId)
+	}, [date])
+
+	return timeDistance
+}
+```
+
+## Formatting the Date in UTC and Local Timezone
+
+Next, we need to be able to format a given date so we can display the timezone, date, and time in both UTC and the local browser timezone.
+
+To extract and format the timezone, we can use `Intl.DateTimeFormat` along with the `formatToParts` method:
+
+```ts
+const formattedTz = (date: Date, zone: string) =>
+	new Intl.DateTimeFormat('en-US', {
+		timeZone: zone,
+		timeZoneName: 'short'
+	})
+		.formatToParts(date)
+		.find(part => part.type === 'timeZoneName')?.value
+```
+
+With this function:
+
+- Passing a `timeZone` value of `utc` returns `UTC`.
+- Passing a local browser timezone, such as `Europe/Copenhagen` (retrieved using `Intl.DateTimeFormat().resolvedOptions().timeZone`), formats it as `GMT+1`.
+
+With the timezone out of the way, we now just need to format the date and time, which can be easily done as follows:
+
+```ts
+const formattedDate = date.toLocaleString('en-US', {
+	timeZone: zone,
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric'
+})
+
+const formattedTime = date.toLocaleTimeString('en-US', {
+	timeZone: zone,
+	hour: '2-digit',
+	minute: '2-digit',
+	second: '2-digit'
+})
+```
+
+## Factor out the Date, Time and TimeZone component
+
+With the previous formatters in place, we can now create a component that, given a date and a time zone, returns the formatted result in the corresponding layout:
+
+```tsx
+const DateTimeZone: React.FC<{ date: Date; zone: string }> = ({
+	date,
+	zone
+}) => {
+	const formattedTz = new Intl.DateTimeFormat('en-US', {
+		timeZone: zone,
+		timeZoneName: 'short'
+	})
+		.formatToParts(date)
+		.find(part => part.type === 'timeZoneName')?.value
+	return (
+		<div className="flex items-center justify-between gap-3">
+			<div className="flex items-center gap-1.5">
+				<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+					<span className="text-muted-foreground font-mono text-xs">
+						{formattedTz}
+					</span>
+				</div>
+				<span className="text-sm">
+					{date.toLocaleString('en-US', {
+						timeZone: zone,
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})}
+				</span>
+			</div>
+			<span className="text-muted-foreground font-mono text-xs tabular-nums">
+				{date.toLocaleTimeString('en-US', {
+					timeZone: zone,
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit'
+				})}
+			</span>
+		</div>
+	)
+}
+```
+
+## Pulling it all together
+
+Now, all that’s left is to integrate the previous component with the rest of the layout and logic to build our `RelativeTimeCard` component:
+
+```tsx
+const RelativeTimeCard: FunctionalComponent<Props> = ({ date }) => {
+	const timeDistance = useTimeDistance(date)
+	return (
+		<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+			<div className="flex flex-col gap-3">
+				<div className="flex flex-col gap-3">
+					<span className="text-muted-foreground text-xs tabular-nums">
+						{timeDistance}
+					</span>
+				</div>
+				<div className="flex flex-col gap-2">
+					<DateTimeZone date={date} zone="utc" />
+					<DateTimeZone
+						date={date}
+						zone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+					/>
+				</div>
+			</div>
+		</div>
+	)
+}
+```
+
+And here's the result ✨:
 
 <div className="flex justify-center">
 	<RelativeTimeCard date={new Date()} client:load />
 </div>
+
+To render this on hover, we can just leverage [Radix's Hover Card](https://www.radix-ui.com/primitives/docs/components/hover-card).
+
+Thanks for reading!
