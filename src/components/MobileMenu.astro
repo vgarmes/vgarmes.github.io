@@ -3,6 +3,8 @@ import ThemeToggle from './header/ThemeToggle'
 ---
 
 <style is:global>
+	@reference "tailwindcss";
+
 	.mobile-toggle-on {
 		overflow: hidden;
 	}
@@ -19,10 +21,10 @@ import ThemeToggle from './header/ThemeToggle'
 		touch-action: auto;
 	}
 	.mobile-toggle-on #mobile-menu {
-		@reference block sm:hidden pointer-events-auto;
+		@apply pointer-events-auto block sm:hidden;
 	}
 	.mobile-toggle-on #header {
-		@reference bg-transparent backdrop-blur-none;
+		@apply bg-transparent backdrop-blur-none;
 	}
 </style>
 <div id="mobile-menu" class="fixed inset-0 z-10 overflow-hidden">
@@ -34,7 +36,7 @@ import ThemeToggle from './header/ThemeToggle'
 	></button>
 	<div
 		aria-label="mobile navigation"
-		class="absolute left-0 bottom-[100px] flex h-3/4 w-full flex-col items-center justify-between px-4 pt-8 sm:px-16"
+		class="absolute bottom-[100px] left-0 flex h-3/4 w-full flex-col items-center justify-between px-4 pt-8 sm:px-16"
 	>
 		<nav class="flex w-full flex-col items-center gap-6">
 			<a
