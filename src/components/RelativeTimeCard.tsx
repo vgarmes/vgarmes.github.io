@@ -115,11 +115,9 @@ const RelativeTimeCard: FunctionalComponent<Props> = ({ date }) => {
 	return (
 		<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
 			<div className="flex flex-col gap-3">
-				<div className="flex flex-col gap-3">
-					<span className="text-muted-foreground text-xs tabular-nums">
-						{timeDistance}
-					</span>
-				</div>
+				<span className="text-muted-foreground text-xs tabular-nums">
+					{timeDistance}
+				</span>
 				<div className="flex flex-col gap-2">
 					<DateTimeZone date={date} zone="utc" />
 					<DateTimeZone
