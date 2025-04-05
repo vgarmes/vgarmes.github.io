@@ -9,7 +9,7 @@ tags: ['react', 'vercel', 'datetime']
 draft: false
 ---
 
-import RelativeTimeCard from '../../components/RelativeTimeCard'
+import RelativeTimeCardDemo from '../../components/demos/RelativeTimeCardDemo'
 
 Handling dates and time zones is a common UI/UX challenge in web applications. Depending on the use case, we might display times in UTC or the user’s local time zone, but it’s often unclear which one they’re looking at.
 
@@ -321,10 +321,8 @@ const RelativeTimeCard: FunctionalComponent<Props> = ({ date }) => {
 
 And here's the result ✨:
 
-<div className="flex justify-center">
-	<RelativeTimeCard date={new Date()} client:load />
-</div>
+<RelativeTimeCardDemo client:load />
 
-To render this on hover, we can just leverage [Radix's Hover Card](https://www.radix-ui.com/primitives/docs/components/hover-card).
+To render this on hover, we can just leverage [Radix's Tooltip](https://www.radix-ui.com/primitives/docs/components/tooltip).
 
 Thanks for reading!
