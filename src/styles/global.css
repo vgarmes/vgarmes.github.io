@@ -10,6 +10,7 @@
 	--color-muted: oklch(0.97 0 0);
 	--color-muted-foreground: oklch(0.556 0 0);
 	--color-border: oklch(0.922 0 0);
+	--color-input: oklch(0.922 0 0);
 
 	@keyframes fade-up {
 		0% {
@@ -30,6 +31,7 @@
 		--color-muted: oklch(0.269 0 0);
 		--color-muted-foreground: oklch(0.708 0 0);
 		--color-border: oklch(0.269 0 0);
+		--color-input: oklch(1 0 0 / 15%);
 	}
 }
 
@@ -37,10 +39,12 @@ html {
 	height: 100%;
 	scrollbar-gutter: stable;
 	color-scheme: light;
+	--shadow-border: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 html.dark {
 	color-scheme: dark;
+	--shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.145);
 }
 
 body {

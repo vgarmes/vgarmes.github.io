@@ -19,6 +19,18 @@ const { title, description, image = '/cover.png' } = Astro.props
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
+<!-- Phone status bar color -->
+<meta
+	name="theme-color"
+	content="#1c1c1c"
+	media="(prefers-color-scheme: dark)"
+/>
+<meta
+	name="theme-color"
+	content="#ffffff"
+	media="(prefers-color-scheme: light)"
+/>
+
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
@@ -41,24 +53,12 @@ const { title, description, image = '/cover.png' } = Astro.props
 <!-- This is intentionally inlined to avoid FOUC -->
 <script is:inline>
 	const setTheme = () => {
-		const theme = (() => {
-			if (
-				typeof localStorage !== 'undefined' &&
-				localStorage.getItem('theme')
-			) {
-				return localStorage.getItem('theme')
-			}
-			if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				return 'dark'
-			}
-			return 'dark'
-		})()
-
-		if (theme === 'light') {
-			document.documentElement.classList.remove('dark')
-		} else {
-			document.documentElement.classList.add('dark')
-		}
+		document.documentElement.classList.toggle(
+			'dark',
+			localStorage.theme === 'dark' ||
+				(!('theme' in localStorage) &&
+					window.matchMedia('(prefers-color-scheme: dark)').matches)
+		)
 	}
 
 	// Runs on initial navigation
