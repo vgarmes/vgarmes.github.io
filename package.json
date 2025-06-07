@@ -15,10 +15,10 @@
 		"up": "drizzle-kit up:sqlite"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "^4.1.0",
-		"@astrojs/preact": "^4.0.5",
+		"@astrojs/mdx": "^4.3.0",
+		"@astrojs/preact": "^4.1.0",
 		"@tailwindcss/vite": "^4.0.12",
-		"astro": "^5.4.2",
+		"astro": "^5.9.1",
 		"clsx": "^2.0.0",
 		"drizzle-orm": "^0.28.1",
 		"hono": "^3.4.1",
