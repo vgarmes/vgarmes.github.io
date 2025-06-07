@@ -3,11 +3,7 @@ import { useEffect, useState } from 'preact/hooks'
 
 type Theme = 'dark' | 'light' | 'system'
 
-interface Props {
-	isMobile?: boolean // used to differentiate ids, since html will warn about duplicate ids
-}
-
-const ThemeSwitcher: FunctionalComponent<Props> = ({ isMobile }) => {
+const ThemeSwitcher: FunctionalComponent = () => {
 	const [theme, setTheme] = useState<Theme | null>(null)
 
 	useEffect(() => {
@@ -23,12 +19,15 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ isMobile }) => {
 			localStorage.setItem('theme', newTheme)
 		}
 
-		document.documentElement.classList.toggle(
-			'dark',
+		const prefersDark =
 			newTheme === 'dark' ||
-				(newTheme === 'system' &&
-					window.matchMedia('(prefers-color-scheme: dark)').matches)
-		)
+			(newTheme === 'system' &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+		document.documentElement.classList.toggle('dark', prefersDark)
+		document
+			.querySelector('meta[name="theme-color"]')
+			?.setAttribute('content', prefersDark ? '#0a0a0a' : '#ffffff')
 	}
 
 	return (
@@ -36,11 +35,11 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ isMobile }) => {
 			<legend class="sr-only">Select a display theme</legend>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-system${isMobile ? '-mobile' : ''}`}
+					for={`theme-switcher-system`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-system${isMobile ? '-mobile' : ''}`}
+						id={`theme-switcher-system`}
 						type="radio"
 						aria-label="system"
 						value="system"
@@ -68,11 +67,11 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ isMobile }) => {
 			</span>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-light${isMobile ? '-mobile' : ''}`}
+					for={`theme-switcher-light`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-light${isMobile ? '-mobile' : ''}`}
+						id={`theme-switcher-light`}
 						type="radio"
 						aria-label="light"
 						class="sr-only"
@@ -107,11 +106,11 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ isMobile }) => {
 			</span>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-dark${isMobile ? '-mobile' : ''}`}
+					for={`theme-switcher-dark`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-dark${isMobile ? '-mobile' : ''}`}
+						id={`theme-switcher-dark`}
 						type="radio"
 						aria-label="dark"
 						class="sr-only"
