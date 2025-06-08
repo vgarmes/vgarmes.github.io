@@ -43,12 +43,12 @@ const { title, description, image = '/cover.png' } = Astro.props
 
 <!-- This is intentionally inlined to avoid FOUC -->
 <script is:inline>
-	const prefersDark =
-		localStorage.theme === 'dark' ||
-		(!('theme' in localStorage) &&
-			window.matchMedia('(prefers-color-scheme: dark)').matches)
-
 	const setTheme = () => {
+		const prefersDark =
+			localStorage.theme === 'dark' ||
+			(!('theme' in localStorage) &&
+				window.matchMedia('(prefers-color-scheme: dark)').matches)
+
 		document.documentElement.classList.toggle('dark', prefersDark)
 		document
 			.querySelector('meta[name="theme-color"]')
