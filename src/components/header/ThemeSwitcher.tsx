@@ -3,7 +3,10 @@ import { useEffect, useState } from 'preact/hooks'
 
 type Theme = 'dark' | 'light' | 'system'
 
-const ThemeSwitcher: FunctionalComponent = () => {
+interface Props {
+	id?: string
+}
+const ThemeSwitcher: FunctionalComponent<Props> = ({ id = 'desktop' }) => {
 	const [theme, setTheme] = useState<Theme | null>(null)
 
 	useEffect(() => {
@@ -35,11 +38,11 @@ const ThemeSwitcher: FunctionalComponent = () => {
 			<legend class="sr-only">Select a display theme</legend>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-system`}
+					for={`theme-switcher-system-${id}`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-system`}
+						id={`theme-switcher-system-${id}`}
 						type="radio"
 						aria-label="system"
 						value="system"
@@ -67,11 +70,11 @@ const ThemeSwitcher: FunctionalComponent = () => {
 			</span>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-light`}
+					for={`theme-switcher-light-${id}`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-light`}
+						id={`theme-switcher-light-${id}`}
 						type="radio"
 						aria-label="light"
 						class="sr-only"
@@ -106,11 +109,11 @@ const ThemeSwitcher: FunctionalComponent = () => {
 			</span>
 			<span class="h-full">
 				<label
-					for={`theme-switcher-dark`}
+					for={`theme-switcher-dark-${id}`}
 					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
 				>
 					<input
-						id={`theme-switcher-dark`}
+						id={`theme-switcher-dark-${id}`}
 						type="radio"
 						aria-label="dark"
 						class="sr-only"

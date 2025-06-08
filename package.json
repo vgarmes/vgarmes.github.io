@@ -23,7 +23,7 @@
 		"drizzle-orm": "^0.28.1",
 		"hono": "^3.4.1",
 		"mdast-util-to-string": "^3.2.0",
-		"preact": "^10.17.1",
+		"preact": "^10.26.8",
 		"reading-time": "^1.5.0",
 		"tailwindcss": "^4.0.12"
 	},
