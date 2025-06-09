@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content'
+import { formatDate } from '~/util/helpers'
+
+const posts = (
+	await getCollection(
+		'blog',
+		({ data }) => import.meta.env.DEV || data.draft !== true
+	)
+)
+	.sort((a, b) => {
+		return b.data.pubDate.getTime() - a.data.pubDate.getTime()
+	})
+	.slice(0, 4)
+---
+
+<section class="mt-16 space-y-8">
+	<h3 class="font-medium">Writing</h3>
+	<ul class="flex flex-col gap-4">
+		{
+			posts.map(({ data, id }) => (
+				<li class="grid grid-cols-[140px_1fr] gap-4">
+					<time
+						class="text-muted-foreground text-sm"
+						datetime={data.pubDate.toISOString()}
+					>
+						{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
+							data.pubDate
+						)}
+					</time>
+					<div class="space-y-2">
+						<h4 class="font-medium">{data.title}</h4>
+						<p class="text-muted-foreground text-sm">{data.description}</p>
+					</div>
+				</li>
+			))
+		}
+	</ul>
+</section>
