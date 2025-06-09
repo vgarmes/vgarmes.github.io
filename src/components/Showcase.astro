@@ -1,23 +1,38 @@
 ---
-import ProjectCard from './ProjectCard.astro'
 import { showcase } from '../config'
+import Link from './link.astro'
 ---
 
-<section id="showcase" class="mb-16 scroll-mt-16 md:mb-32">
-	<h2 class="mb-6 text-3xl font-semibold gap-x-3 text-black/80 dark:text-white">
-		Projects
-	</h2>
-	<ul
-		class="xl:gap-x-8s mx-auto grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-8"
-	>
+<section class="mt-16 space-y-8">
+	<h3 class="font-medium">Projects</h3>
+	<ul class="flex flex-col gap-4">
 		{
 			showcase.map(project => (
-				<ProjectCard
-					href={project.url}
-					title={project.name}
-					description={project.description}
-					thumbnail={project.thumbnail}
-				/>
+				<li class="space-y-2">
+					<div class="inline-flex items-center gap-2">
+						<Link href={project.url}>{project.name}</Link>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="24"
+							height="24"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="size-3"
+						>
+							<>
+								<path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+								<path d="m21 3-9 9" />
+								<path d="M15 3h6v6" />
+							</>
+						</svg>
+					</div>
+
+					<p class="text-muted-foreground text-sm">{project.description}</p>
+				</li>
 			))
 		}
 	</ul>

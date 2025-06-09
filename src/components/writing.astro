@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import { formatDate } from '~/util/helpers'
+import Link from '~/components/link.astro'
 
 const posts = (
 	await getCollection(
@@ -16,20 +17,18 @@ const posts = (
 
 <section class="mt-16 space-y-8">
 	<h3 class="font-medium">Writing</h3>
-	<ul class="flex flex-col gap-4">
+	<ul class="flex flex-col gap-8 md:gap-4">
 		{
 			posts.map(({ data, id }) => (
-				<li class="grid grid-cols-[140px_1fr] gap-4">
+				<li class="flex flex-col gap-1 md:grid md:grid-cols-[140px_1fr] md:gap-4">
 					<time
 						class="text-muted-foreground text-sm"
 						datetime={data.pubDate.toISOString()}
 					>
-						{Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-							data.pubDate
-						)}
+						{formatDate(data.pubDate)}
 					</time>
 					<div class="space-y-2">
-						<h4 class="font-medium">{data.title}</h4>
+						<Link href={`/blog/${id}`}>{data.title}</Link>
 						<p class="text-muted-foreground text-sm">{data.description}</p>
 					</div>
 				</li>

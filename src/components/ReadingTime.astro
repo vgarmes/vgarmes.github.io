@@ -7,7 +7,7 @@ const roundedMinutes = Math.ceil(minutesRead)
 const cups = Math.min(Math.round(roundedMinutes / 5), 5)
 ---
 
-<p class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+<p class="text-muted-foreground text-sm">
 	<span class="pr-1">{new Array(cups || 1).fill('☕️').join(' ')}</span>
 	{`${roundedMinutes} min read`}
 </p>

@@ -1,17 +1,17 @@
 ---
-import ExternalLink from './external-link.astro'
+import Link from './link.astro'
 ---
 
-<section class="space-y-4">
+<section class="mt-16 space-y-4">
 	<h3 class="font-medium">Connect</h3>
 
-	<p class="text-muted-foreground">
-		Reach me on <ExternalLink href="mailto:vgmestre@gmail.com"
-			>vgmestre@gmail.com</ExternalLink
-		>, see my open-source projects on <ExternalLink
-			href="https://github.com/vgarmes">Github</ExternalLink
-		> or follow me <ExternalLink href="https://x.com/vgmestre">
+	<p>
+		Reach me on <Link href="mailto:vgmestre@gmail.com">vgmestre@gmail.com</Link
+		>, see my open-source projects on <Link
+			isExternal={true}
+			href="https://github.com/vgarmes">Github</Link
+		> or follow me <Link isExternal={true} href="https://x.com/vgmestre">
 			@vgmestre
-		</ExternalLink>.
+		</Link>.
 	</p>
 </section>
