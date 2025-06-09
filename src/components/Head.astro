@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import { Font } from 'astro:assets'
 
 export interface Props {
 	title: string
@@ -60,3 +61,5 @@ const { title, description, image = '/cover.png' } = Astro.props
 	// Runs on view transitions navigation
 	document.addEventListener('astro:after-swap', setTheme)
 </script>
+
+<Font cssVariable="--font-inter" preload />

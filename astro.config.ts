@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config'
+import { defineConfig, fontProviders } from 'astro/config'
 import preact from '@astrojs/preact'
 import mdx from '@astrojs/mdx'
 import { remarkReadingTime } from './remark-reading-time.mjs'
@@ -21,5 +21,15 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()]
+	},
+
+	experimental: {
+		fonts: [
+			{
+				provider: fontProviders.google(),
+				name: 'Inter',
+				cssVariable: '--font-inter'
+			}
+		]
 	}
 })

@@ -8,28 +8,14 @@ import ThemeSwitcher from './ThemeSwitcher'
 	class="sticky top-0 z-20 flex w-full flex-col backdrop-blur-md transition-transform"
 >
 	<nav
-		class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-2 text-base transition-all md:px-8"
+		class="mx-auto flex w-full max-w-prose items-center justify-between py-2 text-base transition-all"
 	>
 		<div class="flex items-center">
 			<a href="/">
-				<h2
-					class="py-2 pr-12 text-lg font-semibold tracking-tighter hover:text-indigo-600 dark:hover:text-indigo-400"
-				>
-					Victor Garcia
+				<h2 class="text-muted-foreground hover:text-foreground">
+					Victor Mestre
 				</h2>
 			</a>
-			<div class="hidden flex-1 items-center gap-6 sm:flex">
-				<a
-					href="/blog"
-					class="text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400"
-					>Blog</a
-				>
-				<a
-					href="/about"
-					class="text-sm font-medium hover:text-indigo-600 dark:hover:text-indigo-400"
-					>About</a
-				>
-			</div>
 		</div>
 		<div class="hidden sm:flex"><ThemeSwitcher client:visible /></div>
 		<MobileMenuButton />
