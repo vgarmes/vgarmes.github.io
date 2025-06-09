@@ -19,7 +19,6 @@ type PostFrontmatter = {
 	minutesRead: number
 }
 
- 
 type Props = {
 	frontmatter: PostFrontmatter
 	headings: MarkdownHeading[]
@@ -38,14 +37,11 @@ const toc = generateToc(headings)
 >
 	<article class="mx-auto w-full max-w-2xl pt-12 lg:mx-0 lg:max-w-full">
 		<header>
-			<h1
-				id="overview"
-				class="scroll-mt-16 pb-6 text-3xl font-extrabold md:text-4xl max-w-4xl"
-			>
+			<h1 id="overview" class="scroll-mt-16 font-medium">
 				{frontmatter.title}
 			</h1>
-			<div class="flex items-center gap-6 gap-y-4 flex-wrap">
-				<p class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+			<div class="flex flex-wrap items-center gap-6 gap-y-4">
+				<p class="text-muted-foreground text-sm">
 					{date}
 				</p>
 				<ReadingTime minutesRead={frontmatter.minutesRead} />
@@ -56,7 +52,7 @@ const toc = generateToc(headings)
 			class="mt-12 flex flex-1 items-start justify-center pb-6 lg:justify-start"
 		>
 			<div
-				class="prose prose-zinc mx-auto w-full prose-headings:scroll-mt-16 prose-h2:text-indigo-900 prose-code:before:hidden prose-code:after:hidden prose-pre:p-4 prose-img:rounded-md dark:prose-invert prose-h2:dark:text-yellow-400 lg:mx-0 lg:max-w-2xl [&_:not(pre)_>_code]:rounded [&_:not(pre)_>_code]:bg-zinc-200 [&_:not(pre)_>_code]:px-2 [&_:not(pre)_>_code]:py-1 dark:[&_:not(pre)_>_code]:bg-zinc-700"
+				class="prose prose-neutral prose-headings:scroll-mt-16 prose-h2:text-indigo-900 prose-code:before:hidden prose-code:after:hidden prose-pre:p-4 prose-img:rounded-md dark:prose-invert prose-h2:dark:text-yellow-400 mx-auto w-full lg:mx-0 lg:max-w-2xl [&_:not(pre)_>_code]:rounded [&_:not(pre)_>_code]:bg-zinc-200 [&_:not(pre)_>_code]:px-2 [&_:not(pre)_>_code]:py-1 dark:[&_:not(pre)_>_code]:bg-zinc-700"
 			>
 				<slot />
 			</div>

@@ -6,11 +6,8 @@ export function lengthToReadingTime(length: number) {
 	return `${new Array(cups || 1).fill('☕️').join('')} ${minutes} min read`
 }
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-	month: 'long',
-	day: 'numeric',
-	year: 'numeric'
-})
+const dateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' })
+
 export function formatDate(date: string | number | Date) {
 	return dateFormatter.format(new Date(date))
 }
