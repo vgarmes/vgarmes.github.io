@@ -29,7 +29,19 @@ export default defineConfig({
 				provider: fontProviders.google(),
 				name: 'Inter',
 				cssVariable: '--font-inter',
-				weights: ['400 600']
+				styles: ['normal'],
+				weights: ['400 500'],
+				fallbacks: [
+					'ui-sans-serif',
+					'system-ui',
+					'sans-serif',
+					'Apple Color Emoji',
+					'Segoe UI Emoji',
+					'Segoe UI Symbol',
+					'Noto Color Emoji'
+				],
+				optimizedFallbacks: false,
+				subsets: ['latin']
 			}
 		]
 	}
