@@ -2,8 +2,7 @@
 import type { MarkdownHeading } from 'astro'
 import BaseLayout from './base.astro'
 import { formatDate } from '~/util/helpers'
-import TableOfContents from '~/components/TableOfContents'
-import generateToc from '~/util/generateToc'
+
 import ReadingTime from '~/components/ReadingTime.astro'
 import BackTopButton from '~/components/BackTopButton'
 import PostStats from '~/components/post-stats'
@@ -25,9 +24,8 @@ type Props = {
 	slug: string
 }
 
-const { frontmatter, headings, slug } = Astro.props
+const { frontmatter, slug } = Astro.props
 const date = formatDate(frontmatter.pubDate)
-const toc = generateToc(headings)
 ---
 
 <BaseLayout
@@ -56,7 +54,6 @@ const toc = generateToc(headings)
 			>
 				<slot />
 			</div>
-			<TableOfContents client:visible toc={toc} />
 		</div>
 		<div class="flex items-center justify-end pb-6 lg:hidden">
 			<BackTopButton client:visible />
