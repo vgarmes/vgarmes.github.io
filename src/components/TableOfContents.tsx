@@ -1,7 +1,6 @@
 import type { FunctionalComponent, JSX } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import type { TocItem } from '~/util/generateToc'
-import BackTopButton from './BackTopButton'
 import cx from 'clsx'
 
 interface Props {
@@ -78,7 +77,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	}
 
 	return (
-		<aside className="sticky top-16 right-0 ml-16 hidden max-h-[calc(100vh-4rem)] flex-grow flex-col gap-3 pb-3 lg:flex">
+		<aside className="sticky top-16 right-0 col-3 hidden max-h-[calc(100vh-4rem)] w-full flex-grow flex-col gap-3 px-6 pb-3 xl:flex">
 			{toc.length > 0 && (
 				<h2 className="w-full text-sm font-medium tracking-wide">
 					Table of Contents
@@ -95,9 +94,6 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
 						))}
 				</ul>
-			</div>
-			<div className="flex min-w-[180px] items-center justify-end border-t border-zinc-200 pt-3 dark:border-zinc-700">
-				<BackTopButton />
 			</div>
 		</aside>
 	)
