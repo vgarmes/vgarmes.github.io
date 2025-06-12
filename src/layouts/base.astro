@@ -15,11 +15,9 @@ const { title, description, image } = Astro.props
 		<Head title={title} description={description} image={image} />
 		<ClientRouter />
 	</head>
-	<body
-		class="bg-background text-foreground flex flex-col font-sans break-words antialiased"
-	>
+	<body class="bg-background text-foreground break-words antialiased">
 		<main
-			class="mx-auto flex flex-col px-6 py-16 xl:grid xl:grid-cols-[272px_var(--content-width)_272px] xl:gap-x-6 xl:[&>*]:col-2"
+			class="mx-auto flex min-h-[calc(100vh_-_var(--footer-height))] flex-col px-6 py-16 xl:grid xl:grid-cols-[272px_var(--content-width)_272px] xl:gap-x-6 xl:[&>*]:col-2"
 		>
 			<Header />
 			<slot />

@@ -37,6 +37,7 @@
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
 	--content-width: 640px;
+	--footer-height: 56px;
 }
 
 .dark {
