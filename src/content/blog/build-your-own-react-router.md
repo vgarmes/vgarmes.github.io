@@ -96,8 +96,6 @@ To intercept all navigation attempts and prevent the browser's default behavior,
 1. Create a function that we can call in an anchor element (and elsewhere) to enable navigation **to** a different path.
 2. Intercept the event of navigating back using the browser's back button.
 
-### Creating a function to navigate to another path
-
 First and foremost, we require a function that we can call whenever we need to navigate to a different page. The approach to achieve this involves programmatically replacing the URL using a `window` method while simultaneously triggering an event that we can subscribe to and handle the re-rendering process accordingly:
 
 ```ts
@@ -145,7 +143,7 @@ function App() {
 
 ```
 
-## Link component: Replacing anchor's default behavior
+## Link component
 
 Now we can use the `dispatchPushStateEvent` function in the anchor element. For this, we can create a custom `Link` component that will return a traditional anchor element but with the modified functionality:
 
@@ -211,7 +209,7 @@ If you try inspecting the network requests now, you'll notice that after the ini
 
 However, there is still an issue. If you attempt to navigate back using the browser's back button, you will notice that the page content doesn't update. This is because the current location in our SPA is not being updated.
 
-### Updating the location when navigating back
+## Back navigation
 
 To update the current route when the user navigates back, we'll need to make some changes to the  `useEffect` where we previously handled our custom `pushState` event. This time, we will add a subscription to the `popState` event, which is automatically triggered when the back button is clicked (or when `window.back` is called).:
 
@@ -240,9 +238,7 @@ const EVENTS = {
 
 And with this, we have successfully built a working router for our SPAs!
 
-## Adding support to dynamic routes and query parameters
-
-### Dynamic routes
+## Dynamic routes
 
 So far, we have added support for routes with static names (like `/about` for example). However, in most cases, we are going to need routes with dynamic segments (for example `/user/:id`). 
 
@@ -279,7 +275,7 @@ const page = routesToUse.find(({ path }) => {
 
 Where `params` will contain the values of the dynamic segments. For example, if the user is trying to access the route `/user/123`, this will match the route `/user/:id` and `params` will be an object with a value of `{id: '123'}`. We will also keep the value for the original path in `pathname` (in the previous example it would be `/user/:id`) since it might be useful.
 
-### Query parameters
+## Query parameters
 
 Additionally, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
 
@@ -325,7 +321,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Refactoring the navigation
+## Refactoring the navigation
 
 These additions will allow our application to render the right route when the requested url contains dynamic segments and also keep in the state the query parameters. 
 
