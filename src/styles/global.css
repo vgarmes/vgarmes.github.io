@@ -103,7 +103,7 @@ body {
 
 .astro-code {
 	/* font-weight: 600 !important; */
-	@apply border-border border;
+	@apply border-border rounded-xl border;
 }
 
 @media (max-width: 640px) {
