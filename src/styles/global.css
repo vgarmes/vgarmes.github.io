@@ -101,10 +101,18 @@ body {
 	overflow-wrap: break-word;
 }
 
-.astro-code,
-html.dark .astro-code {
+.astro-code {
 	/* font-weight: 600 !important; */
 	@apply border-border border;
+}
+
+@media (max-width: 640px) {
+	.astro-code {
+		margin-left: -25px;
+		margin-right: -25px;
+		width: calc(100% + 50px);
+		border-radius: 0;
+	}
 }
 
 html.dark .astro-code,
