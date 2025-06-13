@@ -103,7 +103,8 @@ body {
 
 .astro-code,
 html.dark .astro-code {
-	font-weight: 600 !important;
+	/* font-weight: 600 !important; */
+	@apply border-border border;
 }
 
 html.dark .astro-code,

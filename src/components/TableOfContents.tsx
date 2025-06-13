@@ -52,13 +52,12 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	const TableOfContentsItem = ({ heading }: { heading: TocItem }) => {
 		const { text, slug, children, depth } = heading
 		return (
-			<li key={slug} className="text-sm">
+			<li key={slug} className={cx('text-sm', { 'pl-3': depth > 2 })}>
 				<a
 					className={cx('leading-normal font-medium', {
 						'text-indigo-600 dark:text-indigo-400':
 							currentHeading.slug === slug,
-						'opacity-70 hover:opacity-100': currentHeading.slug !== slug,
-						'pl-3': depth > 2
+						'opacity-70 hover:opacity-100': currentHeading.slug !== slug
 					})}
 					href={`#${slug}`}
 					onClick={onLinkClick}
@@ -77,7 +76,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	}
 
 	return (
-		<aside className="sticky top-16 right-0 col-3 hidden max-h-[calc(100vh-4rem)] w-full flex-grow flex-col gap-3 px-6 pb-3 xl:flex">
+		<aside className="sticky top-16 right-0 col-3 hidden max-h-[calc(100vh-4rem)] w-full flex-grow flex-col gap-3 pb-3 xl:flex">
 			{toc.length > 0 && (
 				<h2 className="w-full text-sm font-medium tracking-wide">
 					Table of Contents

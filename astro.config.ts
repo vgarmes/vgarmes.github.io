@@ -12,8 +12,8 @@ export default defineConfig({
 	markdown: {
 		shikiConfig: {
 			themes: {
-				light: 'catppuccin-latte',
-				dark: 'tokyo-night'
+				light: 'github-light-high-contrast',
+				dark: 'github-dark-high-contrast'
 			}
 		},
 		remarkPlugins: [remarkReadingTime]
