@@ -7,6 +7,8 @@ import generateToc from '~/util/generateToc'
 import ReadingTime from '~/components/ReadingTime.astro'
 import BackTopButton from '~/components/BackTopButton'
 import PostStats from '~/components/post-stats'
+import Aside from '~/components/aside.astro'
+import Undo from '~/components/icons/Undo.astro'
 
 type PostFrontmatter = {
 	title: string
@@ -61,5 +63,12 @@ const toc = generateToc(headings)
 			<BackTopButton client:visible />
 		</div>
 	</article>
-	<TableOfContents client:visible toc={toc} />
+	<Aside>
+		<a
+			href="/"
+			class="hover:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors dark:text-neutral-600"
+			><Undo />Index</a
+		>
+		<TableOfContents client:visible toc={toc} />
+	</Aside>
 </BaseLayout>

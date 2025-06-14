@@ -1,7 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions'
 import Head from '~/components/Head.astro'
-import Header from '~/components/header.astro'
 import Footer from '~/components/footer.astro'
 import '../styles/global.css'
 const { title, description, image } = Astro.props
@@ -17,9 +16,8 @@ const { title, description, image } = Astro.props
 	</head>
 	<body class="bg-background text-foreground break-words antialiased">
 		<main
-			class="mx-auto flex min-h-[calc(100vh_-_var(--footer-height))] max-w-(--content-width) flex-col px-6 py-16 xl:grid xl:max-w-[1184px] xl:grid-cols-[224px_var(--content-width)_224px] xl:gap-x-6 xl:[&>*]:col-2"
+			class="mx-auto flex min-h-[calc(100vh_-_var(--footer-height))] max-w-(--content-width) flex-col px-6 pt-20 pb-10"
 		>
-			<Header />
 			<slot />
 		</main>
 

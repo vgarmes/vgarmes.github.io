@@ -79,20 +79,18 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	}
 
 	return (
-		<aside className="sticky top-16 right-0 col-3 hidden max-h-[calc(100vh-4rem)] w-full flex-grow flex-col gap-3 pb-3 xl:flex">
-			<div
-				className="h-full max-h-[calc(100vh-10rem)] overflow-y-auto"
-				style={{ overscrollBehavior: 'contain' }}
-				role="navigation"
-			>
-				<ul className="flex flex-col gap-2 pb-3">
-					{toc.length > 0 &&
-						toc.map(tocItem => (
-							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
-						))}
-				</ul>
-			</div>
-		</aside>
+		<nav
+			className="max-h-[calc(100vh-10rem)] max-w-40 overflow-y-auto pt-8"
+			style={{ overscrollBehavior: 'contain' }}
+			role="navigation"
+		>
+			<ul className="flex flex-col gap-2 pb-3">
+				{toc.length > 0 &&
+					toc.map(tocItem => (
+						<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
+					))}
+			</ul>
+		</nav>
 	)
 }
 
