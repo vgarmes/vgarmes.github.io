@@ -5,7 +5,7 @@ import { formatDate } from '~/util/helpers'
 import TableOfContents from '~/components/TableOfContents'
 import generateToc from '~/util/generateToc'
 import ReadingTime from '~/components/ReadingTime.astro'
-import BackTopButton from '~/components/BackTopButton'
+import BackTopButton from '~/components/BackTopButton.astro'
 import PostStats from '~/components/post-stats'
 import Aside from '~/components/aside.astro'
 import Undo from '~/components/icons/Undo.astro'
@@ -69,8 +69,8 @@ const toc = generateToc(headings)
 				<slot />
 			</div>
 		</div>
-		<div class="flex items-center justify-end pb-6 lg:hidden">
-			<BackTopButton client:visible />
+		<div class="flex items-center pt-4 lg:hidden">
+			<BackTopButton />
 		</div>
 	</article>
 </BaseLayout>

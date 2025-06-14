@@ -3,13 +3,15 @@ import ThemeSwitcher from './ThemeSwitcher'
 ---
 
 <footer
-	class="mt-auto h-(--footer-height) w-full border-t border-t-neutral-200 px-6 dark:border-t-neutral-700"
+	class="mt-auto h-(--footer-height) w-full border-t border-t-neutral-200 dark:border-t-neutral-700"
 >
 	<div
 		class="mx-auto flex h-full w-full max-w-(--content-width) items-center justify-between"
 	>
 		<p class="text-muted-foreground text-xs">
-			Victor Mestre, {new Date().getFullYear()}
+			Updated {
+				Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(new Date())
+			}
 		</p>
 		<ThemeSwitcher client:visible />
 	</div>

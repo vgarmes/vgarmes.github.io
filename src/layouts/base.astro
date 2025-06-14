@@ -15,12 +15,14 @@ const { title, description, image } = Astro.props
 		<ClientRouter />
 	</head>
 	<body class="bg-background text-foreground break-words antialiased">
-		<main
-			class="mx-auto flex min-h-[calc(100vh_-_var(--footer-height))] max-w-(--content-width) flex-col px-6 pt-20 pb-10"
-		>
-			<slot />
-		</main>
+		<div class="px-6 pt-20">
+			<main
+				class="mx-auto flex min-h-[calc(100vh_-_var(--footer-height))] max-w-(--content-width) flex-col pb-10"
+			>
+				<slot />
+			</main>
 
-		<Footer />
+			<Footer />
+		</div>
 	</body>
 </html>
