@@ -1,7 +1,7 @@
 ---
 title: 'Set up a delightful custom prompt for PowerShell'
 pubDate: 2023-07-19
-description: 'In this step-by-step guide I explain the process I followed to customize the command prompt for a joyful and efficient development experience using Windows Terminal and Powershell'
+description: 'A joyful and efficient development experience using Windows Terminal and Powershell'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1689889088/blog/overview_ugl3u2.webp' 
     alt: 'Custom command prompt with Powershell'

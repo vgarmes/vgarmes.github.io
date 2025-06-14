@@ -1,7 +1,7 @@
 ---
 title: 'Adding likes to a static blog site using Cloudflare Workers and D1'
 pubDate: 2023-11-14
-description: 'In this in-depth walkthrough I explain the process I followed to add a "likes" feature to my blog posts using modern Edge technologies like Cloudflare Workers and D1 coupled with the power Hono and Drizzle.'
+description: 'Using Edge technologies to add a "likes" feature.'
 image:
   url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1699994715/blog/adding-likes-thumbnail_gvj01i.webp'
   alt: 'Adding likes to a static blog site'
@@ -284,7 +284,7 @@ Now you should have the worker deployed. You can preview it at `<YOUR_WORKER>.<Y
 
 For the like button, I created a component in React with a design inspired by [Delba Oliveira's design](https://delba.dev/blog/a-like-button-that-likes-you-back), with a few changes and tweaks, including a playful confetti animation when the user reaches the maximum number of likes. You can play with the componnet here (it will reset the likes count after 3 seconds of reaching the maximum):
 
-<div className="w-full flex justify-center">
+<div className="flex w-full justify-center">
 	<LikeButtonDemo client:visible />
 </div>
 

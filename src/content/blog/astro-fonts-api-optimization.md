@@ -1,7 +1,7 @@
 ---
 title: "Getting the Most Out of Astro’s Fonts API"
 pubDate: 2025-06-14
-description: 'A quick look at customizing fonts in Astro using their new experimental Fonts API — and how I optimized it to avoid layout shifts and unnecessary font downloads.'
+description: 'A quick look at customizing fonts in Astro using their new experimental Fonts API.'
 image:
     url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp' 
     alt: 'Redesign 2025'

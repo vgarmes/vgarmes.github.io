@@ -85,7 +85,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 			role="navigation"
 		>
 			<ul className="flex flex-col gap-2 pb-3">
-				{toc.length > 0 &&
+				{toc.length > 1 &&
 					toc.map(tocItem => (
 						<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
 					))}
