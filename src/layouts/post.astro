@@ -37,6 +37,16 @@ const toc = generateToc(headings)
 	description={frontmatter.description}
 	image={frontmatter.image?.url}
 >
+	<Aside>
+		<a
+			href="/"
+			class="hover:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors dark:text-neutral-600"
+			><Undo />Index</a
+		>
+		<div class="hidden xl:block">
+			<TableOfContents client:visible toc={toc} />
+		</div>
+	</Aside>
 	<article>
 		<header>
 			<h1 id="overview" class="scroll-mt-16 font-medium">
@@ -63,12 +73,4 @@ const toc = generateToc(headings)
 			<BackTopButton client:visible />
 		</div>
 	</article>
-	<Aside>
-		<a
-			href="/"
-			class="hover:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors dark:text-neutral-600"
-			><Undo />Index</a
-		>
-		<TableOfContents client:visible toc={toc} />
-	</Aside>
 </BaseLayout>
