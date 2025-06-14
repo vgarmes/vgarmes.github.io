@@ -52,13 +52,16 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 	const TableOfContentsItem = ({ heading }: { heading: TocItem }) => {
 		const { text, slug, children, depth } = heading
 		return (
-			<li key={slug} className={cx('text-sm', { 'pl-3': depth > 2 })}>
+			<li key={slug} className={cx({ 'pl-3': depth > 2 })}>
 				<a
-					className={cx('leading-normal font-medium', {
-						'text-indigo-600 dark:text-indigo-400':
-							currentHeading.slug === slug,
-						'opacity-70 hover:opacity-100': currentHeading.slug !== slug
-					})}
+					className={cx(
+						'block text-[0.8125rem] leading-tight font-medium transition-colors',
+						{
+							'text-foreground': currentHeading.slug === slug,
+							'hover:text-foreground text-neutral-400 dark:text-neutral-600':
+								currentHeading.slug !== slug
+						}
+					)}
 					href={`#${slug}`}
 					onClick={onLinkClick}
 				>
@@ -77,17 +80,12 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 
 	return (
 		<aside className="sticky top-16 right-0 col-3 hidden max-h-[calc(100vh-4rem)] w-full flex-grow flex-col gap-3 pb-3 xl:flex">
-			{toc.length > 0 && (
-				<h2 className="w-full text-sm font-medium tracking-wide">
-					Table of Contents
-				</h2>
-			)}
 			<div
 				className="h-full max-h-[calc(100vh-10rem)] overflow-y-auto"
 				style={{ overscrollBehavior: 'contain' }}
 				role="navigation"
 			>
-				<ul className="space-y-3 pb-3">
+				<ul className="flex flex-col gap-2 pb-3">
 					{toc.length > 0 &&
 						toc.map(tocItem => (
 							<TableOfContentsItem key={tocItem.slug} heading={tocItem} />
