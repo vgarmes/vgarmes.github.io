@@ -33,13 +33,13 @@ But then I opened the Network tab in my browser and saw this:
 
 ![Network tab showing the downloaded font files](./images/astro-fonts-api-network.webp)
 
-14 font files on initial load! Even worse, I noticed a strange flash where the text briefly appeared much larger before settling into place.
+14 font files on initial load!
 
 Digging into the resulting HTML `<head>`, I found that:
 
 1. The API was generating 14 @font-face rules, one for each variation.
 
-2. The fallback font in use was Arial, which didn’t match `Inter` in size or spacing — causing that jarring layout shift.
+2. The API also has some fallback optimization, in my case the fallback that it picked is Arial.
 
 3. By default, Astro seems pretty generous with what it includes — pulling in many subsets (`cyrillic-ext`, `cyrillic`, `greek-ext`, and more).
 
@@ -54,16 +54,6 @@ experimental: {
 				cssVariable: '--font-inter',
 				styles: ['normal'],
 				weights: ['400 500'],
-				fallbacks: [
-					'ui-sans-serif',
-					'system-ui',
-					'sans-serif',
-					'Apple Color Emoji',
-					'Segoe UI Emoji',
-					'Segoe UI Symbol',
-					'Noto Color Emoji'
-				],
-				optimizedFallbacks: false,
 				subsets: ['latin']
 			}
 		]
@@ -73,8 +63,7 @@ experimental: {
 Here’s what made the biggest difference:
 
 - Only load the styles I actually use: I don’t use italic or oblique, so I excluded those.
-- Limit to the needed weights: I use just 400 and 500. Specifying them as a range (['400 500']) instead of an array (['400', '500']) ensures only one font file is downloaded.
-- Set sensible fallback fonts: I switched to Tailwind CSS’s default sans-serif stack to avoid layout shifts. I also disabled the API’s default fallback generation using optimizedFallbacks: false.
+- Limit to the needed weights: I use just 400 and 500. Specifying them as a range (`['400 500']`) instead of an array (`['400', '500']`) ensures only one font file is downloaded.
 - Subset to only latin characters: No need to load glyphs I don’t use.
 
 With this setup, I’m now down to just one font file — and the swap from fallback to custom font is barely noticeable.
