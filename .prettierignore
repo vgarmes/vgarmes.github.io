@@ -6,3 +6,5 @@ node_modules
 src/pages/lighthouse/*.astro
 pnpm-lock.yaml
 yarn.lock
+drizzle
+public

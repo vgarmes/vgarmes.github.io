@@ -13,11 +13,11 @@ const { title, description, slug, pubDate, tags } = Astro.props
 ---
 
 <article
-	class="dark:highlight-white/5 group relative flex flex-col justify-between rounded-3xl shadow bg-zinc-50 p-6 hover:bg-zinc-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/50"
+	class="dark:highlight-white/5 group relative flex flex-col justify-between rounded-3xl bg-zinc-50 p-6 shadow hover:bg-zinc-100 dark:bg-zinc-800/80 dark:hover:bg-zinc-700/50"
 >
 	<div class="grow">
 		<h3
-			class="pb-3 text-xl font-bold leading-6 text-zinc-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400"
+			class="pb-3 text-xl leading-6 font-bold text-zinc-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400"
 		>
 			<a href={`/blog/${slug}`}>
 				<span class="absolute inset-0 rounded-3xl"></span>
@@ -41,7 +41,7 @@ const { title, description, slug, pubDate, tags } = Astro.props
 	<div class="flex flex-wrap gap-3 self-end">
 		{
 			tags.map(tag => (
-				<div class=" rounded-full bg-zinc-200 px-3 py-1 text-xs font-bold uppercase dark:bg-zinc-700">
+				<div class="rounded-full bg-zinc-200 px-3 py-1 text-xs font-bold uppercase dark:bg-zinc-700">
 					{tag}
 				</div>
 			))

@@ -27,43 +27,43 @@ First, let’s set up the basic structure of the component using dummy date valu
 
 ```tsx
 const RelativeTimeCard: React.FC = () => {
-	return (
-		<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
-			<div className="flex flex-col gap-3">
-				<span className="text-muted-foreground text-xs tabular-nums">
-					3 hours, 24 minutes, 35 seconds
-				</span>
-				<div className="flex flex-col gap-2">
-					<div className="flex items-center justify-between gap-3">
-						<div className="flex items-center gap-1.5">
-							<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
-								<span className="text-muted-foreground font-mono text-xs">
-									UTC
-								</span>
-							</div>
-							<span className="text-sm">March 10, 2025</span>
-						</div>
-						<span className="text-muted-foreground font-mono text-xs tabular-nums">
-							08:04:34 AM
-						</span>
-					</div>
-					<div className="flex items-center justify-between gap-3">
-						<div className="flex items-center gap-1.5">
-							<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
-								<span className="text-muted-foreground font-mono text-xs">
-									GMT+1
-								</span>
-							</div>
-							<span className="text-sm">March 10, 2025</span>
-						</div>
-						<span className="text-muted-foreground font-mono text-xs tabular-nums">
-							09:04:34 AM
-						</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	)
+  return (
+    <div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+      <div className="flex flex-col gap-3">
+        <span className="text-muted-foreground text-xs tabular-nums">
+          3 hours, 24 minutes, 35 seconds
+        </span>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5">
+              <div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+                <span className="text-muted-foreground font-mono text-xs">
+                  UTC
+                </span>
+              </div>
+              <span className="text-sm">March 10, 2025</span>
+            </div>
+            <span className="text-muted-foreground font-mono text-xs tabular-nums">
+              08:04:34 AM
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5">
+              <div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+                <span className="text-muted-foreground font-mono text-xs">
+                  GMT+1
+                </span>
+              </div>
+              <span className="text-sm">March 10, 2025</span>
+            </div>
+            <span className="text-muted-foreground font-mono text-xs tabular-nums">
+              09:04:34 AM
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 ```
 
@@ -74,41 +74,41 @@ This is what it looks like:
 {
 
 <div className="flex justify-center">
-	<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
-		<div className="flex flex-col gap-3">
-			<span className="text-muted-foreground text-xs tabular-nums">
-				3 hours, 24 minutes, 35 seconds
-			</span>
-			<div className="flex flex-col gap-2">
-				<div className="flex items-center justify-between gap-3">
-					<div className="flex items-center gap-1.5">
-						<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
-							<span className="text-muted-foreground font-mono text-xs">
-								UTC
-							</span>
-						</div>
-						<span className="text-sm">March 10, 2025</span>
-					</div>
-					<span className="text-muted-foreground font-mono text-xs tabular-nums">
-						08:04:34 AM
-					</span>
-				</div>
-				<div className="flex items-center justify-between gap-3">
-					<div className="flex items-center gap-1.5">
-						<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
-							<span className="text-muted-foreground font-mono text-xs">
-								GMT+1
-							</span>
-						</div>
-						<span className="text-sm">March 10, 2025</span>
-					</div>
-					<span className="text-muted-foreground font-mono text-xs tabular-nums">
-						09:04:34 AM
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+    <div className="flex flex-col gap-3">
+      <span className="text-muted-foreground text-xs tabular-nums">
+        3 hours, 24 minutes, 35 seconds
+      </span>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5">
+            <div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+              <span className="text-muted-foreground font-mono text-xs">
+                UTC
+              </span>
+            </div>
+            <span className="text-sm">March 10, 2025</span>
+          </div>
+          <span className="text-muted-foreground font-mono text-xs tabular-nums">
+            08:04:34 AM
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5">
+            <div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+              <span className="text-muted-foreground font-mono text-xs">
+                GMT+1
+              </span>
+            </div>
+            <span className="text-sm">March 10, 2025</span>
+          </div>
+          <span className="text-muted-foreground font-mono text-xs tabular-nums">
+            09:04:34 AM
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 }
 
@@ -124,30 +124,30 @@ To achieve this, we first need to define an array of time units along with their
 
 ```js
 const timeUnits = [
-	{
-		unit: 'year',
-		ms: 31536e6
-	},
-	{
-		unit: 'month',
-		ms: 2628e6
-	},
-	{
-		unit: 'day',
-		ms: 864e5
-	},
-	{
-		unit: 'hour',
-		ms: 36e5
-	},
-	{
-		unit: 'minute',
-		ms: 6e4
-	},
-	{
-		unit: 'second',
-		ms: 1e3
-	}
+  {
+    unit: 'year',
+    ms: 31536e6
+  },
+  {
+    unit: 'month',
+    ms: 2628e6
+  },
+  {
+    unit: 'day',
+    ms: 864e5
+  },
+  {
+    unit: 'hour',
+    ms: 36e5
+  },
+  {
+    unit: 'minute',
+    ms: 6e4
+  },
+  {
+    unit: 'second',
+    ms: 1e3
+  }
 ]
 ```
 
@@ -155,34 +155,34 @@ With this predefined array of time units, we can now build our formatter functio
 
 ```ts
 function formatDistanceToNow(date: Date): string {
-	// Calculate the absolute difference between the current time and the provided date
-	let timeDifference = Math.abs(new Date().getTime() - date.getTime())
+  // Calculate the absolute difference between the current time and the provided date
+  let timeDifference = Math.abs(new Date().getTime() - date.getTime())
 
-	// Initialize an empty array to store the time units
-	const timeParts = []
+  // Initialize an empty array to store the time units
+  const timeParts = []
 
-	// Iterate over the predefined array of time units and their corresponding milliseconds
-	for (const { unit: unitName, ms: unitMilliseconds } of timeUnits) {
-		// Calculate how many of the current unit fit into the remaining time difference
-		const unitCount = Math.floor(timeDifference / unitMilliseconds)
+  // Iterate over the predefined array of time units and their corresponding milliseconds
+  for (const { unit: unitName, ms: unitMilliseconds } of timeUnits) {
+    // Calculate how many of the current unit fit into the remaining time difference
+    const unitCount = Math.floor(timeDifference / unitMilliseconds)
 
-		// If the unit count is greater than 0 or if we already have some parts in the array
-		if (unitCount > 0 || timeParts.length > 0) {
-			// Add the unit count and unit name to the array, pluralizing if necessary
-			timeParts.push(`${unitCount} ${unitName}${unitCount !== 1 ? 's' : ''}`)
+    // If the unit count is greater than 0 or if we already have some parts in the array
+    if (unitCount > 0 || timeParts.length > 0) {
+      // Add the unit count and unit name to the array, pluralizing if necessary
+      timeParts.push(`${unitCount} ${unitName}${unitCount !== 1 ? 's' : ''}`)
 
-			// Update the remaining time difference by taking the remainder after division
-			timeDifference %= unitMilliseconds
-		}
+      // Update the remaining time difference by taking the remainder after division
+      timeDifference %= unitMilliseconds
+    }
 
-		// If we have collected 3 time parts, stop the loop
-		if (timeParts.length === 3) {
-			break
-		}
-	}
+    // If we have collected 3 time parts, stop the loop
+    if (timeParts.length === 3) {
+      break
+    }
+  }
 
-	// Join the time parts with commas and format the result
-	return timeParts.length === 0 ? 'Just now' : `${timeParts.join(', ')} ago`
+  // Join the time parts with commas and format the result
+  return timeParts.length === 0 ? 'Just now' : `${timeParts.join(', ')} ago`
 }
 ```
 
@@ -190,20 +190,20 @@ This works fine as is for a static result, but Vercel dynamically updates the va
 
 ```tsx
 const useTimeDistance = (date: Date) => {
-	const [timeDistance, setTimeDistance] = useState(formatDistanceToNow(date))
+  const [timeDistance, setTimeDistance] = useState(formatDistanceToNow(date))
 
-	useEffect(() => {
-		const updateTimeDistance = () => {
-			const formattedTime = formatDistanceToNow(date)
-			setTimeDistance(formattedTime)
-		}
+  useEffect(() => {
+    const updateTimeDistance = () => {
+      const formattedTime = formatDistanceToNow(date)
+      setTimeDistance(formattedTime)
+    }
 
-		const intervalId = setInterval(updateTimeDistance, 1000)
+    const intervalId = setInterval(updateTimeDistance, 1000)
 
-		return () => clearInterval(intervalId)
-	}, [date])
+    return () => clearInterval(intervalId)
+  }, [date])
 
-	return timeDistance
+  return timeDistance
 }
 ```
 
@@ -215,12 +215,12 @@ To extract and format the timezone, we can use `Intl.DateTimeFormat` along with 
 
 ```ts
 const formattedTz = (date: Date, zone: string) =>
-	new Intl.DateTimeFormat('en-US', {
-		timeZone: zone,
-		timeZoneName: 'short'
-	})
-		.formatToParts(date)
-		.find(part => part.type === 'timeZoneName')?.value
+  new Intl.DateTimeFormat('en-US', {
+    timeZone: zone,
+    timeZoneName: 'short'
+  })
+    .formatToParts(date)
+    .find(part => part.type === 'timeZoneName')?.value
 ```
 
 With this function:
@@ -232,17 +232,17 @@ With the timezone out of the way, we now just need to format the date and time, 
 
 ```ts
 const formattedDate = date.toLocaleString('en-US', {
-	timeZone: zone,
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric'
+  timeZone: zone,
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
 })
 
 const formattedTime = date.toLocaleTimeString('en-US', {
-	timeZone: zone,
-	hour: '2-digit',
-	minute: '2-digit',
-	second: '2-digit'
+  timeZone: zone,
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit'
 })
 ```
 
@@ -252,42 +252,42 @@ With the previous formatters in place, we can now create a component that, given
 
 ```tsx
 const DateTimeZone: React.FC<{ date: Date; zone: string }> = ({
-	date,
-	zone
+  date,
+  zone
 }) => {
-	const formattedTz = new Intl.DateTimeFormat('en-US', {
-		timeZone: zone,
-		timeZoneName: 'short'
-	})
-		.formatToParts(date)
-		.find(part => part.type === 'timeZoneName')?.value
-	return (
-		<div className="flex items-center justify-between gap-3">
-			<div className="flex items-center gap-1.5">
-				<div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
-					<span className="text-muted-foreground font-mono text-xs">
-						{formattedTz}
-					</span>
-				</div>
-				<span className="text-sm">
-					{date.toLocaleString('en-US', {
-						timeZone: zone,
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					})}
-				</span>
-			</div>
-			<span className="text-muted-foreground font-mono text-xs tabular-nums">
-				{date.toLocaleTimeString('en-US', {
-					timeZone: zone,
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit'
-				})}
-			</span>
-		</div>
-	)
+  const formattedTz = new Intl.DateTimeFormat('en-US', {
+    timeZone: zone,
+    timeZoneName: 'short'
+  })
+    .formatToParts(date)
+    .find(part => part.type === 'timeZoneName')?.value
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-1.5">
+        <div className="bg-muted flex h-4 items-center justify-center rounded-xs px-1.5">
+          <span className="text-muted-foreground font-mono text-xs">
+            {formattedTz}
+          </span>
+        </div>
+        <span className="text-sm">
+          {date.toLocaleString('en-US', {
+            timeZone: zone,
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </span>
+      </div>
+      <span className="text-muted-foreground font-mono text-xs tabular-nums">
+        {date.toLocaleTimeString('en-US', {
+          timeZone: zone,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        })}
+      </span>
+    </div>
+  )
 }
 ```
 
@@ -297,25 +297,25 @@ Now, all that’s left is to integrate the previous component with the rest of t
 
 ```tsx
 const RelativeTimeCard: FunctionalComponent<Props> = ({ date }) => {
-	const timeDistance = useTimeDistance(date)
-	return (
-		<div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
-			<div className="flex flex-col gap-3">
-				<div className="flex flex-col gap-3">
-					<span className="text-muted-foreground text-xs tabular-nums">
-						{timeDistance}
-					</span>
-				</div>
-				<div className="flex flex-col gap-2">
-					<DateTimeZone date={date} zone="utc" />
-					<DateTimeZone
-						date={date}
-						zone={Intl.DateTimeFormat().resolvedOptions().timeZone}
-					/>
-				</div>
-			</div>
-		</div>
-	)
+  const timeDistance = useTimeDistance(date)
+  return (
+    <div className="bg-background border-border w-[325px] rounded-md border p-3 shadow-md">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
+          <span className="text-muted-foreground text-xs tabular-nums">
+            {timeDistance}
+          </span>
+        </div>
+        <div className="flex flex-col gap-2">
+          <DateTimeZone date={date} zone="utc" />
+          <DateTimeZone
+            date={date}
+            zone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+          />
+        </div>
+      </div>
+    </div>
+  )
 }
 ```
 

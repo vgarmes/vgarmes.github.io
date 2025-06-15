@@ -34,7 +34,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 			<div className="relative flex">
 				<button
 					className={cx(
-						'relative transform overflow-hidden rounded-lg bg-gradient-to-tl from-zinc-300 to-zinc-100 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90 dark:from-white/5 dark:to-white/30 ',
+						'relative transform overflow-hidden rounded-lg bg-gradient-to-tl from-zinc-300 to-zinc-100 p-1 transition-all duration-300 ease-out enabled:hover:scale-110 enabled:active:scale-90 dark:from-white/5 dark:to-white/30',
 						{ 'animate-pulse': isLoading }
 					)}
 					disabled={disabled}
@@ -55,7 +55,7 @@ const LikeButton: FunctionalComponent<Props> = ({
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						className={cx(
-							'relative h-6 w-6 group-hover:scale-110 fill-white stroke-zinc-400 dark:stroke-transparent',
+							'relative h-6 w-6 fill-white stroke-zinc-400 group-hover:scale-110 dark:stroke-transparent',
 							{
 								[styles.animateHeart]: reachedMaxLikes && shouldAnimate
 							}
@@ -75,13 +75,13 @@ const LikeButton: FunctionalComponent<Props> = ({
 				<LoadingDots />
 			) : (
 				<div
-					className={cx('text-sm font-semibold whitespace-nowrap relative', {
+					className={cx('relative text-sm font-semibold whitespace-nowrap', {
 						'text-pink-600 dark:text-pink-500': userLikes > 0
 					})}
 				>
 					{likes} likes
 					{shouldAnimate && (
-						<div className="absolute text-xs top-0 right-0 translate-x-[calc(100%_+_4px)]">
+						<div className="absolute top-0 right-0 translate-x-[calc(100%_+_4px)] text-xs">
 							<div key={userLikes} className={styles.floatingText}>
 								+1
 							</div>

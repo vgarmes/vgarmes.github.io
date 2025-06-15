@@ -92,9 +92,9 @@ Optionally, add the installed types to the `compilerOptions` in your `tsconfig.j
 
 ```json
 {
-	"compilerOptions": {
-		"types": ["@cloudflare/workers-types"]
-	}
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types"]
+  }
 }
 ```
 
@@ -106,15 +106,15 @@ Let's start by creating the `Posts` table, where we'll store each post's slug al
 
 ```ts
 export const posts = sqliteTable(
-	'posts',
-	{
-		id: integer('id').primaryKey({ autoIncrement: true }),
-		slug: text('slug').notNull(),
-		totalLikes: integer('total_likes').default(0)
-	},
-	table => ({
-		slugIdx: uniqueIndex('slugIdx').on(table.slug)
-	})
+  'posts',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    slug: text('slug').notNull(),
+    totalLikes: integer('total_likes').default(0)
+  },
+  table => ({
+    slugIdx: uniqueIndex('slugIdx').on(table.slug)
+  })
 )
 ```
 
@@ -124,17 +124,17 @@ Now, let's proceed to create the table responsible for tracking user likes:
 
 ```ts
 export const userLikes = sqliteTable(
-	'user_likes',
-	{
-		userId: text('user_id'),
-		postId: integer('post_id').references(() => posts.id),
-		likes: integer('likes').default(0)
-	},
-	table => {
-		return {
-			pk: primaryKey(table.userId, table.postId)
-		}
-	}
+  'user_likes',
+  {
+    userId: text('user_id'),
+    postId: integer('post_id').references(() => posts.id),
+    likes: integer('likes').default(0)
+  },
+  table => {
+    return {
+      pk: primaryKey(table.userId, table.postId)
+    }
+  }
 )
 ```
 
@@ -185,8 +185,8 @@ Now, we can initialize Hono with our customized bindings, ensuring proper typing
 
 ```ts
 type Bindings = {
-	DB: D1Database
-	IP_ADDRESS_SALT: string
+  DB: D1Database
+  IP_ADDRESS_SALT: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -221,39 +221,39 @@ Now, we need to save the relevant information in the database. My approach for t
 
 ```ts
 const post = await db
-	.select({
-		postId: posts.id,
-		userLikes: userLikes.likes
-	})
-	.from(userLikes)
-	.leftJoin(posts, eq(posts.id, userLikes.postId))
-	.where(and(eq(posts.slug, slug), eq(userLikes.userId, currentUserId)))
-	.get()
+  .select({
+    postId: posts.id,
+    userLikes: userLikes.likes
+  })
+  .from(userLikes)
+  .leftJoin(posts, eq(posts.id, userLikes.postId))
+  .where(and(eq(posts.slug, slug), eq(userLikes.userId, currentUserId)))
+  .get()
 ```
 
 Right after, we perform two upsert statements in order to update both the `Posts` and `UserLikes` tables. At the time of writing, there wasn't a way to perform [transactions on D1 using Drizzle](https://github.com/drizzle-team/drizzle-orm/issues/758). Thus, I opted to perform two sequential upsert queries:
 
 ```ts
 const updatedPost = await db
-	.insert(posts)
-	.values({ slug, totalLikes: likesIncrement })
-	.onConflictDoUpdate({
-		target: posts.slug,
-		set: { totalLikes: sql`total_likes + ${likesIncrement}` }
-	})
-	.returning()
-	.get()
+  .insert(posts)
+  .values({ slug, totalLikes: likesIncrement })
+  .onConflictDoUpdate({
+    target: posts.slug,
+    set: { totalLikes: sql`total_likes + ${likesIncrement}` }
+  })
+  .returning()
+  .get()
 
 db.insert(userLikes)
-	.values({
-		userId: currentUserId,
-		postId: updatedPost.id,
-		likes: likesIncrement
-	})
-	.onConflictDoUpdate({
-		target: [userLikes.userId, userLikes.postId],
-		set: { likes: sql`likes + ${likesIncrement}` }
-	})
+  .values({
+    userId: currentUserId,
+    postId: updatedPost.id,
+    likes: likesIncrement
+  })
+  .onConflictDoUpdate({
+    target: [userLikes.userId, userLikes.postId],
+    set: { likes: sql`likes + ${likesIncrement}` }
+  })
 ```
 
 To fetch the likes of a post, we take a similar approach by identifying the post and the user, and finally, we query the database to retrieve the corresponding data. You can see the whole implementation in the [source code](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/api/index.ts).
@@ -285,7 +285,7 @@ Now you should have the worker deployed. You can preview it at `<YOUR_WORKER>.<Y
 For the like button, I created a component in React with a design inspired by [Delba Oliveira's design](https://delba.dev/blog/a-like-button-that-likes-you-back), with a few changes and tweaks, including a playful confetti animation when the user reaches the maximum number of likes. You can play with the componnet here (it will reset the likes count after 3 seconds of reaching the maximum):
 
 <div className="flex w-full justify-center">
-	<LikeButtonDemo client:visible />
+  <LikeButtonDemo client:visible />
 </div>
 
 When a user interacts with the like button on the post, a couple of things happen behind the scenes to make the experience smooth and efficient.
@@ -300,23 +300,23 @@ const [userLikes, setUserLikes] = useState(0)
 const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading')
 
 useEffect(() => {
-	const fetchStats = async () => {
-		const response = await fetch(`${apiHost}/api/posts/${slug}/stats`)
-		if (response.status !== 200) {
-			setStatus('error')
-			return
-		}
-		const data = (await response.json()) as {
-			totalLikes: number
-			userLikes: number
-		}
+  const fetchStats = async () => {
+    const response = await fetch(`${apiHost}/api/posts/${slug}/stats`)
+    if (response.status !== 200) {
+      setStatus('error')
+      return
+    }
+    const data = (await response.json()) as {
+      totalLikes: number
+      userLikes: number
+    }
 
-		setLikes(data.totalLikes)
-		setUserLikes(data.userLikes)
-		setStatus('success')
-	}
+    setLikes(data.totalLikes)
+    setUserLikes(data.userLikes)
+    setStatus('success')
+  }
 
-	fetchStats()
+  fetchStats()
 }, [])
 ```
 
@@ -330,21 +330,21 @@ Since I allow the user to like a post multiple times, the component doesn't send
 const likesIncrement = useRef(0)
 
 useEffect(() => {
-	if (likesIncrement.current === 0) {
-		return
-	}
+  if (likesIncrement.current === 0) {
+    return
+  }
 
-	function likePost() {
-		fetch(`${apiHost}/api/posts/${slug}/like`, {
-			method: 'POST',
-			body: JSON.stringify({ count: likesIncrement.current })
-		})
-		likesIncrement.current = 0
-	}
+  function likePost() {
+    fetch(`${apiHost}/api/posts/${slug}/like`, {
+      method: 'POST',
+      body: JSON.stringify({ count: likesIncrement.current })
+    })
+    likesIncrement.current = 0
+  }
 
-	const timeoutId = setTimeout(likePost, 1000)
+  const timeoutId = setTimeout(likePost, 1000)
 
-	return () => clearTimeout(timeoutId)
+  return () => clearTimeout(timeoutId)
 }, [userLikes])
 ```
 
@@ -354,9 +354,9 @@ Finally, on each button click we call the following function to update all the v
 
 ```tsx
 const handleClick = () => {
-	setLikes(likes + 1)
-	setUserLikes(userLikes + 1)
-	incrementLikes.current += 1
+  setLikes(likes + 1)
+  setUserLikes(userLikes + 1)
+  incrementLikes.current += 1
 }
 ```
 
