@@ -31,16 +31,6 @@ export default defineConfig({
 				cssVariable: '--font-inter',
 				styles: ['normal'],
 				weights: ['400 500'],
-				fallbacks: [
-					'ui-sans-serif',
-					'system-ui',
-					'sans-serif',
-					'Apple Color Emoji',
-					'Segoe UI Emoji',
-					'Segoe UI Symbol',
-					'Noto Color Emoji'
-				],
-				optimizedFallbacks: false,
 				subsets: ['latin']
 			}
 		]
