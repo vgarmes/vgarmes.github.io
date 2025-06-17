@@ -1,11 +1,12 @@
 import type { FunctionalComponent } from 'preact'
-import { useRef, useState } from 'preact/hooks'
+import { useEffect, useRef, useState } from 'preact/hooks'
 
 const FILTERS = ['playlists', 'podcasts', 'artists'] as const
 type FilterType = (typeof FILTERS)[number]
 
 const SpotifyFilters: FunctionalComponent = () => {
 	const [activeFilter, setActiveFilter] = useState<null | FilterType>(null)
+	const [activeCategory, setActiveCategory] = useState<null | string>(null)
 
 	const handleFilterChange = (filter: FilterType) => {
 		const index = FILTERS.indexOf(filter)
@@ -27,6 +28,14 @@ const SpotifyFilters: FunctionalComponent = () => {
 		}
 	}
 
+	const handleCategoryChange = (category: string) => {
+		if (activeCategory === category) {
+			setActiveCategory(null)
+		} else {
+			setActiveCategory(category)
+		}
+	}
+
 	const clearFilters = () => {
 		setActiveFilter(null)
 		filterRefs.current.forEach(ref => {
@@ -38,6 +47,7 @@ const SpotifyFilters: FunctionalComponent = () => {
 
 	const containerRef = useRef<HTMLDivElement>(null)
 	const filterRefs = useRef<(HTMLButtonElement | null)[]>([])
+
 	return (
 		<div ref={containerRef} className="flex items-center gap-2">
 			<button
@@ -79,6 +89,28 @@ const SpotifyFilters: FunctionalComponent = () => {
 					{filter.charAt(0).toUpperCase() + filter.slice(1)}
 				</button>
 			))}
+
+			{activeFilter === 'playlists' &&
+				['By You', 'By Spotify', 'Downloaded'].map((playlist, index) => (
+					<button
+						key={playlist}
+						role="radio"
+						disabled={activeCategory !== null && activeCategory !== playlist}
+						aria-checked={activeCategory === playlist}
+						aria-hidden={activeCategory !== null && activeCategory !== playlist}
+						className="flex h-8 cursor-pointer items-center justify-center rounded-2xl bg-neutral-800 px-4 text-sm text-white opacity-100 transition-colors duration-300 ease-in-out not-aria-checked:hover:brightness-125 disabled:pointer-events-none disabled:opacity-0 aria-checked:bg-green-600 aria-checked:text-black"
+						style={{
+							transition: `transform 0.5s, background-color 0.1s, color 0.1s${activeCategory !== null && activeCategory !== playlist ? '' : ', opacity 0.1s 0.2s'}`,
+							transform: 'translateX(-2.5rem)'
+						}}
+						onClick={() => {
+							handleCategoryChange(playlist)
+						}}
+						ref={el => (filterRefs.current[index] = el)}
+					>
+						{playlist.charAt(0).toUpperCase() + playlist.slice(1)}
+					</button>
+				))}
 		</div>
 	)
 }

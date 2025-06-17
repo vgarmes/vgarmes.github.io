@@ -1,4 +1,4 @@
-import RelativeTimeCard from '../RelativeTimeCard'
+import RelativeTimeCard from './RelativeTimeCard'
 
 const RelativeTimeCardDemo = () => {
 	const date = new Date()

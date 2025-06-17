@@ -1,4 +1,4 @@
-import LikeButton from '.'
+import LikeButton from '~/components/LikeButton'
 import { useEffect, useState } from 'preact/hooks'
 
 const LikeButtonDemo = () => {
