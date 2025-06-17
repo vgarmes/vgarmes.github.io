@@ -13,22 +13,22 @@ const posts = (
 })
 ---
 
-<section class="mt-16 space-y-8">
-	<h3 class="font-medium">Writing</h3>
-	<ul class="flex flex-col gap-8 md:gap-4">
+<section class="mt-16 sm:mt-32">
+	<h3 class="mb-5 font-medium sm:mb-6">Writing</h3>
+	<ul class="flex flex-col gap-7 md:gap-10">
 		{
 			posts.map(({ data, id }) => (
-				<li class="flex flex-col gap-1 md:grid md:grid-cols-[140px_1fr] md:gap-4">
+				<li class="flex flex-col gap-1 md:grid md:grid-cols-[1fr_140px] md:gap-4">
+					<div class="space-y-2">
+						<Link href={`/blog/${id}`}>{data.title}</Link>
+						<p class="text-muted-foreground">{data.description}</p>
+					</div>
 					<time
-						class="text-muted-foreground text-sm"
+						class="text-muted-foreground hidden text-right text-xs leading-6 md:block"
 						datetime={data.pubDate.toISOString()}
 					>
 						{formatDate(data.pubDate)}
 					</time>
-					<div class="space-y-2">
-						<Link href={`/blog/${id}`}>{data.title}</Link>
-						<p class="text-muted-foreground text-sm">{data.description}</p>
-					</div>
 				</li>
 			))
 		}
