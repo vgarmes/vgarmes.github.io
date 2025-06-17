@@ -4,7 +4,6 @@ import BaseLayout from './base.astro'
 import { formatDate } from '~/util/helpers'
 import TableOfContents from '~/components/TableOfContents'
 import generateToc from '~/util/generateToc'
-import ReadingTime from '~/components/ReadingTime.astro'
 import BackTopButton from '~/components/BackTopButton.astro'
 import PostStats from '~/components/post-stats'
 import Aside from '~/components/aside.astro'
@@ -29,6 +28,7 @@ type Props = {
 
 const { frontmatter, headings, slug } = Astro.props
 const date = formatDate(frontmatter.pubDate)
+const isoDate = new Date(frontmatter.pubDate).toISOString()
 const toc = generateToc(headings)
 ---
 
@@ -40,7 +40,7 @@ const toc = generateToc(headings)
 	<Aside>
 		<a
 			href="/"
-			class="hover:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors dark:text-neutral-600"
+			class="hover:text-foreground dark:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors"
 			><Undo />Index</a
 		>
 		<div class="hidden xl:block">
@@ -52,13 +52,12 @@ const toc = generateToc(headings)
 			<h1 id="overview" class="scroll-mt-16 font-medium">
 				{frontmatter.title}
 			</h1>
-			<div class="flex flex-wrap items-center gap-6 gap-y-4">
-				<p class="text-muted-foreground text-sm">
-					{date}
-				</p>
-				<ReadingTime minutesRead={frontmatter.minutesRead} />
-				<PostStats client:visible slug={slug} />
-			</div>
+			<time
+				class="text-muted-foreground flex flex-wrap items-center gap-6 gap-y-4"
+				datetime={isoDate}
+			>
+				{date}
+			</time>
 		</header>
 		<div
 			class="mt-12 flex flex-1 items-start justify-center pb-6 lg:justify-start"
@@ -69,7 +68,8 @@ const toc = generateToc(headings)
 				<slot />
 			</div>
 		</div>
-		<div class="flex items-center pt-4 lg:hidden">
+		<div class="flex items-center justify-between pt-4">
+			<PostStats client:visible slug={slug} />
 			<BackTopButton />
 		</div>
 	</article>

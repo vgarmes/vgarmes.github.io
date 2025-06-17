@@ -55,7 +55,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 			<li key={slug} className={cx({ 'pl-3': depth > 2 })}>
 				<a
 					className={cx(
-						'block text-[0.8125rem] leading-tight font-medium transition-colors',
+						'block text-[0.8125rem] leading-tight transition-colors',
 						{
 							'text-foreground': currentHeading.slug === slug,
 							'hover:text-foreground text-neutral-400 dark:text-neutral-600':
