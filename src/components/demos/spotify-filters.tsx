@@ -1,5 +1,5 @@
 import type { FunctionalComponent } from 'preact'
-import { useEffect, useRef, useState } from 'preact/hooks'
+import { useRef, useState } from 'preact/hooks'
 
 const FILTERS = ['playlists', 'podcasts', 'artists'] as const
 type FilterType = (typeof FILTERS)[number]
