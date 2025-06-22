@@ -1,0 +1,40 @@
+<nav id="animated-tabs" class="not-prose text-muted-foreground relative">
+	<ul
+		class="[&>li>a]:hover:text-foreground flex items-center text-sm [&>li>a]:inline-block [&>li>a]:px-3 [&>li>a]:py-1 [&>li>a]:text-current [&>li>a]:transition-colors"
+	>
+		<li><a href="#model-s">Model S</a></li>
+		<li><a href="#model-3">Model 3</a></li>
+		<li><a href="#model-x">Model X</a></li>
+		<li><a href="#model-y">Model Y</a></li>
+		<li><a href="#powerwall">Powerwall</a></li>
+		<li><a href="#accesorios">Carga</a></li>
+	</ul>
+	<div
+		id="menu-backdrop"
+		class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) rounded bg-black/5 opacity-0 backdrop-blur-lg transition-all duration-500 ease-in-out"
+	>
+	</div>
+</nav>
+
+<script>
+	const listItem = document.querySelectorAll(
+		'#animated-tabs li'
+	) as NodeListOf<HTMLLIElement>
+	const menuBackDrop = document.querySelector('#menu-backdrop') as HTMLElement
+
+	listItem.forEach(item => {
+		item.addEventListener('mouseenter', () => {
+			menuBackDrop.style.setProperty('--left', `${item.offsetLeft}px`)
+			menuBackDrop.style.setProperty('--width', `${item.offsetWidth}px`)
+			menuBackDrop.style.setProperty('--height', `${item.offsetHeight}px`)
+
+			menuBackDrop.style.opacity = '1'
+			menuBackDrop.style.visibility = 'visible'
+		})
+
+		item.addEventListener('mouseleave', () => {
+			menuBackDrop.style.opacity = '0'
+			menuBackDrop.style.visibility = 'hidden'
+		})
+	})
+</script>

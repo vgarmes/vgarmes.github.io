@@ -17,7 +17,7 @@
 	"dependencies": {
 		"@astrojs/mdx": "^4.3.0",
 		"@astrojs/preact": "^4.1.0",
-		"@tailwindcss/vite": "^4.0.12",
+		"@tailwindcss/vite": "^4.1.10",
 		"astro": "^5.9.1",
 		"clsx": "^2.0.0",
 		"drizzle-orm": "^0.28.1",
@@ -25,7 +25,7 @@
 		"mdast-util-to-string": "^3.2.0",
 		"preact": "^10.26.8",
 		"reading-time": "^1.5.0",
-		"tailwindcss": "^4.0.12"
+		"tailwindcss": "^4.1.10"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20230807.0",
