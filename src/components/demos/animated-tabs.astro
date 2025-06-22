@@ -11,7 +11,7 @@
 	</ul>
 	<div
 		id="menu-backdrop"
-		class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) rounded bg-black/5 opacity-0 backdrop-blur-lg transition-all duration-500 ease-in-out"
+		class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-black/5 opacity-0 backdrop-blur-lg transition-all duration-500 ease-in-out"
 	>
 	</div>
 </nav>
@@ -24,6 +24,7 @@
 
 	listItem.forEach(item => {
 		item.addEventListener('mouseenter', () => {
+			menuBackDrop.style.setProperty('--top', `${item.offsetTop}px`)
 			menuBackDrop.style.setProperty('--left', `${item.offsetLeft}px`)
 			menuBackDrop.style.setProperty('--width', `${item.offsetWidth}px`)
 			menuBackDrop.style.setProperty('--height', `${item.offsetHeight}px`)
