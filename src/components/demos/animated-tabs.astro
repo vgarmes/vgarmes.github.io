@@ -1,6 +1,6 @@
 <nav id="animated-tabs" class="not-prose text-muted-foreground relative">
 	<ul
-		class="[&>li>a]:hover:text-foreground flex items-center text-sm [&>li>a]:inline-block [&>li>a]:px-3 [&>li>a]:py-1 [&>li>a]:text-current [&>li>a]:transition-colors"
+		class="[&>li>a]:hover:text-foreground border-b-border flex items-center border-b pb-2 text-sm [&>li>a]:inline-block [&>li>a]:px-3 [&>li>a]:py-1 [&>li>a]:text-current [&>li>a]:transition-colors"
 	>
 		<li><a href="#model-s">Model S</a></li>
 		<li><a href="#model-3">Model 3</a></li>
@@ -14,15 +14,39 @@
 		class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-black/5 opacity-0 backdrop-blur-lg transition-all duration-500 ease-in-out"
 	>
 	</div>
+	<div
+		id="tab-underline"
+		class="bg-foreground absolute bottom-0 left-0 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform duration-150"
+	>
+	</div>
 </nav>
 
 <script>
-	const listItem = document.querySelectorAll(
+	const listItems = document.querySelectorAll(
 		'#animated-tabs li'
 	) as NodeListOf<HTMLLIElement>
-	const menuBackDrop = document.querySelector('#menu-backdrop') as HTMLElement
+	const links = document.querySelectorAll(
+		'#animated-tabs li a'
+	) as NodeListOf<HTMLAnchorElement>
+	const menuBackDrop = document.getElementById(
+		'menu-backdrop'
+	) as HTMLDivElement
+	const tabUnderline = document.getElementById(
+		'tab-underline'
+	) as HTMLDivElement
 
-	listItem.forEach(item => {
+	// initial tab underline position
+	tabUnderline.style.transform = `translateX(${links[0].offsetLeft}px) scaleX(${links[0].offsetWidth / 100})`
+	tabUnderline.style.display = 'block'
+
+	links.forEach(link => {
+		link.addEventListener('click', e => {
+			e.preventDefault()
+			tabUnderline.style.transform = `translateX(${link.offsetLeft}px) scaleX(${link.offsetWidth / 100})`
+		})
+	})
+
+	listItems.forEach(item => {
 		item.addEventListener('mouseenter', () => {
 			menuBackDrop.style.setProperty('--top', `${item.offsetTop}px`)
 			menuBackDrop.style.setProperty('--left', `${item.offsetLeft}px`)
