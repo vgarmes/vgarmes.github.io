@@ -1,33 +1,43 @@
-<nav id="animated-tabs" class="not-prose text-muted-foreground relative">
-	<ul
-		class="[&>li>a]:hover:text-foreground border-b-border flex items-center border-b pb-2 text-sm [&>li>a]:inline-block [&>li>a]:px-3 [&>li>a]:py-1 [&>li>a]:text-current [&>li>a]:transition-colors"
-	>
-		<li><a href="#model-s">Model S</a></li>
-		<li><a href="#model-3">Model 3</a></li>
-		<li><a href="#model-x">Model X</a></li>
-		<li><a href="#model-y">Model Y</a></li>
-		<li><a href="#powerwall">Powerwall</a></li>
-		<li><a href="#accesorios">Carga</a></li>
-	</ul>
-	<div
-		id="menu-backdrop"
-		class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-black/5 opacity-0 backdrop-blur-lg transition-all duration-500 ease-in-out"
-	>
+---
+import Demo from './demo.astro'
+---
+
+<Demo>
+	<div class="flex min-h-40 items-center justify-center p-2">
+		<nav
+			id="animated-tabs"
+			class="text-muted-foreground scrollbar-none relative overflow-x-auto"
+		>
+			<ul
+				class="[&>li>button]:hover:text-foreground border-b-border flex items-center border-b pb-2 text-sm [&>li>button]:inline-block [&>li>button]:cursor-pointer [&>li>button]:px-3 [&>li>button]:py-1 [&>li>button]:text-current [&>li>button]:transition-colors"
+			>
+				<li>
+					<button>Overview</button>
+				</li>
+				<li><button>Activity</button></li>
+				<li><button>Usage</button></li>
+				<li><button>AI</button></li>
+				<li><button>Support</button></li>
+				<li><button>Settings</button></li>
+			</ul>
+			<div
+				id="menu-backdrop"
+				class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-neutral-100 opacity-0 transition-all duration-250 ease-in-out dark:bg-neutral-800"
+			>
+			</div>
+			<div
+				id="tab-underline"
+				class="bg-foreground absolute bottom-0 left-0 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform"
+			>
+			</div>
+		</nav>
 	</div>
-	<div
-		id="tab-underline"
-		class="bg-foreground absolute bottom-0 left-0 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform duration-150"
-	>
-	</div>
-</nav>
+</Demo>
 
 <script>
 	const listItems = document.querySelectorAll(
 		'#animated-tabs li'
 	) as NodeListOf<HTMLLIElement>
-	const links = document.querySelectorAll(
-		'#animated-tabs li a'
-	) as NodeListOf<HTMLAnchorElement>
 	const menuBackDrop = document.getElementById(
 		'menu-backdrop'
 	) as HTMLDivElement
@@ -36,15 +46,8 @@
 	) as HTMLDivElement
 
 	// initial tab underline position
-	tabUnderline.style.transform = `translateX(${links[0].offsetLeft}px) scaleX(${links[0].offsetWidth / 100})`
+	tabUnderline.style.transform = `translateX(${listItems[0].offsetLeft}px) scaleX(${listItems[0].offsetWidth / 100})`
 	tabUnderline.style.display = 'block'
-
-	links.forEach(link => {
-		link.addEventListener('click', e => {
-			e.preventDefault()
-			tabUnderline.style.transform = `translateX(${link.offsetLeft}px) scaleX(${link.offsetWidth / 100})`
-		})
-	})
 
 	listItems.forEach(item => {
 		item.addEventListener('mouseenter', () => {
@@ -60,6 +63,10 @@
 		item.addEventListener('mouseleave', () => {
 			menuBackDrop.style.opacity = '0'
 			menuBackDrop.style.visibility = 'hidden'
+		})
+
+		item.addEventListener('click', () => {
+			tabUnderline.style.transform = `translateX(${item.offsetLeft}px) scaleX(${item.offsetWidth / 100})`
 		})
 	})
 </script>

@@ -1,14 +1,21 @@
 ---
-title: 'Tabs'
-pubDate: 2025-06-14
-description: 'A quick look at customizing fonts in Astro using their new experimental Fonts API.'
-image:
-  url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
-  alt: 'Redesign 2025'
-tags: ['astro', 'typography', 'html']
-draft: true
+title: 'Animated Tabs'
+pubDate: 2025-06-26
+description: 'Smooth tabs using CSS and JavaScript.'
+tags: ['animation', 'tabs', 'css']
+draft: false
 ---
 
 import AnimatedTabs from '~/components/demos/animated-tabs.astro'
+
+Animating tabs is a great example of how small details can make a UI feel more refined. They make interactions feel intentional and responsive.
+
+For these tabs, I kept things simple: just CSS and vanilla JavaScript. I leaned on GPU-friendly properties like `transform` and `opacity` to keep the animations smooth and snappy.
+
+First, there’s the underline that slides to the active tab. I used `translateX` and `scaleX` to move and resize it based on the target tab, which is a quick way to get that fluid motion without triggering layout.
+
+Then I added a backdrop element to simulate a hover effect. It follows the mouse between tabs using `translateX`, adjusting its size dynamically by reading the hovered tab’s offset (`offsetWidth`, `offsetHeight`, etc) values on `mouseenter`.
+
+Here’s what it looks like in action.
 
 <AnimatedTabs />
