@@ -8,14 +8,10 @@ draft: false
 
 import AnimatedTabs from '~/components/demos/animated-tabs.astro'
 
-Animating tabs is a great example of how small details can make a UI feel more refined. They make interactions feel intentional and responsive.
-
-For these tabs, I kept things simple: just CSS and vanilla JavaScript. I leaned on GPU-friendly properties like `transform` and `opacity` to keep the animations smooth and snappy.
-
-First, there’s the underline that slides to the active tab. I used `translateX` and `scaleX` to move and resize it based on the target tab, which is a quick way to get that fluid motion without triggering layout.
-
-Then I added a backdrop element to simulate a hover effect. It follows the mouse between tabs using `translateX`, adjusting its size dynamically by reading the hovered tab’s offset (`offsetWidth`, `offsetHeight`, etc) values on `mouseenter`.
-
-Here’s what it looks like in action.
+Tabs are a common UI element used to display different sections of content one at a time — either by conditionally rendering them or by navigating between separate pages. Adding a bit of animation can make interactions feel more responsive and intentional, and the overall UI more refined.
 
 <AnimatedTabs />
+
+For these tabs, I added a sliding underline for the active tab and a subtle hover effect that follows the cursor to make the tabs feel more interactive. It’s all kept simple: just CSS and about 30 lines of vanilla JavaScript. By relying on GPU-accelerated properties like `transform` and `opacity`, the animations stay smooth and responsive.
+
+See the full code [here](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/animated-tabs.astro).
