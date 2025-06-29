@@ -97,8 +97,7 @@
 	}
 
 	@media (max-width: 640px) {
-		.astro-code,
-		.mobile-full-width {
+		.astro-code {
 			margin-left: -25px;
 			margin-right: -25px;
 			width: calc(100% + 50px);
