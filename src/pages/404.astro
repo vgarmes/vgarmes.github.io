@@ -1,0 +1,26 @@
+---
+import BaseLayout from '~/layouts/base.astro'
+import Aside from '~/components/aside.astro'
+import Undo from '~/components/icons/Undo.astro'
+---
+
+<BaseLayout title="404 - Page Not Found">
+	<Aside>
+		<a
+			href="/"
+			class="hover:text-foreground dark:text-foreground flex items-center gap-1 py-1 text-sm leading-tight font-medium text-neutral-400 transition-colors"
+			><Undo />Index</a
+		>
+	</Aside>
+	<div>
+		<header>
+			<h1 id="overview" class="scroll-mt-16 font-medium">404 - Not Found</h1>
+		</header>
+		<div class="mt-12 flex-1">
+			<p class="text-muted-foreground text-sm">
+				The page you are looking for does not exist. Please check the URL or
+				return to the homepage.
+			</p>
+		</div>
+	</div>
+</BaseLayout>
