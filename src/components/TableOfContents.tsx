@@ -80,7 +80,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 
 	return (
 		<nav
-			className="max-h-[calc(100vh-10rem)] max-w-40 overflow-y-auto pt-8"
+			className="scrollbar-none max-h-[calc(100vh-10rem)] max-w-40 overflow-y-auto pt-8"
 			style={{ overscrollBehavior: 'contain' }}
 			role="navigation"
 		>
