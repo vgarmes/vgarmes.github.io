@@ -8,7 +8,7 @@ const { href, isExternal = false } = Astro.props
 ---
 
 <a
-	class="hover:decoration-foreground underline decoration-neutral-300 decoration-1 underline-offset-2 transition-colors dark:decoration-neutral-600"
+	class="hover:decoration-foreground underline decoration-gray-800 decoration-1 underline-offset-2 transition-colors"
 	href={href}
 	{...isExternal && { rel: 'noopener noreferrer', target: '_blank' }}
 	><slot /></a

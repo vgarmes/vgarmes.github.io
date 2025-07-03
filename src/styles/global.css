@@ -1,12 +1,11 @@
 @import 'tailwindcss';
-@plugin '@tailwindcss/typography';
+@import './prose.css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Color palette comes from Radix UI - Sand theme */
 :root {
 	--radius: 0.625rem;
-	--background: #fdfdfc;
-	--foreground: #21201c;
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
@@ -16,13 +15,36 @@
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
 	--muted: oklch(0.97 0 0);
-	--muted-foreground: #63635e;
 	--accent: oklch(0.97 0 0);
 	--accent-foreground: oklch(0.205 0 0);
 	--destructive: oklch(0.577 0.245 27.325);
 	--border: oklch(0.922 0 0);
 	--input: oklch(0.922 0 0);
 	--ring: oklch(0.708 0 0);
+	--gray-100: #fdfdfc;
+	--gray-200: #f9f9f8;
+	--gray-300: #f1f0ef;
+	--gray-400: #e9e8e6;
+	--gray-500: #e2e1de;
+	--gray-600: #dad9d6;
+	--gray-700: #cfceca;
+	--gray-800: #bcbbb5;
+	--gray-900: #8d8d86;
+	--gray-1000: #82827c;
+	--gray-1100: #63635e;
+	--gray-1200: #21201c;
+	--gray-alpha-100: #00000003;
+	--gray-alpha-200: #00000006;
+	--gray-alpha-300: #0000000f;
+	--gray-alpha-400: #00000017;
+	--gray-alpha-500: #0000001f;
+	--gray-alpha-600: #00000026;
+	--gray-alpha-700: #00000031;
+	--gray-alpha-800: #00000044;
+	--gray-alpha-900: #00000072;
+	--gray-alpha-1000: #0000007c;
+	--gray-alpha-1100: #0000009b;
+	--gray-alpha-1200: #000000df;
 	--content-width: 640px;
 	--footer-height: 56px;
 	--ds-shadow-border: 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -31,8 +53,6 @@
 }
 
 .dark {
-	--background: #111110;
-	--foreground: #eeeeec;
 	--card: oklch(0.205 0 0);
 	--card-foreground: oklch(0.985 0 0);
 	--popover: oklch(0.205 0 0);
@@ -42,7 +62,6 @@
 	--secondary: oklch(0.269 0 0);
 	--secondary-foreground: oklch(0.985 0 0);
 	--muted: oklch(0.269 0 0);
-	--muted-foreground: #b5b3ad;
 	--accent: oklch(0.269 0 0);
 	--accent-foreground: oklch(0.985 0 0);
 	--destructive: oklch(0.704 0.191 22.216);
@@ -53,17 +72,53 @@
 	--ds-shadow-small: 0px 1px 2px rgba(0, 0, 0, 0.08);
 	--ds-shadow-border-small:
 		var(--ds-shadow-border), 0px 1px 2px rgba(0, 0, 0, 0.08);
+	--gray-100: #111110;
+	--gray-200: #191918;
+	--gray-300: #222221;
+	--gray-400: #2a2a28;
+	--gray-500: #31312e;
+	--gray-600: #3b3a37;
+	--gray-700: #494844;
+	--gray-800: #62605b;
+	--gray-900: #6f6d66;
+	--gray-1000: #7c7b74;
+	--gray-1100: #b5b3ad;
+	--gray-1200: #eeeeec;
+	--gray-alpha-100: #00000000;
+	--gray-alpha-200: #ffffff09;
+	--gray-alpha-300: #ffffff12;
+	--gray-alpha-400: #ffffff1b;
+	--gray-alpha-500: #ffffff22;
+	--gray-alpha-600: #ffffff2c;
+	--gray-alpha-700: #ffffff3b;
+	--gray-alpha-800: #ffffff55;
+	--gray-alpha-900: #ffffff64;
+	--gray-alpha-1000: #ffffff72;
+	--gray-alpha-1100: #ffffffaf;
+	--gray-alpha-1200: #ffffffed;
 }
 
 @theme inline {
 	--font-sans: var(--font-inter);
-	--color-background: var(--background);
-	--color-foreground: var(--foreground);
+	--color-background: var(--gray-100);
+	--color-foreground: var(--gray-1200);
 	--color-muted: var(--muted);
-	--color-muted-foreground: var(--muted-foreground);
+	--color-muted-foreground: var(--gray-1100);
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--shadow-sm: var(--ds-shadow-border-small);
+	--color-gray-100: var(--gray-100);
+	--color-gray-200: var(--gray-200);
+	--color-gray-300: var(--gray-300);
+	--color-gray-400: var(--gray-400);
+	--color-gray-500: var(--gray-500);
+	--color-gray-600: var(--gray-600);
+	--color-gray-700: var(--gray-700);
+	--color-gray-800: var(--gray-800);
+	--color-gray-900: var(--gray-900);
+	--color-gray-1000: var(--gray-1000);
+	--color-gray-1100: var(--gray-1100);
+	--color-gray-1200: var(--gray-1200);
 }
 
 @utility scrollbar-none {
@@ -96,22 +151,9 @@
 		@apply border-border rounded-xl border text-[0.8125rem];
 	}
 
-	@media (max-width: 640px) {
-		.astro-code {
-			margin-left: -25px;
-			margin-right: -25px;
-			width: calc(100% + 50px);
-			border-radius: 0;
-		}
-	}
-
 	html.dark .astro-code,
 	html.dark .astro-code span {
 		color: var(--shiki-dark) !important;
 		background-color: var(--shiki-dark-bg) !important;
-		/* Optional, if you also want font styles */
-		font-style: var(--shiki-dark-font-style) !important;
-		/* font-weight: var(--shiki-dark-font-weight) !important; */
-		text-decoration: var(--shiki-dark-text-decoration) !important;
 	}
 }

@@ -30,7 +30,6 @@
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20230807.0",
 		"@eslint/js": "^9.22.0",
-		"@tailwindcss/typography": "^0.5.16",
 		"@typescript-eslint/parser": "^8.26.0",
 		"drizzle-kit": "^0.19.12",
 		"eslint": "^9.22.0",

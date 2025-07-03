@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
 import { formatDate } from '~/util/helpers'
-import Link from '~/components/link.astro'
 
 const posts = (
 	await getCollection(
@@ -15,20 +14,25 @@ const posts = (
 
 <section class="mt-16 sm:mt-32">
 	<h3 class="mb-5 font-medium sm:mb-6">Writing</h3>
-	<ul class="flex flex-col gap-7 md:gap-10">
+	<ul class="flex flex-col gap-7 sm:gap-4">
 		{
 			posts.map(({ data, id }) => (
-				<li class="flex flex-col gap-1 md:grid md:grid-cols-[1fr_140px] md:gap-4">
-					<div class="space-y-2">
-						<Link href={`/blog/${id}`}>{data.title}</Link>
-						<p class="text-muted-foreground">{data.description}</p>
-					</div>
-					<time
-						class="text-muted-foreground hidden text-right text-xs leading-6 md:block"
-						datetime={data.pubDate.toISOString()}
+				<li>
+					<a
+						href={`/blog/${id}`}
+						class="-mx-3 flex gap-1 rounded-md px-3 hover:bg-[#F5F4F4] sm:py-3 md:grid md:grid-cols-[1fr_140px] md:gap-4 dark:hover:bg-gray-200"
 					>
-						{formatDate(data.pubDate)}
-					</time>
+						<div class="flex flex-col">
+							<span>{data.title}</span>
+							<span class="text-muted-foreground">{data.description}</span>
+						</div>
+						<time
+							class="text-muted-foreground hidden text-right text-xs leading-6 md:block"
+							datetime={data.pubDate.toISOString()}
+						>
+							{formatDate(data.pubDate)}
+						</time>
+					</a>
 				</li>
 			))
 		}
