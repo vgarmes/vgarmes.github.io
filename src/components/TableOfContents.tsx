@@ -58,7 +58,7 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 						'block text-[0.8125rem] leading-tight transition-colors',
 						{
 							'text-foreground': currentHeading.slug === slug,
-							'hover:text-foreground text-neutral-400 dark:text-neutral-600':
+							'hover:text-foreground text-(--gray-alpha-900)':
 								currentHeading.slug !== slug
 						}
 					)}
