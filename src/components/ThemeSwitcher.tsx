@@ -34,12 +34,12 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ id = 'desktop' }) => {
 	}
 
 	return (
-		<fieldset class="flex h-8 w-fit items-center rounded-full shadow-[0_0_0_1px_var(--color-neutral-200)] dark:shadow-[0_0_0_1px_var(--color-neutral-700)]">
+		<fieldset class="flex h-8 w-fit items-center rounded-full shadow-(--ds-shadow-border)">
 			<legend class="sr-only">Select a display theme</legend>
 			<span class="h-full">
 				<label
 					for={`theme-switcher-system-${id}`}
-					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--color-neutral-200)] has-checked:dark:shadow-[0_0_0_1px_var(--color-neutral-700)] [&>svg]:size-4"
+					class="text-muted-foreground curspr-pointer has-checked:text-foreground flex size-8 items-center justify-center rounded-full has-checked:shadow-[0_0_0_1px_var(--gray-400),0_1px_2px_0_var(--gray-alpha-100)] [&>svg]:size-4"
 				>
 					<input
 						id={`theme-switcher-system-${id}`}

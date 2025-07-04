@@ -68,10 +68,10 @@
 	--border: oklch(1 0 0 / 10%);
 	--input: oklch(1 0 0 / 15%);
 	--ring: oklch(0.556 0 0);
-	--ds-shadow-border: 0 0 0 1px hsla(0, 0%, 100%, 0.08);
-	--ds-shadow-small: 0px 1px 2px rgba(0, 0, 0, 0.08);
+	--ds-shadow-border: 0 0 0 1px rgba(255, 255, 255, 0.145);
+	--ds-shadow-small: 0px 1px 2px rgba(0, 0, 0, 0.16);
 	--ds-shadow-border-small:
-		var(--ds-shadow-border), 0px 1px 2px rgba(0, 0, 0, 0.08);
+		var(--ds-shadow-border), 0px 1px 2px rgba(0, 0, 0, 0.16);
 	--gray-100: #111110;
 	--gray-200: #191918;
 	--gray-300: #222221;
@@ -106,7 +106,6 @@
 	--color-muted-foreground: var(--gray-1100);
 	--color-border: var(--border);
 	--color-input: var(--input);
-	--shadow-sm: var(--ds-shadow-border-small);
 	--color-gray-100: var(--gray-100);
 	--color-gray-200: var(--gray-200);
 	--color-gray-300: var(--gray-300);
