@@ -6,7 +6,7 @@ import Demo from './demo.astro'
 	<div class="flex min-h-40 items-center justify-center p-2">
 		<nav
 			id="animated-tabs"
-			class="text-muted-foreground scrollbar-none relative overflow-x-auto border-b"
+			class="text-muted-foreground scrollbar-none shadow-border relative overflow-x-auto shadow-[inset_0_-1px]"
 		>
 			<ul
 				class="[&>li>button]:hover:text-foreground flex items-center pb-2 text-sm [&>li>button]:inline-block [&>li>button]:cursor-pointer [&>li>button]:px-3 [&>li>button]:py-1 [&>li>button]:text-current [&>li>button]:transition-colors"
@@ -22,12 +22,12 @@ import Demo from './demo.astro'
 			</ul>
 			<div
 				id="menu-backdrop"
-				class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-gray-300 opacity-0 transition-all duration-250 ease-in-out"
+				class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-gray-300 opacity-0 transition-[opacity,_translate,_width,_height] duration-[250ms,_var(--transition-duration,_0ms),_var(--transition-duration,_0ms),_var(--transition-duration,_0ms)] ease-in-out"
 			>
 			</div>
 			<div
 				id="tab-underline"
-				class="bg-foreground absolute bottom-0 left-0 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform"
+				class="bg-foreground absolute bottom-0 left-0 z-10 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform"
 			>
 			</div>
 		</nav>
@@ -35,15 +35,26 @@ import Demo from './demo.astro'
 </Demo>
 
 <script>
-	const listItems = document.querySelectorAll(
-		'#animated-tabs li'
-	) as NodeListOf<HTMLLIElement>
-	const menuBackDrop = document.getElementById(
+	const list = document.getElementById('animated-tabs') as HTMLUListElement
+	const listItems = list.querySelectorAll('li') as NodeListOf<HTMLLIElement>
+	const menuBackdrop = document.getElementById(
 		'menu-backdrop'
 	) as HTMLDivElement
 	const tabUnderline = document.getElementById(
 		'tab-underline'
 	) as HTMLDivElement
+
+	let firstHover = true
+
+	list.addEventListener('mouseenter', () => {
+		firstHover = true
+		menuBackdrop.style.setProperty('--transition-duration', '0ms')
+	})
+
+	list.addEventListener('mouseleave', () => {
+		firstHover = true
+		menuBackdrop.style.setProperty('--transition-duration', '0ms')
+	})
 
 	// initial tab underline position
 	tabUnderline.style.transform = `translateX(${listItems[0].offsetLeft}px) scaleX(${listItems[0].offsetWidth / 100})`
@@ -51,18 +62,24 @@ import Demo from './demo.astro'
 
 	listItems.forEach(item => {
 		item.addEventListener('mouseenter', () => {
-			menuBackDrop.style.setProperty('--top', `${item.offsetTop}px`)
-			menuBackDrop.style.setProperty('--left', `${item.offsetLeft}px`)
-			menuBackDrop.style.setProperty('--width', `${item.offsetWidth}px`)
-			menuBackDrop.style.setProperty('--height', `${item.offsetHeight}px`)
+			menuBackdrop.style.setProperty('--top', `${item.offsetTop}px`)
+			menuBackdrop.style.setProperty('--left', `${item.offsetLeft}px`)
+			menuBackdrop.style.setProperty('--width', `${item.offsetWidth}px`)
+			menuBackdrop.style.setProperty('--height', `${item.offsetHeight}px`)
 
-			menuBackDrop.style.opacity = '1'
-			menuBackDrop.style.visibility = 'visible'
+			menuBackdrop.style.opacity = '1'
+			menuBackdrop.style.visibility = 'visible'
+
+			if (firstHover) {
+				// After the first hover, enable animation for subsequent hovers
+				menuBackdrop.style.setProperty('--transition-duration', '250ms')
+				firstHover = false
+			}
 		})
 
 		item.addEventListener('mouseleave', () => {
-			menuBackDrop.style.opacity = '0'
-			menuBackDrop.style.visibility = 'hidden'
+			menuBackdrop.style.opacity = '0'
+			menuBackdrop.style.visibility = 'hidden'
 		})
 
 		item.addEventListener('click', () => {
