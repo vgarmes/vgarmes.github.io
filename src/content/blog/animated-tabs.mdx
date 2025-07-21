@@ -1,17 +1,142 @@
 ---
-title: 'Animated Tabs'
-pubDate: 2025-06-26
-description: 'Smooth tabs using CSS and JavaScript.'
+title: 'Vercel Animated Tabs'
+pubDate: 2025-07-21
+description: 'Recreating Vercel tabs using CSS and JavaScript.'
 tags: ['animation', 'tabs', 'css']
 draft: false
 ---
 
 import AnimatedTabs from '~/components/demos/animated-tabs.astro'
 
-Tabs are a common UI element used to display different sections of content one at a time — either by conditionally rendering them or by navigating between separate pages. Adding a bit of animation can make interactions feel more responsive and intentional, and the overall UI more refined.
+In tab navigation elements, you'll typically see an underline that transitions beneath the active tab when you select it. On top of that, Vercel’s implementation in their dashboard adds a very tasteful touch: as you move your mouse across the tabs, a subtle backdrop glides beneath the hovered tab. Even though it seems they use [motion's layout animations](https://motion.dev/docs/react-layout-animations) to achieve this effect, I decided to recreate it using just CSS and vanilla JavaScript. You can see the result below before we get into the details.
 
 <AnimatedTabs />
 
-For these tabs, I added a sliding underline for the active tab and a subtle hover effect that follows the cursor to make the tabs feel more interactive. It’s all kept simple: just CSS and about 30 lines of vanilla JavaScript. By relying on GPU-accelerated properties like `transform` and `opacity`, the animations stay smooth and responsive.
+## The navigation tabs
 
-See the full code [here](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/animated-tabs.astro).
+For the navigation tabs, I made a simple `nav` element consisting of an unordered list of buttons (the navigation elements could just as well be anchor links):
+
+```html
+<nav
+  id="animated-tabs"
+  class="text-muted-foreground scrollbar-none shadow-border relative overflow-x-auto shadow-[inset_0_-1px]"
+>
+  <ul
+    class="[&>li>button]:hover:text-foreground flex items-center pb-2 text-sm [&>li>button]:inline-block [&>li>button]:cursor-pointer [&>li>button]:px-3 [&>li>button]:py-1 [&>li>button]:text-current [&>li>button]:transition-colors"
+  >
+    <li><button>Overview</button></li>
+    <li><button>Activity</button></li>
+    <li><button>Usage</button></li>
+    <li><button>AI</button></li>
+    <li><button>Support</button></li>
+    <li><button>Settings</button></li>
+  </ul>
+</nav>
+```
+
+## The backdrop
+
+The backdrop is simply an absolutely positioned element that uses CSS variables to dynamically adjust its width, height, and position (`--width`, `--height`, `--left` and `--top`).
+
+```html
+<div
+  id="menu-backdrop"
+  class="absolute top-0 left-0 -z-10 h-(--height) w-(--width) translate-x-(--left) translate-y-(--top) rounded bg-gray-300 opacity-0 transition-all duration-250 ease-in-out"
+></div>
+```
+
+With JavaScript, event listeners are added to each navigation tab. When you hover over a tab, these variables are updated to match the size and position of the hovered element, and the backdrop’s opacity is set to make it visible:
+
+```html
+<script>
+  const listItems = list.querySelectorAll('li') as NodeListOf<HTMLLIElement>
+  const menuBackdrop = document.getElementById(
+  	'menu-backdrop'
+  ) as HTMLDivElement
+
+  listItems.forEach(item => {
+  	item.addEventListener('mouseenter', () => {
+  		menuBackdrop.style.setProperty('--top', `${item.offsetTop}px`)
+  		menuBackdrop.style.setProperty('--left', `${item.offsetLeft}px`)
+  		menuBackdrop.style.setProperty('--width', `${item.offsetWidth}px`)
+  		menuBackdrop.style.setProperty('--height', `${item.offsetHeight}px`)
+
+  		menuBackdrop.style.opacity = '1'
+  		menuBackdrop.style.visibility = 'visible'
+  	})
+
+  	item.addEventListener('mouseleave', () => {
+  		menuBackdrop.style.opacity = '0'
+  		menuBackdrop.style.visibility = 'hidden'
+  	})
+  })
+</script>
+```
+
+This has an issue though: if the mouse leaves the navigation tabs and enters again later, the backdrop will momentarily reappear under the previously hovered tab and then immediately translate to the current hovered tab, creating a jarring effect. To avoid this, we disable the translation transition when the mouse first enters or leaves the navigation list and enable it only when the mouse enters one of the tabs. This way, the backdrop always reappears instantly on the currently hovered tab, making the interaction feel much smoother--just as Vercel does.
+
+```html
+<script>
+  const list = document.getElementById('animated-tabs') as HTMLUListElement
+
+  let firstHover = true
+
+  list.addEventListener('mouseenter', () => {
+  	firstHover = true
+  	menuBackdrop.style.setProperty('--transition-duration', '0ms')
+  })
+
+  list.addEventListener('mouseleave', () => {
+  	firstHover = true
+  	menuBackdrop.style.setProperty('--transition-duration', '0ms')
+  })
+
+  listItems.forEach(item => {
+  	item.addEventListener('mouseenter', () => {
+  		// ... ommited
+  		if (firstHover) {
+  			// After the first hover, enable animation for subsequent hovers
+  			menuBackdrop.style.setProperty('--transition-duration', '250ms')
+  			firstHover = false
+  		}
+  	})
+  })
+</script>
+```
+
+## Tab underline
+
+The tab underline is just another absolutely positioned element which translates and scales according to the active tab.
+
+During the initial render, we don't know the actual size of the active tab (first one by default). This is why it's initially hidden (`hidden` class); then the script calculates the initial position and size of the active tab and changes its display mode to `block`.
+
+When a tab is clicked, the underline animates to highlight the newly active tab. This is handled by listening for click events on each tab and updating the underline’s position and scale accordingly:
+
+```html
+<nav>
+  <!-- ...ommited... -->
+  <div
+    id="tab-underline"
+    class="bg-foreground absolute bottom-0 left-0 z-10 hidden h-[2px] w-[100px] origin-[0_0_0] transition-transform"
+  ></div>
+</nav>
+<script>
+  // ... ommited
+  const tabUnderline = document.getElementById('tab-underline') as HTMLDivElement
+
+  // initial tab underline position
+  tabUnderline.style.transform = `translateX(${listItems[0].offsetLeft}px) scaleX(${listItems[0].offsetWidth / 100})`
+  tabUnderline.style.display = 'block'
+
+  listItems.forEach(item => {
+    // ... ommited
+  item.addEventListener('click', () => {
+    tabUnderline.style.transform = `translateX(${item.offsetLeft}px) scaleX(${item.offsetWidth / 100})`
+    })
+  })
+</script>
+```
+
+For this demo, the underline moves on click, but in a production app you might trigger it differently—such as when the route changes or when tab state updates.
+
+That's it! Thanks for reading. You can see the full code [here](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/animated-tabs.astro) and feel free to suggest improvements.
