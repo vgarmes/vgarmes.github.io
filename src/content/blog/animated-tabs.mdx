@@ -81,11 +81,6 @@ This has an issue though: if the mouse leaves the navigation tabs and enters aga
 
   let firstHover = true
 
-  list.addEventListener('mouseenter', () => {
-  	firstHover = true
-  	menuBackdrop.style.setProperty('--transition-duration', '0ms')
-  })
-
   list.addEventListener('mouseleave', () => {
   	firstHover = true
   	menuBackdrop.style.setProperty('--transition-duration', '0ms')

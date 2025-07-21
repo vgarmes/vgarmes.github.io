@@ -46,11 +46,6 @@ import Demo from './demo.astro'
 
 	let firstHover = true
 
-	list.addEventListener('mouseenter', () => {
-		firstHover = true
-		menuBackdrop.style.setProperty('--transition-duration', '0ms')
-	})
-
 	list.addEventListener('mouseleave', () => {
 		firstHover = true
 		menuBackdrop.style.setProperty('--transition-duration', '0ms')
