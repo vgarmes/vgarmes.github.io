@@ -35,50 +35,52 @@ import Demo from './demo.astro'
 </Demo>
 
 <script>
-	const list = document.getElementById('animated-tabs') as HTMLUListElement
-	const listItems = list.querySelectorAll('li') as NodeListOf<HTMLLIElement>
-	const menuBackdrop = document.getElementById(
-		'menu-backdrop'
-	) as HTMLDivElement
-	const tabUnderline = document.getElementById(
-		'tab-underline'
-	) as HTMLDivElement
+	document.addEventListener('astro:page-load', () => {
+		const list = document.getElementById('animated-tabs') as HTMLUListElement
+		const listItems = list.querySelectorAll('li') as NodeListOf<HTMLLIElement>
+		const menuBackdrop = document.getElementById(
+			'menu-backdrop'
+		) as HTMLDivElement
+		const tabUnderline = document.getElementById(
+			'tab-underline'
+		) as HTMLDivElement
 
-	let firstHover = true
+		let firstHover = true
 
-	list.addEventListener('mouseleave', () => {
-		firstHover = true
-		menuBackdrop.style.setProperty('--transition-duration', '0ms')
-	})
-
-	// initial tab underline position
-	tabUnderline.style.transform = `translateX(${listItems[0].offsetLeft}px) scaleX(${listItems[0].offsetWidth / 100})`
-	tabUnderline.style.display = 'block'
-
-	listItems.forEach(item => {
-		item.addEventListener('mouseenter', () => {
-			menuBackdrop.style.setProperty('--top', `${item.offsetTop}px`)
-			menuBackdrop.style.setProperty('--left', `${item.offsetLeft}px`)
-			menuBackdrop.style.setProperty('--width', `${item.offsetWidth}px`)
-			menuBackdrop.style.setProperty('--height', `${item.offsetHeight}px`)
-
-			menuBackdrop.style.opacity = '1'
-			menuBackdrop.style.visibility = 'visible'
-
-			if (firstHover) {
-				// After the first hover, enable animation for subsequent hovers
-				menuBackdrop.style.setProperty('--transition-duration', '250ms')
-				firstHover = false
-			}
+		list.addEventListener('mouseleave', () => {
+			firstHover = true
+			menuBackdrop.style.setProperty('--transition-duration', '0ms')
 		})
 
-		item.addEventListener('mouseleave', () => {
-			menuBackdrop.style.opacity = '0'
-			menuBackdrop.style.visibility = 'hidden'
-		})
+		// initial tab underline position
+		tabUnderline.style.transform = `translateX(${listItems[0].offsetLeft}px) scaleX(${listItems[0].offsetWidth / 100})`
+		tabUnderline.style.display = 'block'
 
-		item.addEventListener('click', () => {
-			tabUnderline.style.transform = `translateX(${item.offsetLeft}px) scaleX(${item.offsetWidth / 100})`
+		listItems.forEach(item => {
+			item.addEventListener('mouseenter', () => {
+				menuBackdrop.style.setProperty('--top', `${item.offsetTop}px`)
+				menuBackdrop.style.setProperty('--left', `${item.offsetLeft}px`)
+				menuBackdrop.style.setProperty('--width', `${item.offsetWidth}px`)
+				menuBackdrop.style.setProperty('--height', `${item.offsetHeight}px`)
+
+				menuBackdrop.style.opacity = '1'
+				menuBackdrop.style.visibility = 'visible'
+
+				if (firstHover) {
+					// After the first hover, enable animation for subsequent hovers
+					menuBackdrop.style.setProperty('--transition-duration', '250ms')
+					firstHover = false
+				}
+			})
+
+			item.addEventListener('mouseleave', () => {
+				menuBackdrop.style.opacity = '0'
+				menuBackdrop.style.visibility = 'hidden'
+			})
+
+			item.addEventListener('click', () => {
+				tabUnderline.style.transform = `translateX(${item.offsetLeft}px) scaleX(${item.offsetWidth / 100})`
+			})
 		})
 	})
 </script>
