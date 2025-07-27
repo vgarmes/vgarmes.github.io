@@ -45,20 +45,13 @@ const { title, description, image = '/cover.png' } = Astro.props
 
 <!-- This is intentionally inlined to avoid FOUC -->
 <script is:inline>
-	const setTheme = () => {
-		const prefersDark =
-			localStorage.theme === 'dark' ||
-			(!('theme' in localStorage) &&
-				window.matchMedia('(prefers-color-scheme: dark)').matches)
+	const prefersDark =
+		localStorage.theme === 'dark' ||
+		(!('theme' in localStorage) &&
+			window.matchMedia('(prefers-color-scheme: dark)').matches)
 
-		document.documentElement.classList.toggle('dark', prefersDark)
-		document
-			.querySelector('meta[name="theme-color"]')
-			?.setAttribute('content', prefersDark ? '#0a0a0a' : '#ffffff')
-	}
-
-	// Runs on initial navigation
-	setTheme()
-	// Runs on view transitions navigation
-	document.addEventListener('astro:after-swap', setTheme)
+	document.documentElement.classList.toggle('dark', prefersDark)
+	document
+		.querySelector('meta[name="theme-color"]')
+		?.setAttribute('content', prefersDark ? '#0a0a0a' : '#ffffff')
 </script>
