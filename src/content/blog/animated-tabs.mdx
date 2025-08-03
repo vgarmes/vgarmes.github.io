@@ -6,11 +6,11 @@ tags: ['animation', 'tabs', 'css']
 draft: false
 ---
 
-import AnimatedTabs from '~/components/demos/animated-tabs.astro'
+import AnimatedTabs from '~/components/demos/animated-tabs.tsx'
 
 In tab navigation elements, you'll typically see an underline that transitions beneath the active tab when you select it. On top of that, Vercel’s implementation in their dashboard adds a very tasteful touch: as you move your mouse across the tabs, a subtle backdrop glides beneath the hovered tab. Even though it seems they use [motion's layout animations](https://motion.dev/docs/react-layout-animations) to achieve this effect, I decided to recreate it using just CSS and vanilla JavaScript. You can see the result below before we get into the details.
 
-<AnimatedTabs />
+<AnimatedTabs client:load />
 
 ## The navigation tabs
 
