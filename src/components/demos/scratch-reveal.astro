@@ -1,0 +1,97 @@
+<div class="relative h-[200px] w-[300px]">
+	<!-- Hidden content -->
+	<div class="absolute inset-0">hello world</div>
+	<!-- Scratchable area -->
+	<canvas id="canvas" width="300" height="200" class="absolute h-full w-full"
+	></canvas>
+</div>
+
+<script>
+	const canvas = document.getElementById('canvas') as HTMLCanvasElement
+	const ctx = canvas.getContext('2d')
+	if (!ctx) {
+		throw new Error('Canvas element not found')
+	}
+
+	canvas.width = canvas.offsetWidth
+	canvas.height = canvas.offsetHeight
+
+	// 1. Draw metallic gradient
+	const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+	gradient.addColorStop(0, '#d9d9d9')
+	gradient.addColorStop(1, '#a6a6a6')
+	ctx.fillStyle = gradient
+	ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+	// 2. Add metallic noise (procedural, no external image)
+	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+	const data = imageData.data
+	for (let i = 0; i < data.length; i += 4) {
+		const rand = (Math.random() - 0.5) * 50 // noise intensity
+		data[i] += rand // R
+		data[i + 1] += rand // G
+		data[i + 2] += rand // B
+	}
+	ctx.putImageData(imageData, 0, 0)
+
+	// 3. Scratch logic
+	let isDrawing = false
+
+	let lastCheck = 0
+	const CHECK_INTERVAL = 500 // ms
+
+	document.addEventListener('mousedown', () => (isDrawing = true))
+	document.addEventListener('mouseup', stopDrawing)
+	canvas.addEventListener('mousemove', scratch)
+
+	document.addEventListener('touchstart', () => (isDrawing = true))
+	document.addEventListener('touchend', stopDrawing)
+	canvas.addEventListener('touchmove', scratch, { passive: true })
+
+	function stopDrawing() {
+		isDrawing = false
+	}
+
+	function getErasedPercentage() {
+		const imageData = ctx!.getImageData(0, 0, canvas.width, canvas.height)
+		const data = imageData.data
+		let erasedPixels = 0
+
+		// Each pixel has 4 values (R, G, B, A)
+		for (let i = 3; i < data.length; i += 4) {
+			if (data[i] === 0) erasedPixels++ // alpha = 0 means erased
+		}
+
+		const totalPixels = canvas.width * canvas.height
+		console.log((erasedPixels / totalPixels) * 100)
+		return (erasedPixels / totalPixels) * 100 // percentage
+	}
+
+	function scratch(e: MouseEvent | TouchEvent) {
+		if (!isDrawing || !ctx) return
+
+		const rect = canvas.getBoundingClientRect()
+		let x: number, y: number
+		if ('touches' in e) {
+			// Handle touch events
+			x = e.touches[0].clientX - rect.left
+			y = e.touches[0].clientY - rect.top
+		} else {
+			// Handle mouse events
+			x = (e as MouseEvent).clientX - rect.left
+			y = (e as MouseEvent).clientY - rect.top
+		}
+
+		ctx.globalCompositeOperation = 'destination-out'
+		ctx.beginPath()
+		ctx.arc(x, y, 20, 0, Math.PI * 2)
+		ctx.fill()
+
+		// sample every 200ms
+		const now = Date.now()
+		if (now - lastCheck > CHECK_INTERVAL) {
+			lastCheck = now
+			console.log(getErasedPercentage().toFixed(2) + '% erased')
+		}
+	}
+</script>
