@@ -40,13 +40,30 @@
 	let lastCheck = 0
 	const CHECK_INTERVAL = 500 // ms
 
-	document.addEventListener('mousedown', () => (isDrawing = true))
+	let lastX = 0
+	let lastY = 0
+
+	ctx.lineJoin = 'round'
+	ctx.lineCap = 'round'
+	ctx.globalCompositeOperation = 'destination-out'
+	ctx.lineWidth = 20
+
+	document.addEventListener('mousedown', startDrawing)
 	document.addEventListener('mouseup', stopDrawing)
 	canvas.addEventListener('mousemove', scratch)
 
-	document.addEventListener('touchstart', () => (isDrawing = true))
+	document.addEventListener('touchstart', startDrawing)
 	document.addEventListener('touchend', stopDrawing)
-	canvas.addEventListener('touchmove', scratch, { passive: true })
+	canvas.addEventListener('touchmove', scratch)
+
+	function startDrawing(e: MouseEvent | TouchEvent) {
+		isDrawing = true
+		const { offsetX, offsetY } = e
+		// guardar las coordenadas iniciales
+
+		lastX = offsetX
+		lastY = offsetY
+	}
 
 	function stopDrawing() {
 		isDrawing = false
@@ -63,29 +80,34 @@
 		}
 
 		const totalPixels = canvas.width * canvas.height
-		console.log((erasedPixels / totalPixels) * 100)
+
 		return (erasedPixels / totalPixels) * 100 // percentage
 	}
 
 	function scratch(e: MouseEvent | TouchEvent) {
 		if (!isDrawing || !ctx) return
 
-		const rect = canvas.getBoundingClientRect()
 		let x: number, y: number
 		if ('touches' in e) {
+			e.preventDefault() // Prevent scrolling
 			// Handle touch events
+			const rect = canvas.getBoundingClientRect()
 			x = e.touches[0].clientX - rect.left
 			y = e.touches[0].clientY - rect.top
 		} else {
 			// Handle mouse events
-			x = (e as MouseEvent).clientX - rect.left
-			y = (e as MouseEvent).clientY - rect.top
+			x = e.offsetX
+			y = e.offsetY
 		}
 
-		ctx.globalCompositeOperation = 'destination-out'
 		ctx.beginPath()
-		ctx.arc(x, y, 20, 0, Math.PI * 2)
-		ctx.fill()
+		ctx.moveTo(lastX, lastY)
+		ctx.lineTo(x, y)
+
+		ctx.stroke()
+
+		lastX = x
+		lastY = y
 
 		// sample every 200ms
 		const now = Date.now()
