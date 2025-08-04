@@ -1,6 +1,6 @@
 <div class="relative h-[200px] w-[300px]">
 	<!-- Hidden content -->
-	<div class="absolute inset-0">hello world</div>
+	<div class="absolute inset-0 select-none">hello world</div>
 	<!-- Scratchable area -->
 	<canvas id="canvas" width="300" height="200" class="absolute h-full w-full"
 	></canvas>
@@ -48,11 +48,20 @@
 	ctx.globalCompositeOperation = 'destination-out'
 	ctx.lineWidth = 20
 
-	document.addEventListener('mousedown', startDrawing)
+	canvas.addEventListener('mousedown', startDrawing)
 	document.addEventListener('mouseup', stopDrawing)
 	canvas.addEventListener('mousemove', scratch)
+	canvas.addEventListener('mouseenter', (e: MouseEvent) => {
+		if (isDrawing) {
+			// restart coordinates if mouse left and re-entered while drawing
+			const { offsetX, offsetY } = e
+			// guardar las coordenadas iniciales
+			lastX = offsetX
+			lastY = offsetY
+		}
+	})
 
-	document.addEventListener('touchstart', startDrawing)
+	canvas.addEventListener('touchstart', startDrawing)
 	document.addEventListener('touchend', stopDrawing)
 	canvas.addEventListener('touchmove', scratch)
 
