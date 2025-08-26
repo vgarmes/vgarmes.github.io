@@ -1,12 +1,11 @@
----
-import cursor from './progress_full.png'
----
-
 <div class="flex items-center gap-3">
-	<div class="relative h-10 w-[300px] overflow-hidden rounded-md">
+	<p class="text-muted-foreground text-xs">API KEY</p>
+	<div class="relative h-8 w-[320px] overflow-hidden rounded-md">
 		<!-- Hidden content -->
 		<div class="absolute inset-0 flex items-center px-3 select-none">
-			<span class="text-foreground text-sm">hello world</span>
+			<span class="text-foreground font-mono text-sm"
+				>sk_4f8a29c0b7d14e2fa91c6d03a8f5e7bd</span
+			>
 		</div>
 		<!-- Scratchable area -->
 		<canvas id="canvas" width="300" height="200" class="absolute h-full w-full"
@@ -14,7 +13,7 @@ import cursor from './progress_full.png'
 	</div>
 	<button
 		id="copy-button"
-		class="transform-all flex size-4 items-center justify-center opacity-0"
+		class="transform-all flex size-4 cursor-pointer items-center justify-center opacity-0"
 		title="Copy code"
 	>
 		<svg
