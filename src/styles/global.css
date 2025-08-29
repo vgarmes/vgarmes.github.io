@@ -50,6 +50,7 @@
 	--ds-shadow-border: 0 0 0 1px rgba(0, 0, 0, 0.08);
 	--ds-shadow-small: 0px 2px 2px rgba(0, 0, 0, 0.04);
 	--ds-shadow-border-small: var(--ds-shadow-border), var(--ds-shadow-small);
+	--ds-background-demo: white;
 }
 
 .dark {
@@ -96,6 +97,7 @@
 	--gray-alpha-1000: #ffffff72;
 	--gray-alpha-1100: #ffffffaf;
 	--gray-alpha-1200: #ffffffed;
+	--ds-background-demo: #0b0b09;
 }
 
 @theme inline {
