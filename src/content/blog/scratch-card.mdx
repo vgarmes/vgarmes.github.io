@@ -1,15 +1,15 @@
 ---
-title: 'Scratch Reveal'
+title: 'Scratch Card'
 pubDate: 2025-08-29
-description: 'Scratch-off surface revealing hidden content underneath'
+description: 'Scratch card that reveals hidden content as you drag.'
 tags: ['crafting', 'design', 'web development']
 draft: false
 ---
 
-import ScratchReveal from '~/components/demos/scratch-reveal.astro'
+import ScratchCard from '~/components/demos/scratch-card.astro'
 
 The other day I came across [dmytro’s portfolio](https://pqoqubbw.dev/), and one of his works caught my eye. It was a component that imitates scratch cards, where the user drags the mouse over the surface to reveal text underneath (in this example, an API key). I thought it was a playful detail you don’t usually see in apps.
 
-<ScratchReveal />
+<ScratchCard />
 
 So I decided to recreate it using a canvas element. The canvas starts with a background that looks like the silver surface of scratch cards, and as the user drags the mouse (or a finger on touch devices), the surface is erased to reveal the hidden text. Once enough of the surface is cleared, a copy button appears next to the text. It’s probably not the best idea for something important like hiding an API key or token, but it could be a fun way to reveal easter eggs, rewards, or other surprises. You can check out the full code [here](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/scratch-reveal.astro) if you’re interested in the details.
