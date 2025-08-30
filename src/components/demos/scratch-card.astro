@@ -12,7 +12,10 @@ import Demo from '~/components/demos/demo.astro'
 				class="bg-background relative h-8 w-[330px] overflow-hidden rounded-md border"
 			>
 				<!-- Hidden content -->
-				<div class="absolute inset-0 flex items-center px-3 select-none">
+				<div
+					id="hidden-content"
+					class="absolute inset-0 flex items-center px-3 opacity-0 select-none"
+				>
 					<span class="text-foreground truncate font-mono text-sm"
 						>sk_4f8a29c0b7d14e2fa91c6d03a8f5e7bd</span
 					>
@@ -46,135 +49,139 @@ import Demo from '~/components/demos/demo.astro'
 			</button>
 		</div>
 	</div>
+</Demo>
 
-	<script>
-		const copyButton = document.getElementById('copy-button')
-		const canvas = document.getElementById('canvas') as HTMLCanvasElement
-		const ctx = canvas.getContext('2d')
-		if (!ctx) {
-			throw new Error('Canvas element not found')
-		}
+<script>
+	const hiddenContent = document.getElementById('hidden-content')
+	const copyButton = document.getElementById('copy-button')
+	const canvas = document.getElementById('canvas') as HTMLCanvasElement
+	const ctx = canvas.getContext('2d')
+	if (!ctx) {
+		throw new Error('Canvas element not found')
+	}
 
-		canvas.width = canvas.offsetWidth
-		canvas.height = canvas.offsetHeight
-		canvas.style.cursor = `url("/coin_cursor.png") 16 16, auto`
+	canvas.width = canvas.offsetWidth
+	canvas.height = canvas.offsetHeight
+	canvas.style.cursor = `url("/coin_cursor.png") 16 16, auto`
 
-		// 1. Draw metallic gradient
-		const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-		gradient.addColorStop(0, '#d9d9d9')
-		gradient.addColorStop(1, '#a6a6a6')
-		ctx.fillStyle = gradient
-		ctx.fillRect(0, 0, canvas.width, canvas.height)
+	// 1. Draw metallic gradient
+	const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+	gradient.addColorStop(0, '#d9d9d9')
+	gradient.addColorStop(1, '#a6a6a6')
+	ctx.fillStyle = gradient
+	ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-		// 2. Add metallic noise (procedural, no external image)
-		const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-		const data = imageData.data
-		for (let i = 0; i < data.length; i += 4) {
-			const rand = (Math.random() - 0.5) * 50 // noise intensity
-			data[i] += rand // R
-			data[i + 1] += rand // G
-			data[i + 2] += rand // B
-		}
-		ctx.putImageData(imageData, 0, 0)
+	// 2. Add metallic noise (procedural, no external image)
+	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+	const data = imageData.data
+	for (let i = 0; i < data.length; i += 4) {
+		const rand = (Math.random() - 0.5) * 50 // noise intensity
+		data[i] += rand // R
+		data[i + 1] += rand // G
+		data[i + 2] += rand // B
+	}
+	ctx.putImageData(imageData, 0, 0)
 
-		// 3. Scratch logic
-		let isDrawing = false
+	// hidden content starts with opacity 0 to avoid flashing it before canvas is painted
+	hiddenContent?.style.setProperty('opacity', '1')
 
-		let lastX = 0
-		let lastY = 0
+	// 3. Scratch logic
+	let isDrawing = false
 
-		ctx.lineJoin = 'round'
-		ctx.lineCap = 'round'
-		ctx.globalCompositeOperation = 'destination-out'
-		ctx.lineWidth = 20
+	let lastX = 0
+	let lastY = 0
 
-		canvas.addEventListener('mousedown', startDrawing)
-		document.addEventListener('mouseup', stopDrawing)
-		canvas.addEventListener('mousemove', scratch)
-		canvas.addEventListener('mouseenter', (e: MouseEvent) => {
-			if (isDrawing) {
-				// restart coordinates if mouse left and re-entered while drawing
-				const { offsetX, offsetY } = e
-				// guardar las coordenadas iniciales
-				lastX = offsetX
-				lastY = offsetY
-			}
-		})
+	ctx.lineJoin = 'round'
+	ctx.lineCap = 'round'
+	ctx.globalCompositeOperation = 'destination-out'
+	ctx.lineWidth = 20
 
-		canvas.addEventListener('touchstart', startDrawing)
-		document.addEventListener('touchend', stopDrawing)
-		canvas.addEventListener('touchmove', scratch)
-
-		function startDrawing(e: MouseEvent | TouchEvent) {
-			isDrawing = true
-
-			if (e instanceof TouchEvent) {
-				const rect = canvas.getBoundingClientRect()
-				const touch = e.touches[0]
-				lastX = touch.clientX - rect.left
-				lastY = touch.clientY - rect.top
-				return
-			}
-
+	canvas.addEventListener('mousedown', startDrawing)
+	document.addEventListener('mouseup', stopDrawing)
+	canvas.addEventListener('mousemove', scratch)
+	canvas.addEventListener('mouseenter', (e: MouseEvent) => {
+		if (isDrawing) {
+			// restart coordinates if mouse left and re-entered while drawing
 			const { offsetX, offsetY } = e
-
-			// store initial coordinates
+			// guardar las coordenadas iniciales
 			lastX = offsetX
 			lastY = offsetY
 		}
+	})
 
-		function stopDrawing() {
-			isDrawing = false
-			const erasedPercentage = getErasedPercentage()
+	canvas.addEventListener('touchstart', startDrawing)
+	document.addEventListener('touchend', stopDrawing)
+	canvas.addEventListener('touchmove', scratch)
 
-			if (erasedPercentage > 90 && copyButton) {
-				copyButton.style.opacity = '1'
-			}
+	function startDrawing(e: MouseEvent | TouchEvent) {
+		isDrawing = true
+
+		if (e instanceof TouchEvent) {
+			const rect = canvas.getBoundingClientRect()
+			const touch = e.touches[0]
+			lastX = touch.clientX - rect.left
+			lastY = touch.clientY - rect.top
+			return
 		}
 
-		function getErasedPercentage() {
-			if (ctx === null) return 0
+		const { offsetX, offsetY } = e
 
-			// just get the central line of the canvas
-			const imageData = ctx.getImageData(0, canvas.height / 2, canvas.width, 1)
-			const data = imageData.data
-			console.log(data.length / 4)
-			let erasedPixels = 0
+		// store initial coordinates
+		lastX = offsetX
+		lastY = offsetY
+	}
 
-			// Each pixel has 4 values (R, G, B, A)
-			for (let i = 3; i < data.length; i += 4) {
-				if (data[i] === 0) erasedPixels++ // alpha = 0 means erased
-			}
+	function stopDrawing() {
+		isDrawing = false
+		const erasedPercentage = getErasedPercentage()
 
-			const totalPixels = canvas.width // width * 1px
+		if (erasedPercentage > 90 && copyButton) {
+			copyButton.style.opacity = '1'
+		}
+	}
 
-			return (erasedPixels / totalPixels) * 100 // percentage
+	function getErasedPercentage() {
+		if (ctx === null) return 0
+
+		// just get the central line of the canvas
+		const imageData = ctx.getImageData(0, canvas.height / 2, canvas.width, 1)
+		const data = imageData.data
+		console.log(data.length / 4)
+		let erasedPixels = 0
+
+		// Each pixel has 4 values (R, G, B, A)
+		for (let i = 3; i < data.length; i += 4) {
+			if (data[i] === 0) erasedPixels++ // alpha = 0 means erased
 		}
 
-		function scratch(e: MouseEvent | TouchEvent) {
-			if (!isDrawing || !ctx) return
+		const totalPixels = canvas.width // width * 1px
 
-			let x: number, y: number
-			if ('touches' in e) {
-				e.preventDefault() // Prevent scrolling
-				// Handle touch events
-				const rect = canvas.getBoundingClientRect()
-				x = e.touches[0].clientX - rect.left
-				y = e.touches[0].clientY - rect.top
-			} else {
-				// Handle mouse events
-				x = e.offsetX
-				y = e.offsetY
-			}
+		return (erasedPixels / totalPixels) * 100 // percentage
+	}
 
-			ctx.beginPath()
-			ctx.moveTo(lastX, lastY)
-			ctx.lineTo(x, y)
+	function scratch(e: MouseEvent | TouchEvent) {
+		if (!isDrawing || !ctx) return
 
-			ctx.stroke()
-
-			lastX = x
-			lastY = y
+		let x: number, y: number
+		if ('touches' in e) {
+			e.preventDefault() // Prevent scrolling
+			// Handle touch events
+			const rect = canvas.getBoundingClientRect()
+			x = e.touches[0].clientX - rect.left
+			y = e.touches[0].clientY - rect.top
+		} else {
+			// Handle mouse events
+			x = e.offsetX
+			y = e.offsetY
 		}
-	</script>
-</Demo>
+
+		ctx.beginPath()
+		ctx.moveTo(lastX, lastY)
+		ctx.lineTo(x, y)
+
+		ctx.stroke()
+
+		lastX = x
+		lastY = y
+	}
+</script>
