@@ -1,0 +1,24 @@
+---
+title: 'Flip-Dot Matrix'
+pubDate: 2025-09-06
+description: 'A flip-dot display inspired component'
+tags: ['crafting', 'design', 'web development']
+draft: false
+---
+
+import FlipDotGridDemo from '~/components/demos/flip-dot-matrix-demo'
+import Demo from '~/components/demos/demo.astro'
+
+The other day when I signed up to my workspace in Linear I noticed a nice loading component that consisted of an animated flip-dot matrix inspired by those vintage airport flight status displays. It looked something like this:
+
+<Demo>
+  <div class="flex items-center justify-center px-3 py-6">
+    <FlipDotGridDemo client:load />
+  </div>
+</Demo>
+
+I thought it was amazing and it offered a lot of possibilities since it could basically display whatever you wanted and scale.
+
+Doing a bit of research, I found out that the creator was Linear's founding designer Adrien Griveau, who posted about it on this [X post](https://x.com/Griveau/status/1932832554354163804).
+
+I’ve always felt inspired by little UI touches like this that bring back retro aesthetics or the feeling of the early internet. They add a layer of nostalgia and personality to otherwise modern, minimal interfaces, and I think that’s what makes them so charming.

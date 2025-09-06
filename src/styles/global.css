@@ -120,6 +120,7 @@
 	--color-gray-1000: var(--gray-1000);
 	--color-gray-1100: var(--gray-1100);
 	--color-gray-1200: var(--gray-1200);
+	--color-primary: var(--primary);
 }
 
 @utility scrollbar-none {

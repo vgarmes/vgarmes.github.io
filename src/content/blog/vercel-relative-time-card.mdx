@@ -15,7 +15,7 @@ Handling dates and time zones is a common UI/UX challenge in web applications. D
 
 To address this, Vercel offers a clever solution in their dashboard. When hovering over a relative timestamp, users see the exact date and time in both UTC and their local time zone—providing clarity without cluttering the interface.
 
-![alt text](https://pbs.twimg.com/media/GdrLhI5WoAAGekN?format=png&name=medium)
+![vercel dashboard showcasing the relative time card](https://pbs.twimg.com/media/GdrLhI5WoAAGekN?format=png&name=medium)
 
 This component is part of [Vercel’s design system](https://vercel.com/geist/relative-time-card), which, unfortunately, isn’t open source. However, by inspecting the compiled JavaScript, I was able to reverse-engineer its implementation. The solution is quite elegant, relying solely on the `Intl.DateTimeFormat` API along with some custom formatter methods.
 
