@@ -7,13 +7,15 @@ const posts = (
 		'writing',
 		({ data }) => import.meta.env.DEV || data.draft !== true
 	)
-).sort((a, b) => {
-	return b.data.pubDate.getTime() - a.data.pubDate.getTime()
-})
+)
+	.sort((a, b) => {
+		return b.data.pubDate.getTime() - a.data.pubDate.getTime()
+	})
+	.slice(0, 5)
 ---
 
-<section class="mt-16 sm:mt-32">
-	<h3 class="mb-5 font-medium sm:mb-6">Writing</h3>
+<section class="mt-16 space-y-5 sm:mt-32 sm:space-y-6">
+	<h3 class="font-medium">Writing</h3>
 	<ul class="flex flex-col gap-7 sm:gap-4">
 		{
 			posts.map(({ data, id }) => (
@@ -37,4 +39,9 @@ const posts = (
 			))
 		}
 	</ul>
+	<a
+		href="/writing"
+		class="hover:decoration-foreground underline decoration-gray-800 decoration-1 underline-offset-2 transition-colors"
+		>All writing</a
+	>
 </section>
