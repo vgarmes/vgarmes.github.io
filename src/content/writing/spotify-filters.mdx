@@ -1,14 +1,20 @@
 ---
 title: 'Spotify Filters'
 pubDate: 2025-06-12
-description: 'Redesign 2025'
-image:
-  url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
-  alt: 'Redesign 2025'
+description: 'Filtering pattern from Spotify on iOS.'
 tags: ['design', 'web development']
-draft: true
+draft: false
 ---
 
 import SpotifyFilters from '~/components/demos/spotify-filters.tsx'
+import Demo from '~/components/demos/demo.astro'
 
-<SpotifyFilters client:visible />
+<Demo>
+  <div class="flex items-center justify-center px-4 py-12">
+    <SpotifyFilters client:visible />
+  </div>
+</Demo>
+
+The filters in the Spotify mobile app are a great example of elegant UI design. They function as tabs, and when you activate one, only the selected filter remains visible alongside a reset button while the rest fade away.
+
+While the real app includes nested options for some filters (like playlists: "By you", "By Spotify", etc.), I simplified things a bit keeping it to only one level. When no filter is selected, all buttons are displayed. Once a filter is activated, a reset button appears, and the active filter smoothly transitions to a new position next to the reset button based on its original location. The other buttons fade out by setting their opacity to 0. [See all implementation details here](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/spotify-filters.tsx).
