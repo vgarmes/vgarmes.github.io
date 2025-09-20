@@ -38,8 +38,10 @@ const toc = generateToc(headings)
 	image={frontmatter.image?.url}
 >
 	<Aside>
-		<a href="/" class="flex items-center gap-1 py-1 text-sm leading-tight"
-			><Undo />Index</a
+		<a
+			href="/writing"
+			class="flex items-center gap-1 py-1 text-sm leading-tight"
+			><Undo />Writing</a
 		>
 		<div class="hidden xl:block">
 			<TableOfContents client:visible toc={toc} />

@@ -4,7 +4,7 @@ import { formatDate } from '~/util/helpers'
 
 const posts = (
 	await getCollection(
-		'blog',
+		'writing',
 		({ data }) => import.meta.env.DEV || data.draft !== true
 	)
 ).sort((a, b) => {
@@ -19,7 +19,7 @@ const posts = (
 			posts.map(({ data, id }) => (
 				<li>
 					<a
-						href={`/blog/${id}`}
+						href={`/writing/${id}`}
 						class="-mx-3 flex gap-1 rounded-md px-3 hover:bg-[#F5F4F4] sm:py-3 md:grid md:grid-cols-[1fr_140px] md:gap-4 dark:hover:bg-gray-200"
 					>
 						<div class="flex flex-col">

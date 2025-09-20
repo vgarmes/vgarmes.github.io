@@ -1,0 +1,51 @@
+---
+import Layout from '~/layouts/base.astro'
+import { getCollection } from 'astro:content'
+import Aside from '~/components/aside.astro'
+import Undo from '~/components/icons/Undo.astro'
+const posts = (
+	await getCollection(
+		'writing',
+		({ data }) => import.meta.env.DEV || data.draft !== true
+	)
+).sort((a, b) => {
+	return b.data.pubDate.getTime() - a.data.pubDate.getTime()
+})
+---
+
+<Layout title="Writing" description="Articles I have written">
+	<Aside>
+		<a href="/" class="flex items-center gap-1 py-1 text-sm leading-tight"
+			><Undo />Index</a
+		>
+	</Aside>
+	<article>
+		<header>
+			<h1 class="scroll-mt-16 font-medium">Writing</h1>
+		</header>
+
+		<div
+			class="mt-12 divide-y border-y hover:[&>a]:opacity-40 hover:[&>a:hover]:opacity-100"
+		>
+			{
+				posts.map(post => (
+					<a
+						class="flex items-center justify-between gap-4 py-3 transition-opacity"
+						href={`/writing/${post.id}`}
+					>
+						<p class="truncate">{post.data.title}</p>
+
+						<time
+							class="text-muted-foreground text-sm whitespace-nowrap"
+							datetime={post.data.pubDate.toISOString()}
+						>
+							{new Date(post.data.pubDate).toLocaleDateString('en-US', {
+								dateStyle: 'medium'
+							})}
+						</time>
+					</a>
+				))
+			}
+		</div>
+	</article>
+</Layout>
