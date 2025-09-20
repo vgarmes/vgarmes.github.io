@@ -24,13 +24,12 @@ const posts = (
 			<h1 class="scroll-mt-16 font-medium">Writing</h1>
 		</header>
 
-		<div
-			class="mt-12 divide-y border-y hover:[&>a]:opacity-40 hover:[&>a:hover]:opacity-100"
-		>
+		<div class="mt-12 divide-y border-y hover:[&>a]:not-hover:opacity-40">
 			{
 				posts.map(post => (
 					<a
-						class="flex items-center justify-between gap-4 py-3 transition-opacity"
+						tabindex="0"
+						class="flex items-center justify-between gap-4 py-3 transition-opacity hover:opacity-100 hover:transition-none focus:!opacity-100 focus:transition-none"
 						href={`/writing/${post.id}`}
 					>
 						<p class="truncate">{post.data.title}</p>
