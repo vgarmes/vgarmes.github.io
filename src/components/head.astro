@@ -22,7 +22,7 @@ const { title, description, image = '/cover.png' } = Astro.props
 <Font cssVariable="--font-inter" preload />
 
 <!-- Phone status bar color -->
-<meta name="theme-color" content="#0a0a0a" />
+<meta name="theme-color" content="#fdfdfc" />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
@@ -53,5 +53,5 @@ const { title, description, image = '/cover.png' } = Astro.props
 	document.documentElement.classList.toggle('dark', prefersDark)
 	document
 		.querySelector('meta[name="theme-color"]')
-		?.setAttribute('content', prefersDark ? '#0a0a0a' : '#ffffff')
+		?.setAttribute('content', prefersDark ? '#111110' : '#fdfdfc')
 </script>
