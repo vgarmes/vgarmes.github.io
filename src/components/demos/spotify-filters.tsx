@@ -45,7 +45,11 @@ const SpotifyFilters: FunctionalComponent = () => {
 				className="flex size-8 cursor-pointer items-center justify-center rounded-full bg-neutral-200 text-black transition-[opacity_0.2s,_transform_0.1s] delay-[0.2s,_0s] hover:scale-105 disabled:opacity-0 disabled:delay-[0s]"
 				onClick={clearFilters}
 			>
-				<svg viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+				<svg
+					viewBox="0 0 21 21"
+					xmlns="http://www.w3.org/2000/svg"
+					class="size-full"
+				>
 					<g
 						fill="none"
 						fill-rule="evenodd"
