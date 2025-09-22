@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import { formatDate } from '~/util/helpers'
+import ArrowUpRight from './icons/ArrowUpRight.astro'
 
 const posts = (
 	await getCollection(
@@ -39,9 +40,12 @@ const posts = (
 			))
 		}
 	</ul>
-	<a
-		href="/writing"
-		class="hover:decoration-foreground underline decoration-gray-800 decoration-1 underline-offset-2 transition-colors"
-		>All writing</a
-	>
+	<div class="flex items-center gap-2">
+		<a
+			href="/writing"
+			class="hover:decoration-foreground underline decoration-gray-800 decoration-1 underline-offset-2 transition-colors"
+			>All writing</a
+		>
+		<span class="text-muted-foreground text-sm"><ArrowUpRight /></span>
+	</div>
 </section>
