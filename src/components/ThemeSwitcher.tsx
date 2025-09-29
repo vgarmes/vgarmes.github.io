@@ -30,7 +30,7 @@ const ThemeSwitcher: FunctionalComponent<Props> = ({ id = 'desktop' }) => {
 		document.documentElement.classList.toggle('dark', prefersDark)
 		document
 			.querySelector('meta[name="theme-color"]')
-			?.setAttribute('content', prefersDark ? '#111110' : '#eeeeec')
+			?.setAttribute('content', prefersDark ? '#111110' : '#fdfdfc')
 	}
 
 	return (
