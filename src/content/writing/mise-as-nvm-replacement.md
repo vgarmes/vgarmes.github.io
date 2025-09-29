@@ -48,9 +48,9 @@ node = "lts"
 You may want to uninstall any previous version of Node.js you have, either from nvm or as a global package. After setup, running `which node` will show something like:
 
 ```shell
-~/.local/share/mise/installs/node/24.9.0/bin/node
+~/.local/share/mise/installs/node/22.20.0/bin/node
 ```
-(the latest version of Node is 24.9.0 at the time of writing).
+(the latest LTS version of Node is 22.20.0 at the time of writing).
 
 If a project requires a different version, for example Node 20, just add a `mise.toml` file in your project root:
 ```toml
