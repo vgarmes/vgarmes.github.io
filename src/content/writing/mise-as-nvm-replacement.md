@@ -1,7 +1,7 @@
 ---
 title: "Switching from nvm to mise-en-place"
 pubDate: 2025-09-29
-description: 'Easily replace nvm with mise-en-place for Node.js management.'
+description: 'A simple alternative for Node.js version management.'
 tags: ["node","javascript","mise"]
 draft: false
 ---
@@ -10,9 +10,9 @@ As a frontend engineer working primarily in the JavaScript ecosystem, I've relie
 
 Recently, I discovered a new tool at work that I believe will replace nvm for me: [mise-en-place](https://mise.jdx.dev/) (or just "mise"). They describe themselves as the "front-end to your dev env" 🙌.
 
-While nvm is Node-specific, mise is a universal version manager. With mise, you can manage not only Node.js, but also Bun, Deno, Go, Python, Rust, and more.
+While nvm is Node-specific, mise is a universal version manager. With mise, you can manage not only Node.js, but also Bun, Deno, Go, Python, Rust, and more. Version preferences are simply managed using a `mise.toml` file in each project, or a global `config.toml` file.
 
-Version preferences are managed using a `mise.toml` file in each project, or a global `config.toml` file.
+If you want a simpler, more flexible way to manage Node.js versions and other runtimes, mise is a great option. It has quickly become an essential tool in my workflow. Here’s how you can get started:
 
 ## Seting up mise
 
@@ -22,7 +22,7 @@ If you're on macOS, installation is simple with Homebrew:
 brew install mise
 ```
 
-If you use Zsh, initialize mise in your `.zshrc`:
+If you use a Zsh terminal shell, initialize mise in your `.zshrc`:
 
 ```shell
 echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
