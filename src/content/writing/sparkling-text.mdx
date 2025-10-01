@@ -1,16 +1,24 @@
 ---
 title: 'Sparkling Text'
-pubDate: 2025-09-28
+pubDate: 2025-10-01
 description: 'Customizing fonts in Astro using their new experimental API.'
-tags: ['astro', 'typography', 'html']
+tags: ['react', 'animation']
 draft: false
 ---
 
 import SparklingText from '~/components/demos/sparkling-text.tsx'
 import Demo from '~/components/demos/Demo.astro'
 
+Recently, I stumbled upon [Linear's stunning Readme page](https://linear.app/readme).
+It's not just a "readme", it's a storytelling masterclass.
+A nostalgic journey through the early magical days of the internet.
+A reflection on how things changed and Linear's mission to revive that sense of wonder.
+
+One detail that really caught my eye on this page was their use of
+delightful text effects. Among them, this highlighted text that sparkles when you hover:
+
 <Demo>
-  <div class="flex h-[200px] items-center justify-center">
-    <SparklingText client:load>Bring back the magic of software</SparklingText>
+  <div class="flex h-[100px] items-center justify-center">
+    <SparklingText client:load>A magical moment.</SparklingText>
   </div>
 </Demo>
