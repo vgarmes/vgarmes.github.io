@@ -11,18 +11,12 @@
 	display: block;
 	opacity: 0;
 	user-select: none;
-}
-
-.sparkle__sparkle[animate] {
 	animation: 700ms ease 0s 1 normal forwards running comeInOut;
 }
 
 .sparkle__sparkle svg {
 	display: block;
 	opacity: 0.5;
-}
-
-.sparkle__sparkle[animate] svg {
 	animation: 1000ms linear 0s 1 normal none running sparkleSpin;
 }
 

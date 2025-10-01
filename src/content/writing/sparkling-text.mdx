@@ -1,0 +1,16 @@
+---
+title: 'Sparkling Text'
+pubDate: 2025-09-28
+description: 'Customizing fonts in Astro using their new experimental API.'
+tags: ['astro', 'typography', 'html']
+draft: false
+---
+
+import SparklingText from '~/components/demos/sparkling-text.tsx'
+import Demo from '~/components/demos/Demo.astro'
+
+<Demo>
+  <div class="flex h-[200px] items-center justify-center">
+    <SparklingText client:load>Bring back the magic of software</SparklingText>
+  </div>
+</Demo>
