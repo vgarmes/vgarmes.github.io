@@ -23,7 +23,7 @@ function generateSparkle(): Sparkle {
 	const left = randomInRange(-20, 120) + '%'
 	const top = randomInRange(-20, 120) + '%'
 
-	return { style: { left, top, opacity: 1 }, createdAt: Date.now() }
+	return { style: { left, top }, createdAt: Date.now() }
 }
 
 const SparklingText: FunctionalComponent<Props> = ({
@@ -44,8 +44,6 @@ const SparklingText: FunctionalComponent<Props> = ({
 
 	useEffect(() => {
 		if (!isAnimating) return
-
-		setSparkles([generateSparkle()])
 
 		const interval = setInterval(() => {
 			setSparkles(prev => [generateSparkle(), ...prev].slice(0, 3))

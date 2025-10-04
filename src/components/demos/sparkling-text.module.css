@@ -9,15 +9,14 @@
 	position: absolute;
 	z-index: -1;
 	display: block;
-	opacity: 0;
 	user-select: none;
-	animation: 700ms ease 0s 1 normal forwards running comeInOut;
+	animation: 700ms ease 0s 1 normal forwards comeInOut;
 }
 
 .sparkle__sparkle svg {
 	display: block;
 	opacity: 0.5;
-	animation: 1000ms linear 0s 1 normal none running sparkleSpin;
+	animation: 1000ms linear 0s 1 normal none sparkleSpin;
 }
 
 .sparkle__text {
