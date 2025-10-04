@@ -137,7 +137,7 @@ function generateSparkle(): Sparkle {
 }
 ```
 
-The position is randomized between -20% and 120% of the parent element's width and height so the sparkles can also render slightly outside this element.
+The position is randomized between -20% and 120% of the container element's width and height so the sparkles can also render slightly outside this element.
 
 ## Generation and cleanup
 
@@ -187,7 +187,7 @@ This ensures React treats each sparkle as a new element, properly triggering the
 
 ## Triggering the animation
 
-Finally we need to trigger the animation when the user is hovering on the text. For that we can add pointer event listeners:
+To make the sparkles appear on hover, we add pointer event listeners to the container:
 
 ```tsx
 <span
@@ -199,9 +199,9 @@ Finally we need to trigger the animation when the user is hovering on the text. 
 </span>
 ```
 
-Another thing to consider is that hovering is not possible on mobile devices, so for these we will always show the animation.
+Another consideration: mobile devices don't support hover interactions, so on touch devices we'll show the animation continuously instead.
 
-For that we can add a hook that checkes wheter hovering is supported and, if that's the case, trigger the animation automatically on mount:
+To handle this, we can add a hook that detects whether hover is supported. If it's not, we automatically trigger the animation on mount:
 
 ```tsx
 useEffect(() => {
@@ -264,5 +264,5 @@ const SparklingText: FunctionalComponent<Props> = ({ children }) => {
 }
 ```
 
-You can see all the implementation details in the [source code](http://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/sparkling-text.tsx)
+You can see the complete implementation details in the [source code](http://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/demos/sparkling-text.tsx)
 and if you found this useful please drop a like! Thanks for reading.
