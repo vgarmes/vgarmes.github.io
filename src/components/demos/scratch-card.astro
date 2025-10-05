@@ -3,50 +3,52 @@ import Demo from '~/components/demos/demo.astro'
 ---
 
 <Demo>
-	<div
-		class="flex w-full flex-col items-start gap-2 overflow-x-auto px-3 py-12 sm:flex-row sm:items-center"
-	>
-		<p class="text-muted-foreground text-xs">API Key</p>
-		<div class="flex items-center gap-3">
-			<div
-				class="bg-background relative h-8 w-[330px] overflow-hidden rounded-md border"
-			>
-				<!-- Hidden content -->
+	<div class="flex w-full items-center justify-center">
+		<div
+			class="flex flex-col items-start gap-2 overflow-x-auto px-3 py-12 sm:flex-row sm:items-center"
+		>
+			<p class="text-muted-foreground text-xs">API Key</p>
+			<div class="flex items-center gap-3">
 				<div
-					id="hidden-content"
-					class="absolute inset-0 flex items-center px-3 opacity-0 select-none"
+					class="bg-background relative h-8 w-[330px] overflow-hidden rounded-md border"
 				>
-					<span class="text-foreground truncate font-mono text-sm"
-						>sk_4f8a29c0b7d14e2fa91c6d03a8f5e7bd</span
+					<!-- Hidden content -->
+					<div
+						id="hidden-content"
+						class="absolute inset-0 flex items-center px-3 opacity-0 select-none"
 					>
+						<span class="text-foreground truncate font-mono text-sm"
+							>sk_4f8a29c0b7d14e2fa91c6d03a8f5e7bd</span
+						>
+					</div>
+					<!-- Scratchable area -->
+					<canvas
+						id="canvas"
+						width="300"
+						height="200"
+						class="absolute h-full w-full"></canvas>
 				</div>
-				<!-- Scratchable area -->
-				<canvas
-					id="canvas"
-					width="300"
-					height="200"
-					class="absolute h-full w-full"></canvas>
-			</div>
-			<button
-				id="copy-button"
-				class="transform-all flex size-4 cursor-pointer items-center justify-center opacity-0"
-				title="Copy code"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path
-						d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
-					></path></svg
+				<button
+					id="copy-button"
+					class="transform-all flex size-4 cursor-pointer items-center justify-center opacity-0"
+					title="Copy code"
 				>
-			</button>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path
+							d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+						></path></svg
+					>
+				</button>
+			</div>
 		</div>
 	</div>
 </Demo>
