@@ -32,25 +32,26 @@ Restart your terminal or run `source ~/.zshrc` to activate.
 
 ## Using mise as nvm replacement
 
-If you want to use the latest LTS release of Node.js version globally by default, just run:
-```shell
-mise use -g node@lts
-```
+At the time of writing, the latest version of Node is v24. To install it and make it the global default we can just run:
 
-Otherwise, indicate the exact version you need.
+```shell
+mise use -g node@24
+```
 
 This creates a `config.toml` in `~/.config/mise`: 
+
 ```toml
 [tools]
-node = "lts"
+node = "24"
 ```
+
+Alternatively, you can just install the latest LTS version by doing `mise use -g node@lts`. However, this will cause mise to warn you every time there is a new LTS version. For me, it's just fine to stick to a version until I decide to manually upgrade.
 
 You may want to uninstall any previous version of Node.js you have, either from nvm or as a global package. After setup, running `which node` will show something like:
 
 ```shell
 ~/.local/share/mise/installs/node/22.20.0/bin/node
 ```
-(the latest LTS version of Node is 22.20.0 at the time of writing).
 
 If a project requires a different version, for example Node 20, just add a `mise.toml` file in your project root:
 ```toml
@@ -58,6 +59,17 @@ If a project requires a different version, for example Node 20, just add a `mise
 node = "20"
 ```
 
-Then mise will automatically switch versions for you as soon as you enter the project directory. 
+Then mise will automatically switch versions for you as soon as you enter the project directory.
 
 Moreover, if you already had a `.nvmrc` or `.node-version`, you don't even need to create this `mise.toml` file if you don't want to. Mise also supports these files out of the box, making it a true drop-in replacement for nvm.
+
+## Listing and uninstalling Node versions
+
+Finally, by running `mise ls`, we can see a list of all the installed Node versions. We will see something like this:
+
+```shell
+Tool  Version  Source                      Requested
+node  24.10.0  ~/.config/mise/config.toml  24
+```
+
+This means that we currently have v24.10.0 installed, and the current context, which is the global `config.toml` file, requires 24. If we were inside the directory of a project that requires another version, we would see a different `Requested` version.
