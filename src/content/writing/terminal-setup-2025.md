@@ -49,7 +49,6 @@ echo "source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme" >> ~/
 
 Now source your `~/.zshrc`, which will automatically trigger the configuration wizard (or run `p10k configure` manually):
 
-
 ```bash
 source ~/.zshrc
 ```
@@ -70,11 +69,11 @@ Add it to your `~/.zshrc`:
 echo "source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" >> ~/.zshrc
 ```
 
-## Install eza 
+## Install eza
 
 eza is a modern replacement for `ls` with better defaults, colors, and icon support.
 
-Install it with: 
+Install it with:
 
 ```bash
 brew install eza

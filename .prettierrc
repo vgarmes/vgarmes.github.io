@@ -16,7 +16,7 @@
 			}
 		},
 		{
-			"files": "*.mdx",
+			"files": "*.mdx|*.md",
 			"options": {
 				"useTabs": false
 			}

@@ -3,9 +3,9 @@ title: 'Redesign 2025'
 pubDate: 2025-06-12
 description: 'Redesign 2025'
 image:
-    url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp' 
-    alt: 'Redesign 2025'
-tags: ["design","web development"]
+  url: 'https://res.cloudinary.com/dx73a1lse/image/upload/v1691097664/blog/build-your-own-react-routerwebp_wzdy1w.webp'
+  alt: 'Redesign 2025'
+tags: ['design', 'web development']
 draft: true
 ---
 
