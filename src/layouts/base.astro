@@ -13,7 +13,7 @@ const { title, description, image } = Astro.props
 		<Head title={title} description={description} image={image} />
 	</head>
 	<body class="bg-background text-foreground break-words antialiased">
-		<div class="px-6">
+		<div class="overflow-x-hidden px-6 md:overflow-x-auto">
 			<main
 				class="mx-auto flex min-h-[calc(100dvh_-_var(--footer-height))] max-w-(--content-width) flex-col py-12 pb-10 lg:py-32"
 			>
