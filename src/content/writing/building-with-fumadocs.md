@@ -3,7 +3,7 @@ title: "How shadcn's documentation is built"
 pubDate: 2025-10-29
 description: 'Building modern documentation sites with Fumadocs and Next.js'
 tags: ['react', 'nextjs', 'documentation']
-draft: true
+draft: false
 ---
 
 [shadcn](https://ui.shadcn.com/) quickly became one of the most popular React component libraries due to its unique approach: building on Radix UI's accessibility primitives with a modern design system while giving developers complete control over their code.
