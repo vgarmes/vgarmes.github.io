@@ -121,6 +121,7 @@
 	--color-gray-1100: var(--gray-1100);
 	--color-gray-1200: var(--gray-1200);
 	--color-primary: var(--primary);
+	--shadow-sm: var(--ds-shadow-border-small);
 }
 
 @utility scrollbar-none {
@@ -150,7 +151,7 @@
 	}
 
 	.astro-code {
-		@apply border-border rounded-xl border text-[0.8125rem];
+		@apply rounded-xl border border-t border-b border-gray-400 text-[0.8125rem] sm:border-none sm:shadow-sm;
 	}
 
 	html.dark .astro-code,
