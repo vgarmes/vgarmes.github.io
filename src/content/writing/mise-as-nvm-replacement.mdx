@@ -40,7 +40,7 @@ mise use -g node@24
 
 This creates a `config.toml` in `~/.config/mise`: 
 
-```toml
+```toml title=.config/mise
 [tools]
 node = "24"
 ```
@@ -54,7 +54,7 @@ You may want to uninstall any previous version of Node.js you have, either from 
 ```
 
 If a project requires a different version, for example Node 20, just add a `mise.toml` file in your project root:
-```toml
+```toml title=mise.toml
 [tools]
 node = "20"
 ```

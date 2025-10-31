@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content'
+import { mdxComponents } from '~/components/mdx-components/index.astro'
 import PostLayout from '~/layouts/post.astro'
 
 export async function getStaticPaths() {
@@ -22,5 +23,5 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
 	headings={headings}
 	slug={post.id}
 >
-	<Content />
+	<Content components={mdxComponents} />
 </PostLayout>

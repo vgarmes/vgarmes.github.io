@@ -13,8 +13,17 @@ export default defineConfig({
 		shikiConfig: {
 			themes: {
 				light: 'github-light-high-contrast',
-				dark: 'github-dark-high-contrast'
-			}
+				dark: 'vesper'
+			},
+			transformers: [
+				{
+					pre(hast) {
+						hast.properties['data-meta'] = this.options.meta?.__raw
+						// the original source code is stored in `source` property
+						hast.properties['data-code'] = this.source
+					}
+				}
+			]
 		},
 		remarkPlugins: [remarkReadingTime]
 	},
@@ -27,11 +36,38 @@ export default defineConfig({
 		fonts: [
 			{
 				provider: fontProviders.google(),
-				name: 'Inter',
-				cssVariable: '--font-inter',
+				name: 'Geist',
+				cssVariable: '--font-geist',
 				styles: ['normal'],
 				weights: ['400 500'],
-				subsets: ['latin']
+				subsets: ['latin'],
+				fallbacks: [
+					'ui-sans-serif',
+					'system-ui',
+					'sans-serif',
+					'Apple Color Emoji',
+					'Segoe UI Emoji',
+					'Segoe UI Symbol',
+					'Noto Color Emoji'
+				]
+			},
+			{
+				provider: fontProviders.google(),
+				name: 'Geist Mono',
+				cssVariable: '--font-geist-mono',
+				styles: ['normal'],
+				weights: ['400 500'],
+				subsets: ['latin'],
+				fallbacks: [
+					'ui-monospace',
+					'SFMono-Regular',
+					'Menlo',
+					'Monaco',
+					'Consolas',
+					'Liberation Mono',
+					'Courier New',
+					'monospace'
+				]
 			}
 		]
 	}

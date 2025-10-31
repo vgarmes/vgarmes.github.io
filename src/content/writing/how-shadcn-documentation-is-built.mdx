@@ -39,7 +39,7 @@ pnpm add fumadocs-mdx fumadocs-core @types/mdx
 
 Next, create a `source.config.ts` configuration file in your project root:
 
-```ts
+```ts title=source.config.ts
 import { defineDocs, defineConfig } from 'fumadocs-mdx/config'
 
 export const docs = defineDocs({
@@ -53,7 +53,7 @@ This directory is where we will place all our MDX source files. This example ass
 
 Finally, update the `next.config.mjs` file at your project's root to configure it to use MDX:
 
-```js
+```js title=next.config.mjs
 import { createMDX } from 'fumadocs-mdx/next'
 
 /** @type {import('next').NextConfig} */
@@ -74,7 +74,7 @@ Before we can integrate with Fumadocs, we need to run either `next dev` or `next
 
 Once that's done, create a `lib/source.ts` file and obtain the Fumadocs `source` from the docs collection output:
 
-```ts
+```ts title=lib/source.ts
 import { docs } from '.source'
 import { loader } from 'fumadocs-core/source'
 
@@ -94,7 +94,7 @@ Unless you use an out-of-the-box solution like `fumadocs-ui`, you'll need to def
 
 For example, here's how to style your main headings:
 
-```tsx
+```tsx title=mdx-components.tsx
 import { cn } from '@/lib/utils'
 
 export const mdxComponents = {
@@ -116,7 +116,7 @@ You can see how shadcn styles the rest of the elements in [their source code](ht
 
 First, create an MDX file for testing. For example, create a page for a Button component at `src/content/docs/button.mdx`:
 
-```mdx
+```mdx title=content/docs/button.mdx
 ---
 title: Button
 description: Displays a button or a component that looks like a button.
@@ -129,8 +129,7 @@ pnpm dlx shadcn@latest add button
 
 Next, add an optional catch-all route at `src/app/docs/[[...slug]]/page.tsx`. Using `generateStaticParams`, this will statically generate a route for each component in the content directory at build time:
 
-```ts
-// src/app/docs/[[...slug]]/page.tsx
+```ts title=app/docs/[[...slug]]/page.tsx
 import { source } from '@/lib/source'
 
 export function generateStaticParams() {
@@ -140,8 +139,7 @@ export function generateStaticParams() {
 
 Then you can read these params to get both the frontmatter data and the body using `source.getPage(["slug"])`:
 
-```tsx
-// src/app/docs/[[...slug]]/page.tsx
+```tsx title=app/docs/[[...slug]]/page.tsx
 import { source } from '@/lib/source'
 import { notFound } from 'next/navigation'
 import { mdxComponents } from 'mdx-components'
@@ -188,9 +186,9 @@ That's it! We should now be able to navigate to `/docs/button` and see our MDX r
 
 shadcn also provides navigation to the previous or next component from any component page. You can quickly achieve this using the`findNeighbour` function from `fumadocs-core`:
 
-```ts
- import { findNeighbour } from "fumadocs-core/page-tree";
- import { source } from "@/lib/source";
+```ts title=components/navigation-links.tsx
+import { findNeighbour } from "fumadocs-core/page-tree";
+import { source } from "@/lib/source";
 
 export default async function NavigationLinks(props: { pageUrl: string }) {
    const neighbours = findNeighbour(source.pageTree, pageUrl);
@@ -211,7 +209,7 @@ The `pageUrl` can be passed down from the main component by getting `page.url`.
 
 You can access the page tree from anywhere in your application. This is useful for listing all components in a sidebar, for example:
 
-```tsx
+```tsx title=app/page.tsx
 import { source } from '@/lib/source'
 
 export default function Home() {
@@ -234,8 +232,7 @@ export default function Home() {
 
 Fumadocs provides built-in search functionality that integrates with Next.js API routes:
 
-```ts
-// app/api/search/route
+```ts title=app/api/search/route.ts
 import { createFromSource } from 'fumadocs-core/search/server'
 
 import { source } from '@/lib/source'

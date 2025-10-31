@@ -101,7 +101,8 @@
 }
 
 @theme inline {
-	--font-sans: var(--font-inter);
+	--font-sans: var(--font-geist);
+	--font-mono: var(--font-geist-mono);
 	--color-background: var(--gray-100);
 	--color-foreground: var(--gray-1200);
 	--color-muted: var(--muted);
@@ -151,9 +152,7 @@
 		overflow-wrap: break-word;
 	}
 
-	.astro-code {
-		@apply rounded-xl border border-t border-b border-gray-400 text-[0.8125rem] sm:border-none sm:shadow-sm;
-	}
+	/*  rounded-xl border border-t border-b border-gray-400 text-[0.8125rem] sm:border-none sm:shadow-sm */
 
 	/* https://docs.astro.build/en/guides/syntax-highlighting/#setting-light-and-dark-mode-themes */
 	html.dark .astro-code,
