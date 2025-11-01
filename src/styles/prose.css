@@ -37,3 +37,21 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+.prose :where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: var(--color-gray-800);
+	text-decoration-thickness: 1px;
+	text-underline-position: from-font;
+	transition-property: text-decoration-color;
+	transition-timing-function: var(
+		--default-transition-timing-function
+	); /* cubic-bezier(0.4, 0, 0.2, 1) */
+	transition-duration: var(--default-transition-duration); /* 150ms */
+}
+
+.prose
+	:where(a):not(:where([class~='not-prose'], [class~='not-prose'] *)):hover {
+	text-decoration-color: var(--color-gray-1200);
+}
