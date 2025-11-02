@@ -9,7 +9,7 @@ import PostStats from '~/components/post-stats'
 import Aside from '~/components/aside.astro'
 import Undo from '~/components/icons/Undo.astro'
 
-type PostFrontmatter = {
+interface PostFrontmatter {
 	title: string
 	description: string
 	pubDate: Date
@@ -20,7 +20,7 @@ type PostFrontmatter = {
 	minutesRead: number
 }
 
-type Props = {
+interface Props {
 	frontmatter: PostFrontmatter
 	headings: MarkdownHeading[]
 	slug: string
@@ -64,7 +64,7 @@ const toc = generateToc(headings)
 			<slot />
 		</div>
 		<div class="flex items-center justify-between pt-4">
-			<PostStats client:visible slug={slug} />
+			<PostStats client:idle slug={slug} />
 			<BackTopButton />
 		</div>
 	</article>
