@@ -159,6 +159,7 @@
 	}
 	.astro-code .line {
 		padding-inline: 1.25rem;
+		height: 20px;
 	}
 	.astro-code code {
 		display: grid;
@@ -175,5 +176,13 @@
 
 	.astro-code .highlighted {
 		@apply relative bg-blue-50 after:absolute after:top-0 after:bottom-0 after:left-0 after:w-[2px] after:bg-blue-600 dark:bg-blue-950 after:dark:bg-blue-400;
+	}
+
+	.astro-code .remove {
+		@apply relative bg-red-50 after:absolute after:top-0 after:bottom-0 after:left-0 after:w-[2px] after:bg-red-600 dark:bg-red-950 after:dark:bg-red-400;
+	}
+
+	.astro-code .add {
+		@apply relative bg-green-50 after:absolute after:top-0 after:bottom-0 after:left-0 after:w-[2px] after:bg-green-600 dark:bg-green-950 after:dark:bg-green-400;
 	}
 }

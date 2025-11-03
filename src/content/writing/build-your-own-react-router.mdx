@@ -24,8 +24,7 @@ As a foundation to test the router, I created an appication using [Vite](https:/
 
 In line with most typical React-based SPAs, this template generates an almost empty `index.html` file containing a root `<div>` element. Additionally, a JavaScript file (in this case, written in TypeScript) is included, where React will inject the rendered HTML into this root element:
 
-```tsx
-// main.tsx
+```tsx title=main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -41,8 +40,7 @@ The file `App.tsx` is where we will have to use our router to control what page 
 
 Following a similar approach to React Router, we'll implement a `Router` component that accepts the routes as props. Thus, we can begin by creating the routes object and making an initial attempt at conditionally rendering the corresponding route based on the current location:
 
-```tsx
-// App.tsx
+```tsx title=App.tsx
 const routes = [
   {
     path: '/',
@@ -98,7 +96,7 @@ To intercept all navigation attempts and prevent the browser's default behavior,
 
 First and foremost, we require a function that we can call whenever we need to navigate to a different page. The approach to achieve this involves programmatically replacing the URL using a `window` method while simultaneously triggering an event that we can subscribe to and handle the re-rendering process accordingly:
 
-```ts
+```ts title=utils.ts
 const EVENTS = {
   PUSHSTATE: 'pushstate',
 }
@@ -114,24 +112,19 @@ The `window.history.pushState` method is used to add an entry to the browser's s
 
 At the same time, since this method doesn't trigger any events we can subscribe to, we can dispatch a custom `pushstate` event and subscribe to it in a `useEffect` hook. For this purpose, we will need to make some refinements to the `App.tsx` file:
 
-```tsx
-// App.tsx
-
-/*
-{... same as before ...}
-*/
-const getCurrentPath = () => window.location.pathname;
+```tsx title=App.tsx
+const getCurrentPath = () => window.location.pathname;  // [!code highlight]
 
 function App() {
-  const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
-
-  useEffect(() => {
-    const onLocationChange = () => setCurrentPathname(getCurrentPath());
-    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
-    return () => {
-      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange)
-    };
-    }, [])
+  const [currentPathname, setCurrentPathname] = useState(getCurrentPath()); // [!code highlight]
+  
+  useEffect(() => { // [!code highlight]
+    const onLocationChange = () => setCurrentPathname(getCurrentPath()); // [!code highlight]
+    window.addEventListener(EVENTS.PUSHSTATE, onLocationChange); // [!code highlight]
+    return () => { // [!code highlight]
+      window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange) // [!code highlight]
+    }; // [!code highlight]
+    }, []) // [!code highlight]
 
   const page = routes.find((route) => route.path === currentPathname)?.element
   return (
@@ -147,8 +140,7 @@ function App() {
 
 Now we can use the `dispatchPushStateEvent` function in the anchor element. For this, we can create a custom `Link` component that will return a traditional anchor element but with the modified functionality:
 
-```tsx
-// Link.tsx
+```tsx title=Link.tsx
 import { AnchorHTMLAttributes, MouseEvent } from 'react';
 import { dispatchPushStateEvent } from './utils';
 
@@ -181,7 +173,7 @@ What we are accomplishing here is that clicking on the anchor will trigger our c
 
 With the new `Link` component in place, we can now proceed to refactor the elements returned by our routes:
 
-```tsx
+```tsx title=App.tsx
 const routes = [
   {
     path: '/',
@@ -213,26 +205,26 @@ However, there is still an issue. If you attempt to navigate back using the brow
 
 To update the current route when the user navigates back, we'll need to make some changes to the  `useEffect` where we previously handled our custom `pushState` event. This time, we will add a subscription to the `popState` event, which is automatically triggered when the back button is clicked (or when `window.back` is called).:
 
-```tsx
+```tsx title=App.tsx
 const [currentPathname, setCurrentPathname] = useState(getCurrentPath());
 
 useEffect(() => {
   const onLocationChange = () => setCurrentPathname(getCurrentPath());
   window.addEventListener(EVENTS.PUSHSTATE, onLocationChange);
-  window.addEventListener(EVENTS.POPSTATE, onLocationChange);
+  window.addEventListener(EVENTS.POPSTATE, onLocationChange); // [!code highlight]
   return () => {
     window.removeEventListener(EVENTS.PUSHSTATE, onLocationChange);
-    window.removeEventListener(EVENTS.POPSTATE, onLocationChange);
+    window.removeEventListener(EVENTS.POPSTATE, onLocationChange); // [!code highlight]
   };
 }, []);
 ```
 
 Where we added the new event to the `EVENTS` object:
 
-```ts
+```ts utils.ts
 const EVENTS = {
   PUSHSTATE: 'pushstate',
-  POPSTATE: 'popstate',
+  POPSTATE: 'popstate', // [!code highlight]
 }
 ```
 
@@ -244,16 +236,16 @@ So far, we have added support for routes with static names (like `/about` for ex
 
 To support his, we will use the library **path-to-regexp** and replace this line in `App.tsx` where we check for equal path names:
 
-```ts
-const page = routes.find((route) => route.path === currentPathname)?.element
+```ts title=App.tsx
+const page = routes.find((route) => route.path === currentPathname)?.element 
 ```
 
 With this one:
 
-```ts
+```ts title=App.tsx
 import { match } from 'path-to-regexp';
 
-let params: Record<string, string> = {};
+let params: Record<string, string> = {}; 
 let pathname: string = '';
 
 const page = routesToUse.find(({ path }) => {
@@ -279,7 +271,7 @@ Where `params` will contain the values of the dynamic segments. For example, if 
 
 Additionally, we'll also need to support query parameters. For this, we can start by implementing a helper function that will get the query parammeters (also called search parameters) from the current location:
 
-```ts
+```ts title=getQueryParams.ts
 export const getQueryParams = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const query = {} as Record<string, string | string[]>;
@@ -300,7 +292,7 @@ This function will return an object whose values will be either a string or an a
 
 Now, we can add this to the event subscription, so the application is re-rendered when there's a query change. For this purpose, I renamed the previous `currentPathname` to `currentLocation`, which will contain both the current path and query:
 
-```ts
+```ts title=App.tsx
 const [currentLocation, setCurrentLocation] = useState({
   path: getCurrentPath(),
   query: getQueryParams(),
@@ -327,7 +319,7 @@ These additions will allow our application to render the right route when the re
 
 However, if we want to link to a dynamic route or add query parameters to a link programatically, we'll need to refactor our `Link` component so it's able to link to an `href` given any values of path, dynamic segments and query parameters. The function to do this conversion would be something like this:
 
-```ts
+```ts title=getRelativeHref.ts
 import { compile } from 'path-to-regexp';
 
 const compilePathWithSegments = (
@@ -377,8 +369,7 @@ The function `getRelativeHref` will accept a URL as a string, for example `/abou
 
 Then we can add this functionality to the `Link` component:
 
-```tsx
-// Link.tsx
+```tsx title=Link.tsx
 function Link({ target, to, ...props }: LinkProps) {
   const href = getRelativeHref(to);
   const handleClick = (event: MouseEvent) => {
@@ -401,8 +392,7 @@ Now that we have all the basic functionality of the routing in place, we can ext
 
 Let's start by creating the context:
 
-```tsx
-// context.ts
+```tsx title=context.ts
 import { createContext, useContext } from 'react';
 
 interface RouterContext {
@@ -419,9 +409,7 @@ export function useRouter() {
 
 Now we can create a `Router` component that returns this context and includes all the routing logic:
 
-```tsx
-// Router.tsx
-
+```tsx title=Router.tsx
 function navigate(to: string | PathObject) {
   const href = getRelativeHref(to);
   dispatchPushStateEvent(href);
@@ -460,7 +448,7 @@ function Router({
 
 In order to reduce the level of abstraction, we can define a custom `Route` component, similar to the equivalent component in React Router. This allows us to use the `Route` component for each individual route instead of passing a `routes` object to the `Router`:
 
-```tsx
+```tsx title=App.tsx
 function App() {
   // ...
   return (
@@ -474,9 +462,7 @@ function App() {
 
 This custom `Route` component, similary to the component in React Router, simply returns `null`:
 
-```tsx
-// Route.tsx
-
+```tsx title=Route.tsx
 import { ReactNode } from 'react';
 
 export interface RouteProps {
@@ -496,8 +482,7 @@ Then, React Router cleverly leverages the `React.Children` method, which is not 
 
 By doing this, we can map the `children` and extract the props of the corresponding routes. Then, the `Router` will render the element of the matching route as usual, effectively ignoring the children components:
 
-```tsx
-// Router.tsx
+```tsx title=Router.tsx
 function Router({
   children,
   routes = [],
@@ -534,7 +519,7 @@ As it is now, using this router in our SPA will load all the JavaScript code dur
 
 To optimize and load only the code required to run the current page, we should move the pages into their own files and lazy load them using  `React.Suspense`:
 
-```tsx
+```tsx title=App.tsx
 import { Suspense, lazy } from 'react';
 import { Router, Route } from './';
 import Page404 from './pages/404';

@@ -3,7 +3,10 @@ import preact from '@astrojs/preact'
 import mdx from '@astrojs/mdx'
 import { remarkReadingTime } from './remark-reading-time.mjs'
 import tailwindcss from '@tailwindcss/vite'
-import { transformerNotationHighlight } from '@shikijs/transformers'
+import {
+	transformerNotationDiff,
+	transformerNotationHighlight
+} from '@shikijs/transformers'
 
 // https://astro.build/config
 export default defineConfig({
@@ -25,7 +28,8 @@ export default defineConfig({
 						hast.properties['data-code'] = this.source
 					}
 				},
-				transformerNotationHighlight()
+				transformerNotationHighlight(),
+				transformerNotationDiff()
 			]
 		},
 		remarkPlugins: [remarkReadingTime]
