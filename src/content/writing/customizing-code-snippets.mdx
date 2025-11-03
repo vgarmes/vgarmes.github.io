@@ -6,6 +6,8 @@ tags: ['astro','shiki','mdx']
 draft: true
 ---
 
+import CodeSnippet  from '~/components/mdx-components/code-snippet.astro'
+
 Astro's built-in support for Markdown and syntax highlighting makes it ideal for technical documentation and blog posts.
 
 Moreover, Astro comes with Shiki pre-configured, so it's very easy to have syntax-highlighted code blocks with minimal setup. You just need to choose a theme.
@@ -14,7 +16,7 @@ Until recently, this minimal configuration was all I had for my personal site bu
 
 I found this [great post by Namchee](https://www.namchee.dev/posts/upgrading-astro-code-snippets/) as a reference, and here's how I transformed my code blocks into what you see today.
 
-# MDX in Astro
+## MDX in Astro
 
 This post assumes you have already configured [Astro's MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#installation). 
 
@@ -33,17 +35,49 @@ This will effectively transform the markdown into its HTML equivalent. To custom
 
 With MDX, you can map Markdown syntax to custom components instead of their standard HTML elements. This allows you to write in standard Markdown syntax, but apply special component styling to selected elements.
 
-This can be done by passing `components` to the MDX content. In the example from before, we could for example replace the default heading:
+This can be done by passing `components` to the MDX content. In the example from before, we could example the default code snippet by passing a custom component for `pre`:
 
-```astro
+```astro title=src/pages/blog/post-1.astro
 ---
 import { getEntry, render } from 'astro:content';
-import CustomHeading from '../../components/CustomHeading.astro'; // [!code highlight]
+import CodeSnippet from '../../components/code-snippet.astro'; // [!code highlight]
 const entry = await getEntry('blog', 'post-1');
 const { Content } = await render(entry);
 ---
-<Content components={{ h1: CustomHeading }} />
+<Content components={{ pre: CodeSnippet }} /> // [!code highlight]
 ```
 
-In order to customize our code snippets, we would just need to do that with the `pre` element.
+Where our `CodeSnippet` could be something like this taking some inspiration from [Vercel's](https://vercel.com/geist/code-block):
+
+```astro title=src/components/code-snippet.astro
+---
+const { props } = Astro.props
+---
+<div class="my-6 overflow-hidden rounded-xl shadow-sm">
+	<div
+		class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
+	>
+		<div
+			class="text-muted-foreground flex grow items-center justify-start gap-2"
+		>
+            <FileIcon />
+			<span class="text-[13px]">src/components/code-snippet</span>}
+		</div>
+		
+	</div>
+
+	<pre {...props}><slot /></pre>
+</div>
+```
+
+It is important to pass the `props` down to the `pre` element so all the styling for the syntax highlighting is preserved.
+
+## Adding a title
+
+As you can see, in the previous example I hard-coded a title.
+
+Now that we know how to replace certain elements by custom components when converting MDX to HTML, we can start creating our code snippet component.
+
+In my case, I wanted to have a similar look and feel as [Vercel's](https://vercel.com/geist/code-block)
+
 

@@ -153,7 +153,15 @@
 	}
 
 	.astro-code {
+		font-size: 0.8125rem;
 		background-color: var(--shiki-light-bg);
+		padding-block: 1.25rem;
+	}
+	.astro-code .line {
+		padding-inline: 1.25rem;
+	}
+	.astro-code code {
+		display: grid;
 	}
 	.astro-code span {
 		color: var(--shiki-light);
