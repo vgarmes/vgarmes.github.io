@@ -17,6 +17,7 @@
 	"dependencies": {
 		"@astrojs/mdx": "^4.3.0",
 		"@astrojs/preact": "^4.1.0",
+		"@shikijs/transformers": "^3.14.0",
 		"@tailwindcss/vite": "^4.1.10",
 		"astro": "^5.9.1",
 		"clsx": "^2.0.0",

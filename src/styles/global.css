@@ -152,12 +152,20 @@
 		overflow-wrap: break-word;
 	}
 
-	/*  rounded-xl border border-t border-b border-gray-400 text-[0.8125rem] sm:border-none sm:shadow-sm */
-
-	/* https://docs.astro.build/en/guides/syntax-highlighting/#setting-light-and-dark-mode-themes */
-	html.dark .astro-code,
+	.astro-code {
+		background-color: var(--shiki-light-bg);
+	}
+	.astro-code span {
+		color: var(--shiki-light);
+	}
+	html.dark .astro-code {
+		background-color: var(--shiki-dark-bg);
+	}
 	html.dark .astro-code span {
-		color: var(--shiki-dark) !important;
-		background-color: var(--shiki-dark-bg) !important;
+		color: var(--shiki-dark);
+	}
+
+	.astro-code .highlighted {
+		@apply relative bg-blue-50 after:absolute after:top-0 after:bottom-0 after:left-0 after:w-[2px] after:bg-blue-600 dark:bg-blue-950 after:dark:bg-blue-400;
 	}
 }

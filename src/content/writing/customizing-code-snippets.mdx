@@ -1,0 +1,49 @@
+---
+title: Customizing Code Snippets in MDX with Astro
+description: Customizing code blocks in Astro MDX with Shiki and interactive features
+pubDate: 2025-11-05
+tags: ['astro','shiki','mdx']
+draft: true
+---
+
+Astro's built-in support for Markdown and syntax highlighting makes it ideal for technical documentation and blog posts.
+
+Moreover, Astro comes with Shiki pre-configured, so it's very easy to have syntax-highlighted code blocks with minimal setup. You just need to choose a theme.
+
+Until recently, this minimal configuration was all I had for my personal site but I decided it was time for my code snippets to get an upgrade.
+
+I found this [great post by Namchee](https://www.namchee.dev/posts/upgrading-astro-code-snippets/) as a reference, and here's how I transformed my code blocks into what you see today.
+
+# MDX in Astro
+
+This post assumes you have already configured [Astro's MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#installation). 
+
+When using MDX in Astro, typically with content collections, you'll render it using the `Content` component:
+
+```astro title=src/pages/blog/post-1.astro
+---
+import { getEntry, render } from 'astro:content';
+const entry = await getEntry('blog', 'post-1');
+const { Content } = await render(entry);
+---
+<Content />
+```
+
+This will effectively transform the markdown into its HTML equivalent. To customize this HTML an option can be creating a CSS stylesheet to style each of these elements. However, sometimes we want to make more advanced customizations and customize this default transformation.
+
+With MDX, you can map Markdown syntax to custom components instead of their standard HTML elements. This allows you to write in standard Markdown syntax, but apply special component styling to selected elements.
+
+This can be done by passing `components` to the MDX content. In the example from before, we could for example replace the default heading:
+
+```astro
+---
+import { getEntry, render } from 'astro:content';
+import CustomHeading from '../../components/CustomHeading.astro'; // [!code highlight]
+const entry = await getEntry('blog', 'post-1');
+const { Content } = await render(entry);
+---
+<Content components={{ h1: CustomHeading }} />
+```
+
+In order to customize our code snippets, we would just need to do that with the `pre` element.
+
