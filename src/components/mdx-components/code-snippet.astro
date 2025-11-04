@@ -6,10 +6,12 @@ import FileIcon from '~/components/icons/FileIcon.astro'
 import Javascript from '~/components/icons/Javascript.astro'
 import Markdown from '~/components/icons/Markdown.astro'
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
+import AstroIcon from '../icons/AstroIcon.astro'
 
 const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props
 
 const langIconMap: Record<string, AstroComponentFactory> = {
+	astro: AstroIcon,
 	js: Javascript,
 	jsx: Javascript,
 	ts: Typescript,
