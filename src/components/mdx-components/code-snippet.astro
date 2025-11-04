@@ -5,13 +5,21 @@ import Terminal from '~/components/icons/Terminal.astro'
 import FileIcon from '~/components/icons/FileIcon.astro'
 import Javascript from '~/components/icons/Javascript.astro'
 import Markdown from '~/components/icons/Markdown.astro'
+import CSS from '~/components/icons/CSS.astro'
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
 import AstroIcon from '../icons/AstroIcon.astro'
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'div'> {
+	'data-meta': string
+	'data-code': string
+}
 
 const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props
 
 const langIconMap: Record<string, AstroComponentFactory> = {
 	astro: AstroIcon,
+	css: CSS,
 	js: Javascript,
 	jsx: Javascript,
 	ts: Typescript,
@@ -27,7 +35,7 @@ const LanguageIcon = langIconMap[props['data-language']] ?? FileIcon
 const meta: Record<string, string> = {}
 
 if (dataMeta) {
-	dataMeta.split(',').forEach((prop: string) => {
+	dataMeta.split(' ').forEach((prop: string) => {
 		const tokens = prop.split('=')
 		meta[tokens[0].trim()] = tokens[1]
 	})
@@ -40,18 +48,22 @@ const title =
 		: null)
 ---
 
-<div class="my-6 overflow-hidden rounded-xl shadow-sm">
-	<div
-		class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
-	>
-		<div
-			class="text-muted-foreground flex grow items-center justify-start gap-2"
-		>
-			<LanguageIcon />
-			{title && <span class="text-[0.8125rem]">{title}</span>}
-		</div>
-		<CopyButton client:visible textToCopy={dataCode} />
-	</div>
+<div class="relative my-6 overflow-hidden rounded-xl shadow-sm">
+	{
+		title && (
+			<div class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4">
+				<div class="text-muted-foreground flex grow items-center justify-start gap-2">
+					<LanguageIcon />
+					<span class="text-[0.8125rem]">{title}</span>
+				</div>
+			</div>
+		)
+	}
 
 	<pre {...props}><slot /></pre>
+	<CopyButton
+		client:visible
+		textToCopy={dataCode}
+		className="absolute top-2 right-2"
+	/>
 </div>

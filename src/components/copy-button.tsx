@@ -75,11 +75,19 @@ function CheckIcon(props: ComponentProps<'svg'>) {
 	)
 }
 
-export default function CopyButton({ textToCopy }: { textToCopy: string }) {
+interface Props {
+	textToCopy: string
+	className?: string
+}
+
+export default function CopyButton({ textToCopy, className }: Props) {
 	const { isCopied, copyToClipboard } = useCopyToClipboard()
 	return (
 		<button
-			className="text-muted-foreground hover:bg-muted hover:text-foreground flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md [&>svg]:size-4"
+			className={cn(
+				'text-muted-foreground hover:bg-muted hover:text-foreground flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md [&>svg]:size-4',
+				className
+			)}
 			onClick={() => copyToClipboard(textToCopy)}
 			title="Copy to clipboard"
 		>
