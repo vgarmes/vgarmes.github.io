@@ -27,8 +27,8 @@ const TableOfContents: FunctionalComponent<Props> = ({ toc }) => {
 		}
 
 		const observerOptions: IntersectionObserverInit = {
-			rootMargin: '-60px 0% -66%',
-			threshold: 1
+			rootMargin: '15% 0% -35% 0%',
+			threshold: 0
 		}
 
 		const headingsObserver = new IntersectionObserver(
