@@ -2,11 +2,11 @@
 title: Supercharging code blocks in MDX with Astro
 description: Customizing code blocks in Astro MDX with Shiki and interactive features
 pubDate: 2025-11-05
-tags: ['astro','shiki','mdx']
+tags: ['astro', 'shiki', 'mdx']
 draft: true
 ---
 
-import CodeSnippet  from '~/components/mdx-components/code-snippet.astro'
+import CodeSnippet from '~/components/mdx-components/code-snippet.astro'
 
 Astro's built-in support for Markdown and syntax highlighting makes it ideal for technical documentation and blog posts.
 
@@ -18,16 +18,17 @@ I found this [great post by Namchee](https://www.namchee.dev/posts/upgrading-ast
 
 ## MDX in Astro
 
-This post assumes you have already configured [Astro's MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#installation). 
+This post assumes you have already configured [Astro's MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#installation).
 
 When using MDX in Astro, typically with content collections, you'll render it using the `Content` component:
 
 ```astro title=src/pages/blog/post-1.astro
 ---
-import { getEntry, render } from 'astro:content';
-const entry = await getEntry('blog', 'post-1');
-const { Content } = await render(entry);
+import { getEntry, render } from 'astro:content'
+const entry = await getEntry('blog', 'post-1')
+const { Content } = await render(entry)
 ---
+
 <Content />
 ```
 
@@ -39,45 +40,123 @@ This can be done by passing `components` to the MDX content. In the example from
 
 ```astro title=src/pages/blog/post-1.astro
 ---
-import { getEntry, render } from 'astro:content';
-import CodeSnippet from '../../components/code-snippet.astro'; // [!code highlight]
-const entry = await getEntry('blog', 'post-1');
-const { Content } = await render(entry);
+import { getEntry, render } from 'astro:content'
+import CodeSnippet from '../../components/code-snippet.astro' // [!code highlight]
+const entry = await getEntry('blog', 'post-1')
+const { Content } = await render(entry)
 ---
+
 <Content components={{ pre: CodeSnippet }} /> // [!code highlight]
 ```
 
-Where our `CodeSnippet` could be something like this taking some inspiration from [Vercel's](https://vercel.com/geist/code-block):
+Where our `CodeSnippet` could be something like this:
 
 ```astro title=src/components/code-snippet.astro
 ---
 const { props } = Astro.props
 ---
-<div class="my-6 overflow-hidden rounded-xl shadow-sm">
-	<div
-		class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
-	>
-		<div
-			class="text-muted-foreground flex grow items-center justify-start gap-2"
-		>
-            <FileIcon />
-			<span class="text-[13px]">src/components/code-snippet</span>}
-		</div>
-		
-	</div>
 
-	<pre {...props}><slot /></pre>
+<div class="my-6 overflow-hidden rounded-xl shadow-sm">
+  <div
+    class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
+  >
+    <div
+      class="text-muted-foreground flex grow items-center justify-start gap-2"
+    >
+      <FileIcon />
+      <span class="text-xs">src/components/code-snippet</span>
+    </div>
+  </div>
+
+  <pre {...props}><slot /></pre>
 </div>
 ```
 
 It is important to pass the `props` down to the `pre` element so all the styling for the syntax highlighting is preserved.
 
-## Adding a title
+## Passing Markdown metadata
 
-As you can see, in the previous example I hard-coded a title.
+As you can see, in the previous example I hard-coded the title "src/components/code-snippet".
 
-Now that we know how to replace certain elements by custom components when converting MDX to HTML, we can start creating our code snippet component.
+Ideally, we should be able to pass the tile in the markdown. Shiki gives the user the possibility to add metadata to code blocks.
 
-In my case, I wanted to have a similar look and feel as [Vercel's](https://vercel.com/geist/code-block)
+However, its Astro integration doesn't pass this metadata by default.
 
+To address this, we can add transformers in our Astro configuration.
 
+```ts title=astro.config.ts
+export default defineConfig({
+  markdown: {
+    shikiConfig: {
+      transformers: [
+        {
+          pre(hast) {
+            // [!code highlight]
+            hast.properties['data-meta'] = this.options.meta?.__raw // [!code highlight]
+          }
+        }
+      ]
+    }
+  }
+})
+```
+
+If we now pass a title as metadata in a code block in our markdown like
+
+````mdx
+## Example
+
+```ts title=utils.ts
+console.log('hello world')
+```
+````
+
+We can retrieve it in our `CodeBlock` component:
+
+```astro title=src/components/code-block.astro
+---
+interface Props extends HTMLAttributes<'div'> {
+  'data-meta': string
+}
+
+const { 'data-meta': dataMeta, ...props } = Astro.props // [!code highlight]
+
+const meta: Record<string, string> = {}
+
+if (dataMeta) {
+  dataMeta.split(' ').forEach((prop: string) => {
+    const tokens = prop.split('=')
+    meta[tokens[0].trim()] = tokens[1]
+  })
+}
+
+const title = meta.title
+---
+
+<div class="my-6 overflow-hidden rounded-xl shadow-sm">
+  <div
+    class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
+  >
+    <div
+      class="text-muted-foreground flex grow items-center justify-start gap-2"
+    >
+      <FileIcon />
+      <span class="text-xs">{title}</span>
+    </div>
+  </div>
+
+  <pre {...props}><slot /></pre>
+</div>
+```
+
+## Showing language icon
+
+bla
+
+## Highlighting lines
+
+bla
+
+## Adding a Copy to Clipboard button
+
+bla
