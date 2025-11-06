@@ -1,26 +1,26 @@
 ---
 title: Supercharging code blocks in MDX with Astro
 description: Customizing code blocks in Astro MDX with Shiki and interactive features
-pubDate: 2025-11-05
+pubDate: 2025-11-06
 tags: ['astro', 'shiki', 'mdx']
-draft: true
+draft: false
 ---
 
 import CodeBlock from '~/components/mdx-components/code-block.astro'
 
-Astro's built-in support for Markdown and syntax highlighting makes it ideal for technical documentation and blog posts.
+Astro ships with excellent out-of-the-box support for Markdown, making it ideal for static content-heavy sites. However, styling Markdown has its limitations, especially when you want to customize certain elements like code blocks.
 
-Moreover, Astro comes with Shiki pre-configured, so it's very easy to have syntax-highlighted code blocks with minimal setup. You just need to choose a theme.
+This is where Astro's [MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#why-mdx) comes in.
 
-Until recently, this minimal configuration was all I had for my personal site but I decided it was time for my code blocks to get an upgrade.
+MDX lets you replace standard HTML elements with custom components. Instead of rendering a plain `<pre>` tag for code blocks, you can intercept it and use your own component with enhanced functionality.
 
-I found this [great post by Namchee](https://www.namchee.dev/posts/upgrading-astro-code-snippets/) as a reference, and here's how I transformed my code blocks into what you see today.
+In this post, I'll walk you through customizing code blocks to create polished examples like the ones you're seeing on this site, with titles, language icons, line highlighting, and copy-to-clipboard functionality.
 
 ## MDX in Astro
 
 This post assumes you have already configured [Astro's MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#installation).
 
-When using MDX in Astro, typically with content collections, you'll render it using the `Content` component:
+When you render MDX content in Astro using content collections, you typically use the `Content` component:`
 
 ```astro title=src/pages/blog/post-1.astro
 ---
@@ -32,11 +32,9 @@ const { Content } = await render(entry)
 <Content />
 ```
 
-This will effectively transform the markdown into its HTML equivalent. To customize this HTML an option can be creating a CSS stylesheet to style each of these elements. However, sometimes we want to make more advanced customizations and customize this default transformation.
+This transforms your Markdown into HTML. Code blocks become `<pre>` tags with Shiki's syntax highlighting already applied.
 
-With MDX, you can map Markdown syntax to custom components instead of their standard HTML elements. This allows you to write in standard Markdown syntax, but apply special component styling to selected elements.
-
-This can be done by passing `components` to the MDX content. In the example from before, we could example the default code block by passing a custom component for `pre`:
+The key insight is that MDX lets you override these default HTML elements with custom components. By passing a `components` prop, we can intercept the `<pre>` tag and wrap it with our own component:
 
 ```astro title=src/pages/blog/post-1.astro
 ---
@@ -49,40 +47,43 @@ const { Content } = await render(entry)
 <Content components={{ pre: CodeBlock }} /> // [!code highlight]
 ```
 
-Where our `CodeBlock` could be something like this:
+Now every code block in your MDX will render through your custom `CodeBlock` component instead.
+
+This `CodeBlock` can be any component you choose, but we with a few considerations:
+
+1. Astro injects the syntax-highlighted code as children, so you need to include `<slot />` to display it.
+
+2. The component must accept `props` and spread them onto the `<pre>` element. This preserves all of Shiki's syntax highlighting styles and any additional attributes.
+
+3. The main wrapper should still be a `<pre>` tag to maintain semantic HTML.
+
+With these constraints in mind, let's start with a simple component we can extend later:
 
 ```astro title=src/components/code-block.astro
 ---
-const { props } = Astro.props
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'pre'> {}
+
+const props = Astro.props
 ---
 
-<div class="my-6 overflow-hidden rounded-xl shadow-sm">
-  <div
-    class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
-  >
-    <div
-      class="text-muted-foreground flex grow items-center justify-start gap-2"
-    >
-      <FileIcon />
-      <span class="text-xs">src/components/code-block</span>
-    </div>
-  </div>
-
-  <pre {...props}><slot /></pre>
+<div class="my-6 overflow-hidden rounded-xl border border-gray-200 shadow-sm">
+  <pre {...props} class="m-0"><slot /></pre>
 </div>
 ```
 
-It is important to pass the `props` down to the `pre` element so all the styling for the syntax highlighting is preserved.
+## Configuring Shiki to Pass Metadata
 
-## Passing Markdown metadata
+In Markdown, you can write metadata for a code block (the part after the triple backticks), for example a title:
 
-As you can see, in the previous example I hard-coded the title "src/components/code-block".
+````md
+```ts title=utils.ts
+console.log('hello')
+```
+````
 
-Ideally, we should be able to pass the tile in the markdown. Shiki gives the user the possibility to add metadata to code blocks.
-
-However, its Astro integration doesn't pass this metadata by default.
-
-To address this, we can add transformers in our Astro configuration.
+By default, Astro's Shiki integration doesn't pass this metadata to your component. We need to add a [Shiki transformer](https://shiki.style/guide/transformers) in our Astro configuration to expose it:
 
 ```ts title=astro.config.ts
 export default defineConfig({
@@ -90,9 +91,9 @@ export default defineConfig({
     shikiConfig: {
       transformers: [
         {
+          // [!code highlight:2]
           pre(hast) {
-            // [!code highlight]
-            hast.properties['data-meta'] = this.options.meta?.__raw // [!code highlight]
+            hast.properties['data-meta'] = this.options.meta?.__raw
           }
         }
       ]
@@ -101,17 +102,11 @@ export default defineConfig({
 })
 ```
 
-If we now pass a title as metadata in a code block in our markdown like
+This transformer runs when Shiki processes each code block, adding a `data-meta` attribute to the generated HTML.
 
-````mdx
-## Example
+## Parsing and Displaying the Title
 
-```ts title=utils.ts
-console.log('hello world')
-```
-````
-
-We can retrieve it in our `CodeBlock` component:
+Now we can access the metadata in our component. Update `CodeBlock` to parse the title and display it in a header:
 
 ```astro title=src/components/code-block.astro
 ---
@@ -121,67 +116,7 @@ interface Props extends HTMLAttributes<'div'> {
   'data-meta': string
 }
 
-const { 'data-meta': dataMeta, ...props } = Astro.props // [!code highlight]
-
-const meta: Record<string, string> = {}
-
-if (dataMeta) {
-  dataMeta.split(' ').forEach((prop: string) => {
-    const tokens = prop.split('=')
-    meta[tokens[0].trim()] = tokens[1]
-  })
-}
-
-const title = meta.title // [!code highlight]
----
-
-<div class="my-6 overflow-hidden rounded-xl shadow-sm">
-  <div
-    class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
-  >
-    <div
-      class="text-muted-foreground flex grow items-center justify-start gap-2"
-    >
-      <FileIcon />
-      <!-- [!code highlight] -->
-      <span class="text-xs">{title}</span>
-    </div>
-  </div>
-
-  <pre {...props}><slot /></pre>
-</div>
-```
-
-## Showing language icon
-
-Another nice detail when displaying code blocks is showing the icon of the language the code block is written in. For this, Astro's Shiki integration already passes a `data-code` attribute we can retrieve in our props.
-
-We can then use this to map each language of interest to their corresponding icon, for example Typescript, Astro and Terminal:
-
-```astro title=src/components/code-block.astro
----
-import Typescript from '~/components/icons/Typescript.astro'
-import Terminal from '~/components/icons/Terminal.astro'
-import FileIcon from '~/components/icons/FileIcon.astro'
-import AstroIcon from '../icons/AstroIcon.astro'
-import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
-import type { HTMLAttributes } from 'astro/types'
-
-interface Props extends HTMLAttributes<'div'> {
-  'data-meta': string
-  'data-code': string
-}
-
-const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props // [!code highlight]
-
-const langIconMap: Record<string, AstroComponentFactory> = {
-  astro: AstroIcon,
-  ts: Typescript,
-  tsx: Typescript,
-  shell: Terminal
-}
-
-const LanguageIcon = langIconMap[props['data-language']] ?? FileIcon // [!code highlight]
+const { 'data-meta': dataMeta, ...props } = Astro.props
 
 const meta: Record<string, string> = {}
 
@@ -202,7 +137,63 @@ const title = meta.title
     <div
       class="text-muted-foreground flex grow items-center justify-start gap-2"
     >
-      <!-- [!code highlight] -->
+      <span class="text-xs">{title}</span>
+    </div>
+  </div>
+
+  <pre {...props}><slot /></pre>
+</div>
+```
+
+## Adding language icons
+
+Astro's Shiki integration already passes a `data-language` attribute by default that we can access directly from `props`.
+
+Based on this, we can use it to map each language of interest to their corresponding icon:
+
+```astro title=src/components/code-block.astro
+---
+import Typescript from '~/components/icons/Typescript.astro'
+import Terminal from '~/components/icons/Terminal.astro'
+import FileIcon from '~/components/icons/FileIcon.astro'
+import AstroIcon from '../icons/AstroIcon.astro'
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'div'> {
+  'data-meta': string
+}
+
+const { 'data-meta': dataMeta, ...props } = Astro.props
+
+const icons: Record<string, AstroComponentFactory> = {
+  astro: AstroIcon,
+  ts: Typescript,
+  tsx: Typescript,
+  shell: Terminal
+}
+
+const LanguageIcon = icons[props['data-language']] ?? FileIcon // [!code highlight]
+
+const meta: Record<string, string> = {}
+
+if (dataMeta) {
+  dataMeta.split(' ').forEach((prop: string) => {
+    const tokens = prop.split('=')
+    meta[tokens[0].trim()] = tokens[1]
+  })
+}
+
+const title = meta.title
+---
+
+<div class="my-6 overflow-hidden rounded-xl shadow-sm">
+  <div
+    class="flex h-12 items-center rounded-t-md border-b border-gray-400 bg-gray-200 py-0 pr-3 pl-4"
+  >
+    <div
+      class="text-muted-foreground flex grow items-center justify-start gap-2"
+    >
       <LanguageIcon />
       <span class="text-xs">{title}</span>
     </div>
@@ -212,14 +203,17 @@ const title = meta.title
 </div>
 ```
 
-## Highlighting lines
+## Enabling line highlighting
 
-Another great feature of Shiki is that they provide some common transformers via their package `@shikijs/transformers`.
+Shiki provides excellent built-in transformers for line highlighting. Install the transformers package:
 
-One of those transformers is the line highlighting. By installing both `transformerNotationDiff` and `transformerNotationHighlight`, we can just add a comment to our markdown code like `//[!code highlight]`, `//[!code ++]`, `//[!code --]` and Shiki will add the corresponding classes `highlighted`, `diff add` or `diff remove` which we can style accordingly:
+```shell
+pnpm install @shikijs/transformers
+```
+
+Then update your Astro configuration:
 
 ```ts title=astro.config.ts
-// [!code ++:4]
 import {
   transformerNotationDiff,
   transformerNotationHighlight
@@ -232,10 +226,9 @@ export default defineConfig({
         {
           pre(hast) {
             hast.properties['data-meta'] = this.options.meta?.__raw
-            hast.properties['data-code'] = this.source
           }
         },
-        // [!code ++:2]
+        // [!code highlight:2]
         transformerNotationHighlight(),
         transformerNotationDiff()
       ]
@@ -244,10 +237,11 @@ export default defineConfig({
 })
 ```
 
+Now you can use the special comments `[!code highlight]`, `[!code ++]` and `[!code --]` in your Markdown code blocks which will be transformed into the corresponding CSS classes `highlighted`, `diff add` and `diff remove` which can be styled accordingly
+
 ## Adding a Copy to Clipboard button
 
-To add a copy to clipboard button, we should have availabe the original source code from our markdown down to our component.
-The original code is actually stored when transforming MDX to HTML and we can pass it to our component inside another `data` attribute using another Shiki transformer:
+The final touch is a copy button. For that, we can grab the source coude which is available in Shiki's transformers and pass it as a `data-code` attribute to our component:
 
 ```ts title=astro.config.ts
 export default defineConfig({
@@ -257,7 +251,7 @@ export default defineConfig({
         {
           pre(hast) {
             hast.properties['data-meta'] = this.options.meta?.__raw
-            hast.properties['data-code'] = this.source // [!code ++]
+            hast.properties['data-code'] = this.source // [!code highlight]
           }
         }
       ]
@@ -266,7 +260,9 @@ export default defineConfig({
 })
 ```
 
-Finally, we can make a React component for the button:
+Finally, we can create a button component with the necessary client-side interactivity for copying the code to the clipboard.
+
+In this case and since I already have the corresponding integration in my Astro site, I've used a React component for simplicity:
 
 ```tsx title=src/components/copy-button.tsx
 export default function CopyButton({ textToCopy, className }: Props) {
@@ -297,7 +293,9 @@ export default function CopyButton({ textToCopy, className }: Props) {
 }
 ```
 
-Then pass the code in the `textToCopy` props:
+For brevity, I ommited some of the logic like the hook to copy to clipboard. You can see the full implementation in the [source code](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/copy-button.tsx).
+
+Then access the code with our new `data` attribute and pass it in the `textToCopy` props:
 
 ```astro title=src/components/code-block.astro
 ---
@@ -307,8 +305,6 @@ interface Props extends HTMLAttributes<'div'> {
 }
 
 const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props // [!code highlight]
-
-/* rest ommited for brevity */
 ---
 
 <div class="relative my-6 overflow-hidden rounded-xl shadow-sm">
@@ -324,7 +320,6 @@ const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props /
   }
 
   <pre {...props}><slot /></pre>
-  <!-- [!code ++:5] -->
   <CopyButton
     client:visible
     textToCopy={dataCode}
@@ -332,3 +327,9 @@ const { 'data-meta': dataMeta, 'data-code': dataCode, ...props } = Astro.props /
   />
 </div>
 ```
+
+## Wrapping up and credits
+
+You now have fully featured code blocks in Astro MDX that you can easily extend further as desired. The complete implementation is available in my [personal site repository](https://github.com/vgarmes/vgarmes.github.io) and you can see these code blocks in action on my personal site.
+
+This guide was inspired by [Namchee's excellent post](https://www.namchee.dev/posts/upgrading-astro-code-snippets/) on upgrading Astro code snippets, which I'd recommend you reading as well if you enjoyed this post.

@@ -6,7 +6,13 @@
 .prose :where(ul):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
 	margin-block: 24px;
 	list-style-type: disc;
-	padding-inline-start: 1.625em;
+	margin-left: 24px;
+}
+
+.prose :where(ol):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+	margin-block: 24px;
+	list-style-type: decimal;
+	margin-left: 24px;
 }
 
 .prose :where(li):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
