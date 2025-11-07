@@ -8,9 +8,7 @@ draft: false
 
 import CodeBlock from '~/components/mdx-components/code-block.astro'
 
-Astro ships with excellent out-of-the-box support for Markdown, making it ideal for static content-heavy sites. However, styling Markdown has its limitations, especially when you want to customize certain elements like code blocks.
-
-This is where Astro's [MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#why-mdx) comes in.
+Astro ships with excellent out-of-the-box support for Markdown, making it ideal for static content-heavy sites. However, styling Markdown has its limitations, especially when you want to customize certain elements like code blocks. This is where Astro's [MDX integration](https://docs.astro.build/en/guides/integrations-guide/mdx/#why-mdx) comes into play.
 
 MDX lets you replace standard HTML elements with custom components. Instead of rendering a plain `<pre>` tag for code blocks, you can intercept it and use your own component with enhanced functionality.
 
@@ -44,12 +42,13 @@ const entry = await getEntry('blog', 'post-1')
 const { Content } = await render(entry)
 ---
 
-<Content components={{ pre: CodeBlock }} /> // [!code highlight]
+// [!code highlight]
+<Content components={{ pre: CodeBlock /* can map other elements too */ }} />
 ```
 
 Now every code block in your MDX will render through your custom `CodeBlock` component instead.
 
-This `CodeBlock` can be any component you choose, but we with a few considerations:
+This `CodeBlock` can be any component you choose, but with a few considerations:
 
 1. Astro injects the syntax-highlighted code as children, so you need to include `<slot />` to display it.
 
@@ -112,7 +111,7 @@ Now we can access the metadata in our component. Update `CodeBlock` to parse the
 ---
 import type { HTMLAttributes } from 'astro/types'
 
-interface Props extends HTMLAttributes<'div'> {
+interface Props extends HTMLAttributes<'pre'> {
   'data-meta': string
 }
 
@@ -160,7 +159,7 @@ import AstroIcon from '../icons/AstroIcon.astro'
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
 import type { HTMLAttributes } from 'astro/types'
 
-interface Props extends HTMLAttributes<'div'> {
+interface Props extends HTMLAttributes<'pre'> {
   'data-meta': string
 }
 
@@ -237,11 +236,11 @@ export default defineConfig({
 })
 ```
 
-Now you can use the special comments `[!code highlight]`, `[!code ++]` and `[!code --]` in your Markdown code blocks which will be transformed into the corresponding CSS classes `highlighted`, `diff add` and `diff remove` which can be styled accordingly
+Now you can use the special comments `[!code highlight]`, `[!code ++]` and `[!code --]` in your Markdown code blocks which will be transformed into the corresponding CSS classes `highlighted`, `diff add` and `diff remove` which can be styled accordingly.
 
 ## Adding a Copy to Clipboard button
 
-The final touch is a copy button. For that, we can grab the source coude which is available in Shiki's transformers and pass it as a `data-code` attribute to our component:
+The final touch is a copy button. For that, we can grab the original code before any transformation, which is available in Shiki's transformers, and pass it as a `data-code` attribute to our component:
 
 ```ts title=astro.config.ts
 export default defineConfig({
@@ -293,13 +292,13 @@ export default function CopyButton({ textToCopy, className }: Props) {
 }
 ```
 
-For brevity, I ommited some of the logic like the hook to copy to clipboard. You can see the full implementation in the [source code](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/copy-button.tsx).
+For brevity, I omitted some of the logic like the hook to copy to clipboard. You can see the full implementation in the [source code](https://github.com/vgarmes/vgarmes.github.io/blob/main/src/components/copy-button.tsx).
 
 Then access the code with our new `data` attribute and pass it in the `textToCopy` props:
 
 ```astro title=src/components/code-block.astro
 ---
-interface Props extends HTMLAttributes<'div'> {
+interface Props extends HTMLAttributes<'pre'> {
   'data-meta': string
   'data-code': string
 }
