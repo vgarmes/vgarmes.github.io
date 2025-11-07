@@ -152,6 +152,10 @@
 		overflow-wrap: break-word;
 	}
 
+	button:not(disabled):hover {
+		cursor: pointer;
+	}
+
 	.astro-code {
 		font-size: 0.8125rem;
 		background-color: var(--shiki-light-bg);
